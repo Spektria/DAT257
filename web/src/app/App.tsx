@@ -1,7 +1,7 @@
 import React from 'react';
 import Calendar,{date, event} from 'react-awesome-calendar';
 
-const App = () => {
+const App = () : JSX.Element => {
   return (
     <div>
     <div className='pl-10 pr-10'>
