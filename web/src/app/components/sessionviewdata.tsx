@@ -1,17 +1,17 @@
 class SessionViewData {
 	location:		string
-	timeAndDate:	string
-	instructors:	string
-	participants:	string
+	date:			Date
+	instructors:	string[]
+	participants:	string[]
 
 	constructor(
 		location:		string,
-		timeAndDate:	string,
-		instructors:	string,
-		participants:	string
+		date:			Date,
+		instructors:	string[],
+		participants:	string[]
 	) {
 		this.location		= location;
-		this.timeAndDate	= timeAndDate;
+		this.date			= date;
 		this.instructors	= instructors;
 		this.participants	= participants;
 	}
@@ -20,8 +20,8 @@ class SessionViewData {
 		return this.location;
 	}
 
-	getTimeAndDate() {
-		return this.timeAndDate;
+	getDate() {
+		return this.date;
 	}
 
 	getInstructors() {

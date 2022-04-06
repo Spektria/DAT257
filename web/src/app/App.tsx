@@ -6,9 +6,9 @@ const App = () => {
 
 	let data = new SessionViewData(
 		"Vid vattnet",
-		"12:00 2022-04-06",
-		"Bengt Bengtsson",
-		"Alice Albertsson, Carl Carlsson"
+		new Date(),
+		["Bengt Bengtsson", "Erik Eriksson"],
+		["Alice Albertsson", "Carl Carlsson", "Daniel Danielsson"]
 	);
 
 	return (
