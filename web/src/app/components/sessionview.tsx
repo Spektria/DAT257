@@ -1,14 +1,7 @@
 import react from 'React';
 import SessionViewData from './sessionviewdata';
 
-const SessionView = () : JSX.Element => {
-
-	let data = new SessionViewData(
-		"Vid vattnet",
-		"12:00 2022-04-06",
-		"Bengt Bengtsson",
-		"Alice Albertsson, Carl Carlsson"
-	);
+const SessionView = (data: SessionViewData) : JSX.Element => {
 
 	return (
 		<div>
