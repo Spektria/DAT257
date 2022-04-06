@@ -1,8 +1,11 @@
 import React from 'react';
 import Calendar,{date, event} from 'react-awesome-calendar';
+import EventEditor from './components/EventEditor'
 
 const App = () : JSX.Element => {
   return (
+    <EventEditor /> 
+    /*
     <div>
     <div className='pl-10 pr-10'>
       <Calendar
@@ -12,6 +15,7 @@ const App = () : JSX.Element => {
       />
     </div>
     </div>
+    */
   );
 }
 
