@@ -2,7 +2,7 @@ import react from 'React';
 
 const SessionView = () : JSX.Element => {
 	return (
-		<p>Uppkörningstillfälle</p>
+		<h2>Uppkörningstillfälle</h2>
 	);
 }
 
