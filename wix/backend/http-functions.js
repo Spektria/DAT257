@@ -26,6 +26,8 @@ backend/http-functions.js
 import {getSecret} from 'wix-secrets-backend';
 import { ok, badRequest, notFound } from 'wix-http-functions';
 
+// Used to verify that the request contains 
+// a valid API key in path 0.
 async function verify(request){
   const API_Key = await getSecret("API_Key");
   try {
@@ -45,7 +47,7 @@ export async function get_hello(request) {
        "body": ""
    };
 
-   if(verify(request)){
+   if(await verify(request)){
       response.body = "Hello. You are valid!";
       return ok(response);
    }
@@ -65,24 +67,20 @@ export async function get_services(request){
        "body": ""
    };
 
-   if(verify(request)){
-     var worked = false;
+   if(await verify(request)){
      await wixData.query('Bookings/Services')
        .find()
        .then( (results) => {
          if(results.items.length > 0) {
             let firstItem = results.items[0]; 
             response.body = firstItem;               
-            worked = true;
           } 
+          else {
+            response.body = "EMPTY!";
+          }
         }).catch(err => console.log(err))
 
-     if(worked){
-       return ok(response);
-     }
-     else {
-       return notFound(response);
-     }
+     return ok(response);
    }
    return badRequest(response);
 }
