@@ -1,6 +1,7 @@
 import react from 'React';
 import SessionViewData from './sessionviewdata';
 
+// Converts an array of strings to an HTML list of those strings
 function listPeople(arr: string[]) {
 
 	let peopleList: JSX.Element[] = [];
@@ -24,6 +25,7 @@ function listPeople(arr: string[]) {
 	return out;
 }
 
+// Element for showing a driving lesson session
 const SessionView = (data: SessionViewData) : JSX.Element => {
 
 	return (
