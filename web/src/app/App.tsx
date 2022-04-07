@@ -1,9 +1,9 @@
-import React from 'react';
+import { FC } from 'react';
 import Calendar,{date, event} from 'react-awesome-calendar';
 import SessionView from './components/SessionView';
 import { SessionViewData } from '../types/types';
 
-const App = () : JSX.Element => {
+const App : FC = ()  => {
 	
 	const data : SessionViewData = {
 		location: "Vid vattnet",

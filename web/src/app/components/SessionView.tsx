@@ -1,5 +1,5 @@
-import React from 'react';
-import { SessionViewData } from './sessionviewdata';
+import { FC } from 'react';
+import { SessionViewData } from '../../types/types';
 
 // Converts an array of strings to an HTML list of those strings
 function listPeople(arr: string[]) {
@@ -13,7 +13,7 @@ function listPeople(arr: string[]) {
 }
 
 // Element for showing a driving lesson session
-const SessionView : React.FC<SessionViewData> = data => {
+const SessionView : FC<SessionViewData> = data => {
 
 	return (
 		<div>
