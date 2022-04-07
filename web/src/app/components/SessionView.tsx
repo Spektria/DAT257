@@ -1,12 +1,13 @@
 import { FC } from 'react';
 import { SessionViewData } from '../../types/types';
+import { zipWith } from 'ramda'
 
 // Converts an array of strings to an HTML list of those strings
 function listPeople(arr: string[]) {
 	return(
     <div>
       <ul>
-        {arr.map(x => <li>{x}</li>)}
+        { zipWith((x, k) => <li key={k}>{x}</li>, arr, [1, 2, 3]) }
       </ul>
     </div>
   );
