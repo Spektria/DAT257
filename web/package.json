@@ -1,18 +1,18 @@
 {
-  "name": "react-ts-tail-demo",
+  "name": "vattenskoter",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.16.3",
+    "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.4.1",
     "@types/node": "^16.11.26",
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.14",
-    "react": "^17.0.2",
-    "react-awesome-calendar": "fredins/react-awesome-calendar.git#1e415a305181c7e3611532f8b6fcdd68497eca79",
-    "react-dom": "^17.0.2",
+    "react": "^18.0.0",
+    "react-awesome-calendar": "fredins/react-awesome-calendar.git#6028a1914ef4cd50bbdff2f7cecf32a931e3d957",
+    "react-dom": "^18.0.0",
     "react-scripts": "5.0.0",
     "typescript": "^4.6.3",
     "web-vitals": "^2.1.4"
