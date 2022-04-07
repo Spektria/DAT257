@@ -3,14 +3,12 @@ import Calendar,{date, event} from 'react-awesome-calendar';
 
 const App = () : JSX.Element => {
   return (
-    <div>
     <div className='pl-10 pr-10'>
       <Calendar
         events = {events}
         onClickEvent={(id : number) => alert('event id: ' + id) }
         onClickTimeLine={(date : date) => alert('create an event at date: ' + JSON.stringify(date))}
       />
-    </div>
     </div>
   );
 }
