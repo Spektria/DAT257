@@ -7,7 +7,7 @@ function listPeople(arr: string[]) {
 	return(
     <div>
       <ul>
-        { zipWith((x, k) => <li key={k}>{x}</li>, arr, [1, 2, 3]) }
+        { zipWith((x, k) => <li key={k}>{x}</li>, arr, Array.from(Array(arr.length).keys())) }
       </ul>
     </div>
   );
