@@ -1,16 +1,16 @@
-import React from 'react';
+import { FC } from 'react';
 import Calendar,{date, event} from 'react-awesome-calendar';
-import SessionView from './components/sessionview';
-import SessionViewData from './components/sessionviewdata';
+import SessionView from './components/SessionView';
+import { SessionViewData } from '../types/types';
 
-const App = () : JSX.Element => {
+const App : FC = ()  => {
 	
-	let data = new SessionViewData(
-		"Vid vattnet",
-		new Date(),
-		["Bengt Bengtsson", "Erik Eriksson"],
-		["Alice Albertsson", "Carl Carlsson", "Daniel Danielsson"]
-	);
+	const data : SessionViewData = {
+		location: "Vid vattnet",
+		date: new Date(),
+		instructors: ["Bengt Bengtsson", "Erik Eriksson"],
+		participants: ["Alice Albertsson", "Carl Carlsson", "Daniel Danielsson"]
+	};
 
   return (
     <div className='pl-10 pr-10'>
@@ -19,7 +19,7 @@ const App = () : JSX.Element => {
         onClickEvent={(id : number) => alert('event id: ' + id) }
         onClickTimeLine={(date : date) => alert('create an event at date: ' + JSON.stringify(date))}
       />
-	  {SessionView(data)}
+      <SessionView {...data}/>
     </div>
   );
 }
