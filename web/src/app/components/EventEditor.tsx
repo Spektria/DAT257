@@ -41,7 +41,7 @@ const EventEditor = (): JSX.Element => {
         </h4>
         <br></br>
         <h4>Till: &nbsp;
-          <input type="datetime-local" id="Test_DatetimeLocal" />
+          <input type="datetime-local" id="Test_DatetimeLocal" onChange={e => setState({ to: new Date(e.target.value)})}/>
         </h4>
         <br></br>
         <label>Instruktör:</label>
