@@ -32,16 +32,16 @@ const EventEditor = (): JSX.Element => {
         <br></br>
         <label>
           Plats: &nbsp;
-          <input type="text" value={state?.place} onChange={e => setState({ place: e.target.value })} />
+          <input type="text" onChange={e => setState({ place: e.target.value })} />
         </label>
         <br></br>
         <br></br>
         <h4>Från: &nbsp;
-          <input type="datetime-local" id="Test_DatetimeLocal" onChange={e => setState({ from: new Date(e.target.value)})}/>
+          <input type="datetime-local" onChange={e => setState({ from: new Date(e.target.value)})}/>
         </h4>
         <br></br>
         <h4>Till: &nbsp;
-          <input type="datetime-local" id="Test_DatetimeLocal" onChange={e => setState({ to: new Date(e.target.value)})}/>
+          <input type="datetime-local" onChange={e => setState({ to: new Date(e.target.value)})}/>
         </h4>
         <br></br>
         <label>Instruktör:</label>
