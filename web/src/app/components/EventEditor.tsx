@@ -11,13 +11,15 @@ className : är var man stoppar in tailwind-funktioner/klasser https://tailwindc
 
 
 type Data = {
-  title?: string
+  place?: string
   , from?: Date
   , to?: Date
   , instructor?: string
   , students?: string
   , color?: string
 }
+
+//{"year": year, "month": month, "day": day, "hour": hour}
 
 const EventEditor = (): JSX.Element => {
   const [state, setState] = useState<Data>()
@@ -30,12 +32,12 @@ const EventEditor = (): JSX.Element => {
         <br></br>
         <label>
           Plats: &nbsp;
-          <input type="text" value={state?.title} onChange={e => setState({ title: e.target.value })} />
+          <input type="text" value={state?.place} onChange={e => setState({ place: e.target.value })} />
         </label>
         <br></br>
         <br></br>
         <h4>Från: &nbsp;
-          <input type="datetime-local" id="Test_DatetimeLocal" />
+          <input type="datetime-local" id="Test_DatetimeLocal" onChange={e => setState({ from: new Date(e.target.value)})}/>
         </h4>
         <br></br>
         <h4>Till: &nbsp;
@@ -56,20 +58,22 @@ const EventEditor = (): JSX.Element => {
           Elever: &nbsp;
           <input type="text" value={state?.students} onChange={e => setState({ students: e.target.value })} />
         </label>
-        <p>{state?.title}</p>
+        <p>{state?.place}</p>
         <br></br>
         <button
-          type="button" >Skapa
+          type="button">Skapa
         </button>
         &nbsp;
         <button
-          type="button" >Avbryt
+          type="button">Avbryt
         </button>
       </form>
 
     </div>
   )
 }
+
+
 
 
 export default EventEditor
