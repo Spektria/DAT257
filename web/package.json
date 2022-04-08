@@ -11,7 +11,7 @@
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.14",
     "react": "^17.0.2",
-    "react-awesome-calendar": "fredins/react-awesome-calendar.git#1e415a305181c7e3611532f8b6fcdd68497eca79",
+    "react-awesome-calendar": "fredins/react-awesome-calendar.git#6028a1914ef4cd50bbdff2f7cecf32a931e3d957",
     "react-dom": "^17.0.2",
     "react-scripts": "5.0.0",
     "typescript": "^4.6.3",
