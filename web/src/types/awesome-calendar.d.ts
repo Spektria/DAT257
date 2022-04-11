@@ -1,7 +1,7 @@
 declare module 'react-awesome-calendar' {
   import { ComponentClass, Component } from 'react'
 
-  export type event = {
+  export type Event_ = {
     id: number
     color: string
     from: Date
@@ -9,14 +9,14 @@ declare module 'react-awesome-calendar' {
     title: string
   }
   
-  export type date = {
+  export type Date_ = {
     year: number 
     month: number
     day: number
     hour: number   
   }
 
-  export type calendarState = {
+  export type CalendarState = {
     mode: string
     year: number
     month: number
@@ -24,11 +24,11 @@ declare module 'react-awesome-calendar' {
   }
 
   export type CalendarProps = {
-    events?: event[]
+    events?: Event_[]
     header?: Component
-    onChange?: (newState : calendarState) => void
-    onClickEvent?: (id: number) => void
-    onClickTimeLine?: (date: date) => void
+    onChange?: (newState : CalendarState) => void
+    onClickEvent?: (id: number) => void 
+    onClickTimeLine?: (date: Date_) => void
   }
 
   const Calendar: ComponentClass<CalendarProps>
