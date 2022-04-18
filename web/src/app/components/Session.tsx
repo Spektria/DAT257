@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { SessionViewData } from '../../types/types';
+import { SessionData } from '../../types/types';
 import { zipWith } from 'ramda'
 
 // Converts an array of strings to an HTML list of those strings
@@ -14,13 +14,12 @@ function listPeople(arr: string[]) {
 }
 
 // Element for showing a driving lesson session
-const SessionView : FC<SessionViewData> = data => {
-
+const Session : FC<SessionData> = data => {
 	return (
 		<div>
 			<h2>Uppkörningstillfälle</h2>
 			<b>Plats:</b> {data.location}<br/>
-			<b>Tid:</b> {data.date.toString()}<br/>
+			<b>Tid:</b> {data.from.toString()}<br/>
 			<b>Instruktörer:</b><br/>
 			{listPeople(data.instructors)}
 			<b>Deltagare:</b><br/>
@@ -29,4 +28,4 @@ const SessionView : FC<SessionViewData> = data => {
 	);
 }
 
-export default SessionView;
+export default Session;
