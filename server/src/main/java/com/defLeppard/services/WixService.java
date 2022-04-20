@@ -2,6 +2,7 @@ package com.defLeppard.services;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -56,6 +57,16 @@ public class WixService {
                 + "/" + apiKey
                 + "/" + Arrays.stream(args).reduce("", (acc, str) -> acc + "/" + str);
 
-        return this.template.getForObject(uri, String.class);
+        try{
+            var data = this.template.getForObject(uri, String.class);
+            if(data == null)
+                System.out.println("Notice empty response from: \"" + uri + "\" :: ");
+            return data;
+        }
+        catch (HttpClientErrorException ex){
+            System.out.println("Error " + ex.getRawStatusCode() + " from request to: \"" + uri + "\" :: " + ex.getMessage());
+        }
+
+        return null;
     }
 }
