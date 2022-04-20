@@ -1,9 +1,9 @@
 package com.defLeppard.services;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.*;
 
 import java.util.Arrays;
 
@@ -32,20 +32,28 @@ public class WixService {
 
     /**
      * Calls the given function on the wix website.
-     * @param function Name of function being called.
-     * @return the json string response from the server.
+     * @param function name of function being called.
+     * @return the parsed json response form the server as the given type.
+     *
+     * @throws RestClientException if the given type does not fit the returned type.
+     * @throws HttpClientErrorException if there is a clientside error related to the request.
+     * @throws HttpServerErrorException if there is a serverside error related to the request.
      */
-    public String call(String function){
-        return call(function, new String[]{});
+    public<T> ResponseEntity<T> call(Class<T> type, String function){
+        return call(type, function);
     }
 
     /**
      * Calls the given function on the wix website with the given arguments.
      * @param function name of function being called.
      * @param args the arguments to be used in function.
-     * @return the json string response from the server.
+     * @return the parsed json response form the server as the given type.
+     *
+     * @throws RestClientException if the given type does not fit the returned type.
+     * @throws HttpClientErrorException if there is a clientside error related to the request.
+     * @throws HttpServerErrorException if there is a serverside error related to the request.
      */
-    public String call(String function, String... args){
+    public<T> ResponseEntity<T> call(Class<T> type, String function, String... args){
 
         /*
          * The structure of a request to the wix server is:
@@ -58,15 +66,11 @@ public class WixService {
                 + "/" + Arrays.stream(args).reduce("", (acc, str) -> acc + "/" + str);
 
         try{
-            var data = this.template.getForObject(uri, String.class);
-            if(data == null)
-                System.out.println("Notice empty response from: \"" + uri + "\" :: ");
-            return data;
+            return this.template.getForEntity(uri, type);
         }
-        catch (HttpClientErrorException ex){
-            System.out.println("Error " + ex.getRawStatusCode() + " from request to: \"" + uri + "\" :: " + ex.getMessage());
+        catch (HttpStatusCodeException ex){
+            System.out.println("Error " + ex.getStatusCode() + " on call  to " + uri);
+            throw ex;
         }
-
-        return null;
     }
 }
