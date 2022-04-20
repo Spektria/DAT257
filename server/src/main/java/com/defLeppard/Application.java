@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.util.HashMap;
+
 /**
  * Initializes the spring context and any other top level
  * application functions.
@@ -26,8 +28,9 @@ public class Application {
 
 	@Scheduled(fixedRate = 1000 * 10) // ms, i.e. 10 sec
 	private void pingWix(){
-		System.out.println(wixService.call("hello"));
-		System.out.println(wixService.call("services"));
+		System.out.println(wixService.call(String.class,"helloa", new String[]{}).getBody());
+		HashMap<String, String> b = wixService.call(HashMap.class, "services", new String[]{}).getBody();
+		System.out.println(b);
 	}
 
 }
