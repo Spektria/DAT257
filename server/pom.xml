@@ -33,6 +33,12 @@
 			<artifactId>y-collections</artifactId>
 			<version>0.0.10</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
