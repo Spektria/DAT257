@@ -31,19 +31,6 @@ public class WixService {
     }
 
     /**
-     * Calls the given function on the wix website.
-     * @param function name of function being called.
-     * @return the parsed json response form the server as the given type.
-     *
-     * @throws RestClientException if the given type does not fit the returned type.
-     * @throws HttpClientErrorException if there is a clientside error related to the request.
-     * @throws HttpServerErrorException if there is a serverside error related to the request.
-     */
-    public<T> ResponseEntity<T> call(Class<T> type, String function){
-        return call(type, function);
-    }
-
-    /**
      * Calls the given function on the wix website with the given arguments.
      * @param function name of function being called.
      * @param args the arguments to be used in function.
