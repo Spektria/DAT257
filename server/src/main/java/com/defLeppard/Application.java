@@ -27,6 +27,7 @@ public class Application {
 	@Scheduled(fixedRate = 1000 * 10) // ms, i.e. 10 sec
 	private void pingWix(){
 		System.out.println(wixService.call("hello"));
+		System.out.println(wixService.call("services"));
 	}
 
 }
