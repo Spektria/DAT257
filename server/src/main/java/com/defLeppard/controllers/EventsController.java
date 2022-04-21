@@ -55,6 +55,9 @@ public class EventsController {
     @ResponseBody
     ResponseEntity<List<Map<String,?>>> getEvents(@RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<Date> from,
                                                   @RequestParam("to")   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<Date> to){
+
+        // TODO Replace with database sql call
+
         var ret = events;
 
         if(from.isPresent() && to.isPresent()){
