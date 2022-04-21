@@ -6,7 +6,13 @@ export type SessionData =
   , to           : Date
   , instructors  : string[]
   , participants : string[]
-  }
+  };
+
+export type StudentData = 
+  { student      : string,
+    moments      : string[],
+    finishedMoments : String[]
+  };
 
 export type Left<T> = {
   left: T;

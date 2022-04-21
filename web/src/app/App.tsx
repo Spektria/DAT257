@@ -2,6 +2,8 @@ import { FC, useState } from 'react';
 import Session from './components/Session';
 import SessionEditor from './components/SessionEditor';
 import NotFound from './components/NotFound';
+import { StudentData } from '../types/types';
+import StudentProfile from './components/StudentProfile';
 import Calendar from './components/Calendar';
 import { Event_, Date_ } from 'react-awesome-calendar'
 import { SessionData } from '../types/types';
@@ -27,6 +29,7 @@ const App: FC = () => {
           <Route path="/newsession" element={<NewSession />} />
           <Route path="/session/:id" element={<ViewSession />} />
           <Route path="/session/:id/edit" element={<EditSession />} />
+          <Route path="/session/studentprofile" element={StudentProfile} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
