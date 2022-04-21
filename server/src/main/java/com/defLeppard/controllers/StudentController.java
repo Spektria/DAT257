@@ -1,5 +1,6 @@
 package com.defLeppard.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +44,7 @@ class StudentController {
     @GetMapping("")
     @ResponseBody
     ResponseEntity<List<Map<String, String>>> getStudents(){
-        return ResponseEntity.status(200).body(students);
+        return ResponseEntity.status(HttpStatus.OK).body(students);
     }
 
     @GetMapping("/{id}")
@@ -54,7 +55,7 @@ class StudentController {
                 .findFirst()
                 .orElse(new HashMap<>());
 
-        return ResponseEntity.status(200).body(property.map(student::get).isPresent()
+        return ResponseEntity.status(HttpStatus.OK).body(property.map(student::get).isPresent()
                 ? student.get(property.get())
                 : student);
     }
