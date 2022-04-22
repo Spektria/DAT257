@@ -13,7 +13,7 @@ function listPeople(arr: string[]) {
   );
 }
 
-// Element for showing a driving lesson session
+//Element for showing water scooter driving session with CSS styling
 const Session : FC<SessionData> = data => {
 	return (
 		<div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
