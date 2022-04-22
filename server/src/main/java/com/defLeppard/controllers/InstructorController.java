@@ -45,10 +45,24 @@ public class InstructorController {
     }
 
 
-    // TODO: Login method
+    /**
+     * Returns instructor account data
+     * @param username the username of the instructor
+     * @param password the hashed password
+     * @return login token
+     */
     @GetMapping("/login")
     @ResponseBody
-    ResponseEntity<?> logIn(){
+    ResponseEntity<String> logIn(@RequestParam(value = "name", required = true) String username,
+                                 @RequestParam(value = "pw",   required = true) String password){
+
+        if(username == null || password == null || username.isBlank() || password.isBlank())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("username and or password is/are blank");
+
+        // TODO compare with database password hash & username
+
+        // TODO login token
+
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
