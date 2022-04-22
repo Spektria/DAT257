@@ -8,6 +8,10 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  *
  * @author Hugo Ekstarand
@@ -25,6 +29,25 @@ public class StudentControllerTest {
     public void getStudentsOKTest(){
         var resp = this.template.getForEntity("http://localhost:" + port + "/students", String.class);
         Assertions.assertTrue(resp.hasBody() && resp.getStatusCode() == HttpStatus.OK);
+    }
+
+    @Test
+    public void getStudentPropertyTest(){
+        final String prop = "name";
+
+        // Get some student
+        List<Map<String, String>> students = this.template.getForEntity("http://localhost:" + port + "/students", ArrayList.class).getBody();
+
+        // Fetch property of same student
+        var resp = this.template.getForEntity("http://localhost:"
+                + port + "/students/"
+                + students.get(0).get("email")
+                + "?property=" + prop, String.class);
+
+        // Check fetch worked and
+        Assertions.assertTrue(resp.hasBody() && resp.getStatusCode() == HttpStatus.OK);
+        // Check property equal (remember same student)
+        Assertions.assertEquals(students.get(0).get(prop), resp.getBody());
     }
 
 }
