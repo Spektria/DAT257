@@ -26,12 +26,6 @@ public class StudentControllerTest {
     private TestRestTemplate template;
 
     @Test
-    public void getStudentsOKTest(){
-        var resp = this.template.getForEntity("http://localhost:" + port + "/students", String.class);
-        Assertions.assertTrue(resp.hasBody() && resp.getStatusCode() == HttpStatus.OK);
-    }
-
-    @Test
     public void getStudentPropertyTest(){
         final String prop = "name";
 
