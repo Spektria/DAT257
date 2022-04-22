@@ -28,8 +28,8 @@ const Form: FC<SessionData> = initState => {
 
   return (
     <div className='flex flex-col items-center'>
-      <div className='flex flex-col h-screen md:h-fit md:space-y-10 justify-between pt-4 pb-4'>
-        <div className='flex flex-col '>
+      <div className='flex flex-col h-screen md:h-fit justify-between pt-4 pb-4'>
+        <div className='flex flex-col'>
           <div className='flex-row justify-between mt-1 mb-1 '>
             <input className='input text-lg' name='title' type="text" placeholder="Titel" />
           </div>
@@ -63,8 +63,8 @@ const Form: FC<SessionData> = initState => {
           </div>
         </div>
 
-        <div className='flex flex-col space-y-1'>
-          <input className=' text-base font-semibold bg-red-400 text-white pt-1 pb-1 rounded border border-red-400' type='submit' value='Spara' />
+        <div className='flex flex-col space-y-1 bg-white mt-10'>
+          <input className='cursor-pointer text-base font-semibold bg-red-400 text-white pt-1 pb-1 rounded border border-red-400' type='submit' value='Spara' />
           <button className='text-base font-semibold pt-1 pb-1 rounded border border-solid border-gray-200'>Avbryt</button>
         </div>
       </div>

@@ -25,7 +25,7 @@ const MultiInput: FC<Props> = ({ name, options, placeholder }) => {
       <div className='flex flex-row items-center'>
         <label>
           <input className='hidden' type='submit'/>
-          <MdAddCircle className='ml-1 mr-1 inline pb-{1}' size='26px' />
+          <MdAddCircle className='cursor-pointer ml-1 mr-1 inline pb-{1}' size='26px' />
         </label>
         <input className='input text-lg' list='students-list' name={name} placeholder={placeholder} value={input} onChange={e => setInput(e.target.value)} />
         <datalist id="students-list">

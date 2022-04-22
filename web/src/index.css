@@ -2,9 +2,11 @@
 @layer base{
   input[type=date]::-webkit-calendar-picker-indicator {
     margin-left: -20px;
+    cursor: pointer;
   }
   input[type=time]::-webkit-calendar-picker-indicator {
     margin-left: -20px;
+    cursor: pointer;
   }
 }
 @tailwind components;
