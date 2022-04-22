@@ -24,9 +24,5 @@ public class EventControllerTest {
     @Autowired
     private TestRestTemplate template;
 
-    @Test
-    public void getEventsOKTest(){
-        var resp = this.template.getForEntity("http://localhost:" + port + "/events", String.class);
-        Assertions.assertTrue(resp.hasBody() && resp.getStatusCode() == HttpStatus.OK);
-    }
+
 }
