@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
-import java.util.stream.IntStream;
 
 /**
  *
@@ -61,7 +60,6 @@ public class DatabaseService implements CommandLineRunner{
      *      * @return totalRowsAffected the number of rows affected in the database.
      *
      */
-
     private int addStudents(ArrayList<ArrayList<String>> students) {
         int totalRowsAffected = 0;
 
@@ -72,11 +70,28 @@ public class DatabaseService implements CommandLineRunner{
         return totalRowsAffected;
     }
 
+    /**
+     *
+     * Internal class that represents a student through its name and email.
+     *
+     */
     private class Student {
         @JsonProperty("login-email")
         private String studentEmail;
         @JsonProperty("name")
         private String studentName;
+
+        public Student() {
+
+        }
+
+        public String getStudentEmail() {
+            return studentEmail;
+        }
+
+        public String getStudentName() {
+            return studentName;
+        }
 
     }
 
