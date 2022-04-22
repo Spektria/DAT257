@@ -41,12 +41,22 @@ class StudentController {
             );
 
 
+    /**
+     * Returns a list of all students in JSON format.
+     * @return the list of students
+     */
     @GetMapping("")
     @ResponseBody
     ResponseEntity<List<Map<String, String>>> getStudents(){
         return ResponseEntity.status(HttpStatus.OK).body(students);
     }
 
+    /**
+     * Returns a specific student or a student's property given a student id and optionally a specific property name.
+     * @param id the id of the student
+     * @param property the optional property name
+     * @return the student or student property in JSON format
+     */
     @GetMapping("/{id}")
     @ResponseBody
     ResponseEntity<?> getStudent(@PathVariable("id") String id, @RequestParam("property") Optional<String> property){
