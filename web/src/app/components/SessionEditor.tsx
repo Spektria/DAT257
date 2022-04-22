@@ -1,74 +1,73 @@
 import { useReducer, FC } from 'react';
 import { Date_ } from 'react-awesome-calendar'
 import { SessionData, Either } from '../../types/types'
+import MultiInput from './MultiInput'
+import { FaLongArrowAltRight } from 'react-icons/fa'
 
-const SessionEditor: FC<Either<Date_, SessionData>> = ({left, right}) => { 
-    if (right !== undefined)
-      return (<Form {...right}/>)
+const SessionEditor: FC<Either<Date_, SessionData>> = ({ left, right }) => {
+  if (right !== undefined)
+    return (<Form {...right} />)
 
-    const {year, month, day, hour} = left
-    return (
+  const { year, month, day, hour } = left
+  return (
     <Form
       id={0}  /* create a new id */
-      title="Pass" 
+      title="Pass"
       location=""
       from={new Date(`${year}-${month}-${day}T${hour}:00:00+00:00`)}
       to={new Date(`${year}-${month}-${day}T${hour}:00:00+00:00`)}
       instructors={[]}
       participants={[]}
     />
-    )
+  )
 }
 
-const Form : FC<SessionData> = initState => {
-  const reducer = (prevState : SessionData, newFields : Partial<SessionData>) => ({...prevState, ...newFields})
+const Form: FC<SessionData> = initState => {
+  const reducer = (prevState: SessionData, newFields: Partial<SessionData>) => ({ ...prevState, ...newFields })
   const [state, dispatch] = useReducer(reducer, initState)
 
   return (
-    <div className="grid place-items-center h-screen">
-      <form onSubmit={() => console.log("Check the data and save in database if ok")}>
-        <label>Skapa uppkörningstillfälle</label>
-        <br></br>
-        <br></br>
-        <label>
-          Plats: &nbsp;
-          <input type="text" onChange={e => dispatch({ location: e.target.value })} />
-        </label>
-        <br></br>
-        <br></br>
-        <h4>Från: &nbsp;
-          <input type="datetime-local" onChange={e => dispatch({ from: new Date(e.target.value) })} />
-        </h4>
-        <br></br>
-        <h4>Till: &nbsp;
-          <input type="datetime-local" onChange={e => dispatch({ to: new Date(e.target.value) })} />
-        </h4>
-        <br></br>
-        <label>Instruktör:</label>
+    <div className='flex flex-col items-center'>
+      <div className='flex flex-col h-screen md:h-fit md:space-y-10 justify-between pt-4 pb-4'>
+        <div className='flex flex-col '>
+          <div className='flex-row justify-between mt-1 mb-1 '>
+            <input className='input text-lg' name='title' type="text" placeholder="Titel" />
+          </div>
 
-        <select>
-          <option> Erik</option>
-          <option> Erika</option>
-          <option> Klas</option>
-          <option> Hans</option>
-        </select>
-        <br></br>
-        <br></br>
-        <label>
-          Elever: &nbsp;
-          <input type="text" value={state?.participants} onChange={e => dispatch({ participants: [e.target.value] })} />
-        </label>
-        <p>{state?.participants}</p>
-        <br></br>
-        <button
-          type="button"
-        >Skapa</button>
-        &nbsp;
-        <button
-          type="button">Avbryt
-        </button>
-      </form>
+          <div className='flex-row justify-between mt-1 mb-3 border-b-2 pb-4'>
+            <input className='input text-lg' name='place' type="text" placeholder="Plats" />
+          </div>
 
+          <p className='text-lg'>Datum</p>
+          <div className='flex mt-1 mb-3 border-b-2 pb-4 items-center justify-between' >
+            <input className='border border-solid pl-1 pr-1' name='from' type="date" />
+            <FaLongArrowAltRight className='inline ml-2 mr-2' />
+            <input className='border border-solid pl-1 pr-1' name='from' type="date" />
+          </div>
+
+          <p className='text-lg'>Tid</p>
+          <div className='flex mt-1 mb-3 border-b-2 pb-4 items-center justify-between' >
+            <input className='border border-solid pl-1 pr-1' name='from' type="time" />
+            <FaLongArrowAltRight className='inline ml-2 mr-2' />
+            <input className='border border-solid pl-1 pr-1' name='from' type="time" />
+          </div>
+
+
+          <div className='mt-1 mb-3 border-b-2 pb-4'>
+            <label className='text-lg' htmlFor="instructors">Instruktörer: </label>
+            <MultiInput name="instructors" options={['Erik', 'Sofia', 'Karl', 'Björn']} placeholder='Lägg till en instruktör' />
+          </div>
+          <div className='mt-1 mb-1'>
+            <label className='text-lg' htmlFor="students">Elever: </label>
+            <MultiInput name="students" options={['Markus']} placeholder='Lägg till en elev' />
+          </div>
+        </div>
+
+        <div className='flex flex-col space-y-1'>
+          <input className=' text-base font-semibold bg-red-400 text-white pt-1 pb-1 rounded border border-red-400' type='submit' value='Spara' />
+          <button className='text-base font-semibold pt-1 pb-1 rounded border border-solid border-gray-200'>Avbryt</button>
+        </div>
+      </div>
     </div>
   )
 }
