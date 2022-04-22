@@ -14,10 +14,10 @@ CREATE TABLE Instructor(
 	email TEXT NOT NULL, 
 	name TEXT NOT NULL); 
 
-CREATE TABLE Student( 
-	idnr char (10) PRIMARY KEY NOT NULL, 
-	name TEXT NOT NULL, 
-	email TEXT NOT NULL); 
+CREATE TABLE Student(  
+	email TEXT PRIMARY KEY,
+	name TEXT NOT NULL);
+	 
 
 CREATE TABLE EducationalMoment(
 	name TEXT PRIMARY KEY NOT NULL,
