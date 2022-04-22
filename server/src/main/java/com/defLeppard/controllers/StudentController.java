@@ -26,17 +26,17 @@ class StudentController {
             List.of(
                     Map.of(
                             "name", "student1",
-                            "id", "1"
+                            "email", "studnet1@mail.com"
                     ),
 
                     Map.of(
                             "name", "student2",
-                            "id", "2"
+                            "email", "studnet2@mail.com"
                     ),
 
                     Map.of(
                             "name", "student3",
-                            "id", "3"
+                            "email", "studnet3@mail.com"
                     )
             );
 
@@ -52,16 +52,16 @@ class StudentController {
     }
 
     /**
-     * Returns a specific student or a student's property given a student id and optionally a specific property name.
-     * @param id the id of the student
+     * Returns a specific student or a student's property given a student email and optionally a specific property name.
+     * @param email the email of the student
      * @param property the optional property name
      * @return the student or student property in JSON format
      */
-    @GetMapping("/{id}")
+    @GetMapping("/{email}")
     @ResponseBody
-    ResponseEntity<?> getStudent(@PathVariable("id") String id, @RequestParam("property") Optional<String> property){
+    ResponseEntity<?> getStudent(@PathVariable("email") String email, @RequestParam("property") Optional<String> property){
         var student = students.stream()
-                .filter(s -> s.get("id").equals(id.toLowerCase()))
+                .filter(s -> s.get("email").equals(email.toLowerCase()))
                 .findFirst()
                 .orElse(new HashMap<>());
 
