@@ -17,7 +17,7 @@ import {
 } from "react-router-dom";
 
 const App: FC = () => {
-  const [events, _] = useState<Event_[]>(() => map(toEvent, sessions))
+  const [events, setEvents] = useState<Event_[]>(() => map(toEvent, sessions))
 
   return (
     <div className='pl-10 pr-10'>
