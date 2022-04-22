@@ -1,4 +1,4 @@
-package com.defLeppard;
+package com.defLeppard.controllers;
 
 public class InstructorControllerTest {
 }

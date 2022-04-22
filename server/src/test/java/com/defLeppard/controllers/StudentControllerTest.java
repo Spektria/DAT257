@@ -1,4 +1,4 @@
-package com.defLeppard;
+package com.defLeppard.controllers;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -8,6 +8,10 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
+/**
+ *
+ * @author Hugo Ekstarand
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class StudentControllerTest {
 
