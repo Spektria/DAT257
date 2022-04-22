@@ -5,9 +5,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ story#1.3-continuous-integration ]
+    branches: [ main ]
   pull_request:
-    branches: [ story#1.3-continuous-integration ]
+    branches: [ main ]
 
 jobs:
   build:
