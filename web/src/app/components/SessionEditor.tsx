@@ -27,8 +27,8 @@ const Form: FC<SessionData> = initState => {
   const [state, dispatch] = useReducer(reducer, initState)
 
   return (
-    <div className='flex flex-col items-center'>
-      <div className='flex flex-col h-screen md:h-fit justify-between pt-4 pb-4'>
+    <div className='flex flex-col items-center bg-gray-500 h-screen'>
+      <div className='bg-white mt-10 w-full md:w-fit rounded-t md:rounded pl-4 pr-4 pt-4 pb-4 flex flex-col h-full md:h-fit justify-between border'>
         <div className='flex flex-col'>
           <div className='flex-row justify-between mt-1 mb-1 '>
             <input className='input text-lg' name='title' type="text" placeholder="Titel" />
