@@ -64,8 +64,8 @@ const Form: FC<SessionData> = initState => {
         </div>
 
         <div className='flex flex-col space-y-1 bg-white mt-10'>
-          <input className='cursor-pointer text-base font-semibold bg-red-400 text-white pt-1 pb-1 rounded border border-red-400' type='submit' value='Spara' />
-          <button className='text-base font-semibold pt-1 pb-1 rounded border border-solid border-gray-200'>Avbryt</button>
+          <input className='cursor-pointer text-base font-semibold bg-red-400 text-white pt-1 pb-1 rounded border border-red-500 transition-all ease-out hover:shadow-inner active:shadow-inner active:bg-red-600 active:border-red-700' type='submit' value='Spara' />
+          <button className='text-base font-semibold pt-1 pb-1 rounded border border-solid border-gray-200 transition-all ease-out active:bg-gray-200 hover:shadow-inne active:shadow-inner active:border-gray-400'>Avbryt</button>
         </div>
       </div>
     </div>
