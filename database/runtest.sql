@@ -9,4 +9,5 @@ GRANT ALL ON SCHEMA public TO postgres;
 
 
 
+SELECT * FROM Student; 
 \ir database.sql
