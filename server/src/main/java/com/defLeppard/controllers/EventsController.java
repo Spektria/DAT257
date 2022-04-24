@@ -56,6 +56,10 @@ public class EventsController {
     ResponseEntity<List<Map<String,?>>> getEvents(@RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<Date> from,
                                                   @RequestParam("to")   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<Date> to){
 
+        // Note: date is in ISO format. For example if we want dates from 2022-01-01 to 2023-01-01 we
+        //   should write:
+        //  "/events?from=2022-01-01T00:00:00.000-00:00&to=2023-01-01T00:00:00.000-00:00"
+
         // TODO Replace with database sql call
 
         var ret = events;
