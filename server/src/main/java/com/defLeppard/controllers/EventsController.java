@@ -5,7 +5,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -20,14 +25,15 @@ public class EventsController {
 
     // Dummy list
     // TODO: replace with database
+    private final DateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
     private List<Map<String, ?>> events =
             List.of(
                     Map.of(
                             "id", "1",
-                            "title", "walking on water",
+                            "title", "periodTest",
                             "location", "garderoben",
-                            "from", new Date(),
-                            "to", new Date(),
+                            "from", isoFormat.parse("2022-01-01T00:00:00.000-00:00"),
+                            "to", isoFormat.parse("2022-01-01T10:00:00.000-00:00"),
                             "students", new String[]{"Bob", "Neil Armstrong", "Mariana trench"},
                             "instructors", new String[]{"Lizardman"}
                             ),
@@ -36,12 +42,15 @@ public class EventsController {
                             "id", "2",
                             "title", "magnets. How do they work?",
                             "location", "mars",
-                            "from", new Date(),
-                            "to", new Date(),
+                            "from", isoFormat.parse("2022-03-01T11:00:00.000-00:00"),
+                            "to", isoFormat.parse("2022-03-01T00:00:00.000-00:00"),
                             "students", new String[]{"Richard Feynman", "Marie Curie", "Haskell Curry"},
                             "instructors", new String[]{"Oscean man", "Take me by the hand"}
                             )
                     );
+
+    public EventsController() throws ParseException {
+    }
 
 
     /**
@@ -75,7 +84,10 @@ public class EventsController {
                 Date evDFrom = (Date)ev.get("from");
                 Date evDTo = (Date)ev.get("from");
 
-                return evDFrom.after(from.get()) && evDTo.before(to.get());
+                BiPredicate<Date, Date> afterInclusive = (d1, d2) -> d1.equals(d2) || d1.after(d2);
+                BiPredicate<Date, Date> beforeInclusive = (d1, d2) -> d1.equals(d2) || d1.before(d2);
+
+                return afterInclusive.test(evDFrom, from.get()) && beforeInclusive.test(evDTo, to.get());
             }).collect(Collectors.toList());
         }
 
