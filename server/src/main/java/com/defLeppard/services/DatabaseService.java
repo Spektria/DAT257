@@ -1,52 +1,74 @@
 package com.defLeppard.services;
 
-
-import com.defLeppard.Application;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.boot.SpringApplication;
-import org.springframework.stereotype.Service;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import java.util.ArrayList;
+        import org.springframework.boot.SpringApplication;
+        import org.springframework.jdbc.core.JdbcTemplate;
+        import org.springframework.boot.CommandLineRunner;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import com.fasterxml.jackson.databind.ObjectMapper;
+        import org.springframework.boot.autoconfigure.SpringBootApplication;
+        import java.io.File;
+        import java.io.IOException;
+        import java.util.ArrayList;
+        import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  *
- * Service for performing database queries, inserts and other database related actions.
+ * Service for reading a JSON-file and converting the JSON objects to java object,
+ * database-queries, inserts into the database and other database related actions.
  *
- * @author Jonas Röst
- */
-
-@Service
-public class DatabaseService implements CommandLineRunner{
-
+ *
+ * @author William Schmitz, Jonas Röst
+  */
+@SpringBootApplication
+@JsonIgnoreProperties (ignoreUnknown = true)
+class DatabaseService implements CommandLineRunner {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
+    private String studentEmail;
+    private String studentName;
 
     /**
+     * Runs the methods for inserting read students into the database
      *
-     * Callback used to run the bean.
      *
      */
+
     @Override
-    public void run(String... args) throws Exception {
-        String sql = "INSERT INTO Student VALUES (9806135372,'Wille', 'willecool99@gmail.com')";
-        int rows = jdbcTemplate.update(sql);
-        System.out.println(rows);
+    public void run(String[] args) throws IOException {
+
+        //create ObjectMapper instance
+
+        //read json file and convert to student object
+        addStudent(returnStudent());
+
     }
 
-
     /**
      *
-     * Inserts a given student as a row in the internal database table Student.
-     *      * @param student is the student to be inserted into the database.
-     *      * @return rowsAffected the number of rows affected in the database.
+     *
+     * Reads a JSON file and returns the content as Java objects
+     * Will implement to be able to read several JSON objects simultaneously
+     * @return Returns the read JSON objects into java objects
      *
      */
-    private int addStudent(ArrayList<String> student) {
+    private DatabaseService returnStudent() throws IOException {
 
-        String sqlStatement = "INSERT INTO Student VALUES ('"+student.get(0)+"', '"+student.get(1)+"')";
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        DatabaseService student = objectMapper.readValue(new File("src/main/java/com/defLeppard/services/testJSON.json"), DatabaseService.class);
+
+        return student;
+
+    }
+
+    /**
+     * Inserts students into the internal database
+     * @param student the student which is to be inserted into the database.
+     * @return the number of rows affected in the database
+     */
+    private int addStudent(DatabaseService student) {
+
+        String sqlStatement = "INSERT INTO Student VALUES ('" +student.studentEmail + "', '" +student.studentName + "')";
 
         int rowsAffected = jdbcTemplate.update(sqlStatement);
 
@@ -54,16 +76,16 @@ public class DatabaseService implements CommandLineRunner{
     }
 
     /**
-     *
-     * Inserts a group of students into the internal database table Student.
-     *      * @param students the list of students to be inserted into the database.
-     *      * @return totalRowsAffected the number of rows affected in the database.
-     *
+     * Will be implemented later on to read several students and put these in an arraylist to
+     * be able to read more than one student at a time from a JSON file
+     * @param students the students which are to be inserted into the database.
+     * @return the number of rows affected in the database
      */
-    private int addStudents(ArrayList<ArrayList<String>> students) {
+
+    private int addStudents(ArrayList<DatabaseService> students) {
         int totalRowsAffected = 0;
 
-        for (ArrayList<String> student : students) {
+        for (DatabaseService student : students) {
             totalRowsAffected += addStudent(student);
         }
 
@@ -71,30 +93,24 @@ public class DatabaseService implements CommandLineRunner{
     }
 
     /**
-     *
-     * Internal class that represents a student through its name and email.
+     * Help methods to return and get students name and email
      *
      */
-    private class Student {
-        @JsonProperty("login-email")
-        private String studentEmail;
-        @JsonProperty("name")
-        private String studentName;
-
-        public Student() {
-
+        public String getStudentName() {
+            return studentName;
         }
 
         public String getStudentEmail() {
             return studentEmail;
         }
 
-        public String getStudentName() {
-            return studentName;
+        public void setStudentName(String studentName) {
+            this.studentName = studentName;
         }
 
+        public void setStudentEmail(String studentEmail) {
+            this.studentEmail = studentEmail;
+        }
+
+
     }
-
-}
-
-
