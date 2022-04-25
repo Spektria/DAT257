@@ -5,7 +5,7 @@ import { zipWith } from 'ramda'
 // Converts an array of strings to an HTML list of those strings
 function listPeople(arr: string[]) {
 	return(
-    <div>
+    <div className='text-sm text-gray-500'>
       <ul>
         { zipWith((x, k) => <li key={k}>{x}</li>, arr, Array.from(Array(arr.length).keys())) }
       </ul>
@@ -40,11 +40,11 @@ const Session : FC<SessionData> = data => {
 							</div>
 							<div className="mt-5">
 								<span className="font-medium text-theme-pink">Instruktörer:</span>
-								<ul className="text-sm text-gray-500">{listPeople(data.instructors)}</ul>
+								{listPeople(data.instructors)}
 							</div>
 							<div className="mt-5 ">
 								<span className="font-medium text-theme-pink">Deltagare:</span>
-								<ul className="text-sm text-gray-500">{listPeople(data.participants)}</ul>
+								{listPeople(data.participants)}
 							</div>
 						</div>
 					</div>
