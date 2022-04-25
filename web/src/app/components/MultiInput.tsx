@@ -38,8 +38,8 @@ const MultiInput: FC<Props> = ({ name, options, placeholder }) => {
           <input className='hidden' type='submit' />
           <MdAddCircle className='cursor-pointer ml-1 mr-1 inline pb-{1}' size='26px' />
         </label>
-        <input className='input text-lg' list='students-list' name={name} placeholder={placeholder} value={input} onChange={e => setInput(e.target.value)} />
-        <datalist id="students-list">
+        <input className='input text-lg' list={name + '-list'} name={name} placeholder={placeholder} value={input} onChange={e => setInput(e.target.value)} />
+        <datalist id={name + '-list'}>
           {addIndex<string>(map)((x, i) => <option key={x + i}>{x}</option>, options)}
         </datalist>
       </div>
