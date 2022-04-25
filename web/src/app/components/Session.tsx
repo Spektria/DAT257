@@ -40,11 +40,11 @@ const Session : FC<SessionData> = data => {
 							</div>
 							<div className="mt-5">
 								<span className="font-medium text-theme-pink">Instruktörer:</span>
-								<p className="text-sm text-gray-500">{listPeople(data.instructors)}</p>
+								<ul className="text-sm text-gray-500">{listPeople(data.instructors)}</ul>
 							</div>
 							<div className="mt-5 ">
 								<span className="font-medium text-theme-pink">Deltagare:</span>
-								<p className="text-sm text-gray-500">{listPeople(data.participants)}</p>
+								<ul className="text-sm text-gray-500">{listPeople(data.participants)}</ul>
 							</div>
 						</div>
 					</div>
