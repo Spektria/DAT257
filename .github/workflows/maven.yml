@@ -5,9 +5,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ main ]
+    branches: [ story#1.3-continuous-integration ]
   pull_request:
-    branches: [ main ]
+    branches: [ story#1.3-continuous-integration ]
 
 jobs:
   build:
@@ -23,7 +23,5 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      #run: mvn -B package --file pom.xml
-      run: |
-        cd server
-        mvn --batch-mode --update-snapshots package
+      run: mvn --batch-mode --update-snapshots package
+      working-directory: server
