@@ -1,4 +1,17 @@
 @tailwind base;
+@layer base{
+  input[type=date]::-webkit-calendar-picker-indicator {
+    margin-left: -20px;
+    cursor: pointer;
+  }
+  input[type=time]::-webkit-calendar-picker-indicator {
+    margin-left: -20px;
+    cursor: pointer;
+  }
+}
 @tailwind components;
 @tailwind utilities;
 
+.input {
+  @apply border rounded outline-none  border-gray-200 focus:border-sky-300  focus:outline-sky-200 focus:outline-offset-0 transition-all pl-2 pr-2
+}

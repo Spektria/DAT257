@@ -20,7 +20,7 @@ const App: FC = () => {
   const [events, setEvents] = useState<Event_[]>(() => map(toEvent, sessions))
 
   return (
-    <div className='pl-10 pr-10'>
+    <div>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Calendar events={events} />} />
