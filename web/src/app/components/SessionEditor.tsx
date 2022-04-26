@@ -42,7 +42,7 @@ const Form: FC<SessionData> = initState => {
           <div className='flex mt-1 mb-3 border-b-2 pb-4 items-center justify-between' >
             <input className='border border-solid pl-1 pr-1' name='from' type="date" />
             <FaLongArrowAltRight className='inline ml-2 mr-2' />
-            <input className='border border-solid pl-1 pr-1' name='from' type="date" />
+            <input className='border border-solid pl-1 pr-1' name='to' type="date" />
           </div>
 
           <p className='text-lg'>Tid</p>
