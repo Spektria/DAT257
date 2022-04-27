@@ -13,6 +13,12 @@ export type StudentData =
   , email : string
   }
 
+export type InstructorData = 
+  { name    : string
+  , email   : string
+    // TODO potentially hash for password? Maybe only server side.
+  }
+
 export type Left<T> = {
   left: T;
   right?: never;
