@@ -8,6 +8,11 @@ export type SessionData =
   , participants : string[]
   }
 
+export type StudentData =
+  { name  : string
+  , email : string
+  }
+
 export type Left<T> = {
   left: T;
   right?: never;
