@@ -52,21 +52,23 @@ const TextSelector: FC<TSelectorData> = ({placeholder, selectables, inputChanged
     }
 
     return (
-        <div>
+        <div className='group relative'>
             
-            <input autoComplete='true' placeholder={placeholder} value={inputValue} 
+            <input className='input text-lg' autoComplete='true' placeholder={placeholder} value={inputValue} 
             onChange={ev => onInputChange(ev.target.value)} onKeyDown={onKeyDown}/>
-            <ul>
+
+            <div className="group-hover:block dropdown-menu absolute hidden h-auto w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5" role="menu"
+                style={{zIndex: "99"}}>
                 {
                     predictionsValue.map((itm, i) => (
-                        <li style={{color: i === predictionIndex ? "green" : "red"}}
+                        <li className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-400" role="menuitem" id={'menu-item-' + i}
                             key={i + '_' + itm} 
-                            onClick={_ => onInputChange(itm)}>
+                            onClick={_ => onInputChange(itm)} >
                             {itm}
                         </li>
                     ))
                 }
-            </ul>
+            </div>
         </div>
     );
 } 
