@@ -1,7 +1,8 @@
 import { FC, FormEventHandler, useReducer, useState } from 'react'
-import { map, addIndex, none } from 'ramda'
+import { map, addIndex, none, zipWith } from 'ramda'
 import ListProfile from './ListProfile'
 import { MdAddCircle } from 'react-icons/md'
+import TextSelector from './TextSelector'
 
 /**
 * @field name - Name attribute of JSX element
@@ -38,10 +39,7 @@ const MultiInput: FC<Props> = ({ name, options, placeholder }) => {
           <input className='hidden' type='submit' />
           <MdAddCircle className='cursor-pointer ml-1 mr-1 inline pb-{1}' size='26px' />
         </label>
-        <input className='input text-lg' list={name + '-list'} name={name} placeholder={placeholder} value={input} onChange={e => setInput(e.target.value)} />
-        <datalist id={name + '-list'}>
-          {addIndex<string>(map)((x, i) => <option key={x + i}>{x}</option>, options)}
-        </datalist>
+        <TextSelector onChange={setInput} placeholder={placeholder} selectables={options}/>
       </div>
     </form>
   )
