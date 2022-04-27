@@ -9,7 +9,7 @@ import { FC, useState } from "react"
 /**
  * @field placeholder - Placeholder for input
  * @field selectables - Approved inputs
- * @field
+ * @field onChange    - Callback for when input changes
  */
  type TSelectorData = {
     placeholder?: string
