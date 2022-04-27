@@ -15,25 +15,29 @@ import {
   useLocation,
   Params,
 } from "react-router-dom";
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
+import { getEvents } from './apis/EventApi'
 
 const App: FC = () => {
   const events = map(toEvent, sessions)
 
   return (
-    <div>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Calendar events={events} />} />
+          <Route path="/" element={<Calendar />} />
           <Route path="/newsession" element={<NewSession />} />
           <Route path="/session/:id" element={<ViewSession />} />
           <Route path="/session/:id/edit" element={<EditSession />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
-    </div>
+    </QueryClientProvider>
   );
 }
 
+const queryClient = new QueryClient()
 
 const NewSession = () => <SessionEditor {...{left: (useLocation().state as {date : Date_}).date}}/>
 
@@ -62,16 +66,5 @@ function WithParam<T>(f: (ps: Readonly<Params<string>>) => T | undefined, g: (t 
   return comp
 } 
 
-function toEvent(session: SessionData): Event_ {
-  return (
-    {
-      id: session.id,
-      color: '#fd3153',
-      from: session.from,
-      to: session.to,
-      title: session.title,
-    }
-  )
-}
 
 export default App;
