@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import Session from './components/Session';
 import SessionEditor from './components/SessionEditor';
 import NotFound from './components/NotFound';
@@ -17,7 +17,7 @@ import {
 } from "react-router-dom";
 
 const App: FC = () => {
-  const [events, setEvents] = useState<Event_[]>(() => map(toEvent, sessions))
+  const events = map(toEvent, sessions)
 
   return (
     <div>
