@@ -6,6 +6,8 @@ on:
 jobs:
   build:
 
+    env:
+      CI: ''
     runs-on: ubuntu-latest
 
     strategy:
