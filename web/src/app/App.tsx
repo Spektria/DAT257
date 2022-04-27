@@ -18,6 +18,7 @@ import {
 
 const App: FC = () => {
   const events = map(toEvent, sessions)
+  const hello = () => "hello world"
 
   return (
     <div className='pl-10 pr-10'>
