@@ -14,9 +14,9 @@ import { FC, useState } from "react"
  type TSelectorData = {
     placeholder?: string
     selectables: string[]
-    inputChangedCallback: (str: string) => void
+    onChange: (str: string) => void
 }
-const TextSelector: FC<TSelectorData> = ({placeholder, selectables, inputChangedCallback}) => {
+const TextSelector: FC<TSelectorData> = ({placeholder, selectables, onChange}) => {
     // User text input value
     let [inputValue, inputSetter] = useState("");
     // All current predictions
@@ -39,7 +39,7 @@ const TextSelector: FC<TSelectorData> = ({placeholder, selectables, inputChanged
         inputSetter(str);
         predictionsSetter(str !== '' ? predictions(str, selectables) : []);
         setPredictionIndex(-1);
-        inputChangedCallback(str);
+        onChange(str);
     }
     return (
         <div className='group relative dropdown  px-4 cursor-pointer font-bold tracking-wide'>
