@@ -1,8 +1,9 @@
-import { useReducer, FC } from 'react';
+import { useReducer, FC, useState } from 'react';
 import { Date_ } from 'react-awesome-calendar'
-import { SessionData, Either } from '../../types/types'
+import { SessionData, Either, StudentData } from '../../types/types'
 import MultiInput from './MultiInput'
 import { FaLongArrowAltRight } from 'react-icons/fa'
+import { getStudents } from '../apis/StudentApi';
 
 const SessionEditor: FC<Either<Date_, SessionData>> = ({ left, right }) => {
   if (right !== undefined)
@@ -25,6 +26,9 @@ const SessionEditor: FC<Either<Date_, SessionData>> = ({ left, right }) => {
 const Form: FC<SessionData> = initState => {
   const reducer = (prevState: SessionData, newFields: Partial<SessionData>) => ({ ...prevState, ...newFields })
   const [state, dispatch] = useReducer(reducer, initState)
+
+  const [students, setStudents] = useState<[StudentData]>();
+  getStudents().then(s => setStudents(s));
 
   return (
     <div className='flex flex-col items-center bg-gray-500 h-screen'>
@@ -59,7 +63,7 @@ const Form: FC<SessionData> = initState => {
           </div>
           <div className='mt-1 mb-1'>
             <label className='text-lg' htmlFor="students">Elever: </label>
-            <MultiInput name="students" options={['Markus']} placeholder='Lägg till en elev' />
+            <MultiInput name="students" options={students == undefined ? [] : students.map(s => s.name)} placeholder='Lägg till en elev' />
           </div>
         </div>
 
