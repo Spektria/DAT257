@@ -40,7 +40,10 @@ const TextSelector: FC<TSelectorData> = ({placeholder, selectables, onChange}) =
         inputSetter(str);
         predictionsSetter(str !== '' ? predictions(str, selectables) : []);
         setPredictionIndex(-1);
-        onChange(str);
+
+        // Only if it is a valid string do we notify listener. 
+        if(selectables.includes(str))
+            onChange(str);
     }
     return (
         <div className='group relative dropdown  px-4 cursor-pointer font-bold tracking-wide'>
