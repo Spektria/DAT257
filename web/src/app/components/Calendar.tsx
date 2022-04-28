@@ -6,6 +6,7 @@ import { getEvents } from '../apis/EventApi'
 import { SessionData } from '../../types/types'
 import { map } from 'ramda'
 
+/** Calendar component */
 const Calendar: FC = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -40,6 +41,10 @@ const Calendar: FC = () => {
 }
 
 
+/** 
+* Function for mapping SessionData to a calendar event
+* @returns a calendar event
+*/
 function toEvent(session: SessionData): Event_ {
   return (
     {
