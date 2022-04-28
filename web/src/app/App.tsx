@@ -3,9 +3,7 @@ import Session from './components/Session';
 import SessionEditor from './components/SessionEditor';
 import NotFound from './components/NotFound';
 import Calendar from './components/Calendar';
-import { Event_, Date_ } from 'react-awesome-calendar'
-import { SessionData } from '../types/types';
-import { find, map } from 'ramda'
+import { Date_ } from 'react-awesome-calendar'
 import sessions from './Data'
 import {
   BrowserRouter,
@@ -15,13 +13,11 @@ import {
   useLocation,
   Params,
 } from "react-router-dom";
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
+import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
-import { getEvents } from './apis/EventApi'
+import { find } from 'ramda'
 
 const App: FC = () => {
-  const events = map(toEvent, sessions)
-
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
@@ -33,6 +29,7 @@ const App: FC = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }
@@ -65,6 +62,5 @@ function WithParam<T>(f: (ps: Readonly<Params<string>>) => T | undefined, g: (t 
     return <NotFound />
   return comp
 } 
-
 
 export default App;
