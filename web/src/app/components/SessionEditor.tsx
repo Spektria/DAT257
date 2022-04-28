@@ -32,7 +32,10 @@ const Form: FC<SessionData> = initState => {
   getStudents().then(s => setStudents(s));
 
   const [instructors, setInstructors] = useState<[InstructorData]>();
-  getInstructors().then(i => setInstructors(i));
+  getInstructors().then(i => {
+    setInstructors(i);
+    console.log(i);
+  });
 
   return (
     <div className='flex flex-col items-center bg-gray-500 h-screen'>
@@ -67,7 +70,7 @@ const Form: FC<SessionData> = initState => {
           </div>
           <div className='mt-1 mb-1'>
             <label className='text-lg' htmlFor="students">Elever: </label>
-            <MultiInput name="students" options={students == undefined ? [] : students.map(s => s.name)} placeholder='Lägg till en elev' />
+            <MultiInput name="students" options={["Hej på dig", "Bertil BErilsson"]} placeholder='Lägg till en elev' />
           </div>
         </div>
 
