@@ -43,6 +43,7 @@ const Calendar: FC = () => {
 
 /** 
 * Function for mapping SessionData to a calendar event
+* @param session
 * @returns a calendar event
 */
 function toEvent(session: SessionData): Event_ {
