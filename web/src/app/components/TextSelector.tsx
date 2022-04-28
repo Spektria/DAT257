@@ -89,7 +89,7 @@ function predictions(partial: string, collection: string[]): string[] {
 				break;
 			}
 
-			const subStr = str.substring(i, i + partialLen);
+			const subStr = lowerStr.substring(i, i + partialLen);
 
 			if (subStr === lowerPartial) {
 				// Found a match! Add it to the list.
