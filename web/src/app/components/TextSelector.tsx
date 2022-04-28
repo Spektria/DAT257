@@ -2,6 +2,7 @@
  * File contains TextSelector component responsible for searching and selecting approved inputs.
  *
  * @author Hugo Ekstrand
+ * ***REMOVED***
  */
 
 import { toLower, map } from "ramda"
@@ -74,6 +75,10 @@ function predictions(partial: string, collection: string[]): string[] {
 	const partialLen = lowerPartial.length;	// Length of search input
 	let result: string[] = [];	// List of matching search results
 
+	// Go through each string in the collection of available results and then
+	// compare each substring of the same length as the search string to the
+	// search string until a match is found. If a matching substring is found,
+	// add it to the result list.
 	for (var str of collection) {
 		const len = str.length;
 		const lowerStr = toLower(str);
