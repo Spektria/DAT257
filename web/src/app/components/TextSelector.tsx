@@ -70,11 +70,6 @@ const TextSelector: FC<TSelectorData> = ({placeholder, selectables, onChange}) =
  * @returns the subset of allowed predictions which are predictions to the given partial string.
  */
 function predictions(partial: string, collection: string[]): string[] {
-    // TODO: Cleanup or change prediction
-    // Currently it matches on every word in the string.
-    // E.g. partial match of the second word in a string in collection
-    // Or the second word in partial could match a string in collection
-
 	const lowerPartial = toLower(partial);	// Lowercase version of search input to compare against
 	const partialLen = lowerPartial.length;	// Length of search input
 	let result: string[] = [];	// List of matching search results
@@ -100,13 +95,5 @@ function predictions(partial: string, collection: string[]): string[] {
 	}
 
 	return result;
-
-    //return collection
-    //    .filter(str => str.toLowerCase() !== partial.toLowerCase())
-    //    .filter(str =>
-    //        str.toLowerCase()
-    //            .split(' ') // We want to match any word. E.g. surnames and first name
-    //            .filter(sp =>
-    //                partial.toLowerCase().split(' ').filter(p => sp.startsWith(p)).length > 0).length > 0);
 }
 export default TextSelector
