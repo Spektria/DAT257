@@ -70,7 +70,7 @@ const Form: FC<SessionData> = initState => {
           </div>
           <div className='mt-1 mb-1'>
             <label className='text-lg' htmlFor="students">Elever: </label>
-            <MultiInput name="students" options={["Hej på dig", "Bertil BErilsson"]} placeholder='Lägg till en elev' />
+            <MultiInput name="students" options={students == undefined ? [] : students.map(s => s.name)} placeholder='Lägg till en elev' />
           </div>
         </div>
 
