@@ -1,4 +1,4 @@
-import { useReducer, FC, useState } from 'react';
+import { useReducer, FC, useState, useEffect } from 'react';
 import { Date_ } from 'react-awesome-calendar'
 import { SessionData, Either, StudentData, InstructorData } from '../../types/types'
 import MultiInput from './MultiInput'
@@ -29,13 +29,19 @@ const Form: FC<SessionData> = initState => {
   const [state, dispatch] = useReducer(reducer, initState)
 
   const [students, setStudents] = useState<[StudentData]>();
-  getStudents().then(s => setStudents(s));
+
+  useEffect(() => {
+    getStudents().then(s => setStudents(s));
+  }, []);
+  
 
   const [instructors, setInstructors] = useState<[InstructorData]>();
-  getInstructors().then(i => {
-    setInstructors(i);
-    console.log(i);
-  });
+
+  useEffect(() => {
+    getInstructors().then(i => setInstructors(i));
+  }, []);
+
+  
 
   return (
     <div className='flex flex-col items-center bg-gray-500 h-screen'>
