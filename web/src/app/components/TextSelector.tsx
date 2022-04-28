@@ -4,6 +4,7 @@
  * @author Hugo Ekstrand
  */
 
+import { toLower, map } from "ramda"
 import { FC, useState } from "react"
 
 /**
@@ -70,12 +71,39 @@ function predictions(partial: string, collection: string[]): string[] {
     // Currently it matches on every word in the string.
     // E.g. partial match of the second word in a string in collection
     // Or the second word in partial could match a string in collection
-    return collection
-        .filter(str => str.toLowerCase() !== partial.toLowerCase())
-        .filter(str =>
-            str.toLowerCase()
-                .split(' ') // We want to match any word. E.g. surnames and first name
-                .filter(sp =>
-                    partial.toLowerCase().split(' ').filter(p => sp.startsWith(p)).length > 0).length > 0);
+
+	const lowerPartial = toLower(partial);	// Lowercase version of search input to compare against
+	const partialLen = lowerPartial.length;	// Length of search input
+	let result: string[] = [];	// List of matching search results
+
+	for (var str of collection) {
+		const len = str.length;
+		const lowerStr = toLower(str);
+
+		for (let i = 0; i < len; i++) {
+			if (i + partialLen > len) {
+				// We've gone too far
+				break;
+			}
+
+			const subStr = str.substring(i, i + partialLen);
+
+			if (subStr === lowerPartial) {
+				// Found a match! Add it to the list.
+				result.push(str);
+				break;
+			}
+		}
+	}
+
+	return result;
+
+    //return collection
+    //    .filter(str => str.toLowerCase() !== partial.toLowerCase())
+    //    .filter(str =>
+    //        str.toLowerCase()
+    //            .split(' ') // We want to match any word. E.g. surnames and first name
+    //            .filter(sp =>
+    //                partial.toLowerCase().split(' ').filter(p => sp.startsWith(p)).length > 0).length > 0);
 }
 export default TextSelector
