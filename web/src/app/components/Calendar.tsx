@@ -12,6 +12,7 @@ const Calendar: FC = () => {
   const queryClient = useQueryClient()
   const [year, dispatch] = useReducer(
     (prevYear: number, newYear: number) => {
+      console.log(prevYear + "  " + newYear)
       if (prevYear !== newYear)
         queryClient.invalidateQueries('events')
       return newYear
@@ -19,7 +20,7 @@ const Calendar: FC = () => {
     , new Date().getFullYear())
 
   const { isLoading, error, data } =
-    useQuery<SessionData[], Error>('events', () => getEvents(year))
+    useQuery<SessionData[], Error>('events', () => getEvents(year), { staleTime:600000 })
 
 
   if (isLoading) return <p className='text-center p-10'>Loading...</p>
