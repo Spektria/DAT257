@@ -5,6 +5,7 @@ import MultiInput from './MultiInput'
 import { FaLongArrowAltRight } from 'react-icons/fa'
 import { getStudents } from '../apis/StudentApi';
 import { getInstructors } from '../apis/InstructorApi';
+import orElse from '../helpers/Helpers';
 
 const SessionEditor: FC<Either<Date_, SessionData>> = ({ left, right }) => {
   if (right !== undefined)
@@ -28,20 +29,20 @@ const Form: FC<SessionData> = initState => {
   const reducer = (prevState: SessionData, newFields: Partial<SessionData>) => ({ ...prevState, ...newFields })
   const [state, dispatch] = useReducer(reducer, initState)
 
+  // Fetch names...
   const [students, setStudents] = useState<[StudentData]>();
-
   useEffect(() => {
     getStudents().then(s => setStudents(s));
   }, []);
   
-
   const [instructors, setInstructors] = useState<[InstructorData]>();
-
   useEffect(() => {
     getInstructors().then(i => setInstructors(i));
   }, []);
 
-  
+  // Generalize extraction of names
+  interface HasName { name: string }
+  const getNames = (list: [HasName] | undefined) => orElse(() => list?.map(s => s.name), [])(null);
 
   return (
     <div className='flex flex-col items-center bg-gray-500 h-screen'>
@@ -72,11 +73,11 @@ const Form: FC<SessionData> = initState => {
 
           <div className='mt-1 mb-3 border-b-2 pb-4'>
             <label className='text-lg' htmlFor="instructors">Instruktörer: </label>
-            <MultiInput name="instructors" options={instructors == undefined ? [] : instructors.map(s => s.name)} placeholder='Lägg till en instruktör' />
+            <MultiInput name="instructors" options={getNames(instructors)} placeholder='Lägg till en instruktör' />
           </div>
           <div className='mt-1 mb-1'>
             <label className='text-lg' htmlFor="students">Elever: </label>
-            <MultiInput name="students" options={students == undefined ? [] : students.map(s => s.name)} placeholder='Lägg till en elev' />
+            <MultiInput name="students" options={getNames(students)} placeholder='Lägg till en elev' />
           </div>
         </div>
 
