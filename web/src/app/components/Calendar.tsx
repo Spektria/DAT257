@@ -6,11 +6,13 @@ const Calendar: FC<{events : Event_[]}> = ({ events }) => {
   const navigate = useNavigate()
   
   return (
-    <AwesomeCalendar
+   <div className='pl-4 pr-4'>
+    <AwesomeCalendar 
       events={events}
       onClickEvent={id => navigate(`session/${id}`)}
       onClickTimeLine={ date => navigate('/newsession', { state: { date } })}
     />
+   </div>
   );
 }
 
