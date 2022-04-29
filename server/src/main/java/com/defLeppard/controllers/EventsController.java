@@ -1,5 +1,6 @@
 package com.defLeppard.controllers;
 
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -94,6 +95,10 @@ public class EventsController {
         return ResponseEntity.status(HttpStatus.OK).body(ret);
     }
 
+    @PostMapping("/newsession")
+    ResponseEntity<String> newSession(@RequestBody String state){
+        return ResponseEntity.status(HttpStatus.OK).body(state);
+    }
 
 
 }

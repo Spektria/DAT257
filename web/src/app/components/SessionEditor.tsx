@@ -31,18 +31,18 @@ const Form: FC<SessionData> = initState => {
       <div className='bg-white mt-10 w-full md:w-fit rounded-t md:rounded pl-4 pr-4 pt-4 pb-4 flex flex-col h-full md:h-fit justify-between border'>
         <div className='flex flex-col'>
           <div className='flex-row justify-between mt-1 mb-1 '>
-            <input className='input text-lg' name='title' type="text" placeholder="Titel" />
+            <input className='input text-lg' name='title' type="text" placeholder="Titel" onChange={e => dispatch({title: e.target.value, id: Math.random()})}/>
           </div>
 
           <div className='flex-row justify-between mt-1 mb-3 border-b-2 pb-4'>
-            <input className='input text-lg' name='place' type="text" placeholder="Plats" />
+            <input className='input text-lg' name='place' type="text" placeholder="Plats" onChange={e => dispatch({location: e.target.value, id: Math.random()})}/>
           </div>
 
           <p className='text-lg'>Datum</p>
           <div className='flex mt-1 mb-3 border-b-2 pb-4 items-center justify-between' >
-            <input className='border border-solid pl-1 pr-1' name='from' type="date" />
+            <input className='border border-solid pl-1 pr-1' name='from' type="date" onChange={e => dispatch({from: new Date(e.target.value), id: Math.random()})}/>
             <FaLongArrowAltRight className='inline ml-2 mr-2' />
-            <input className='border border-solid pl-1 pr-1' name='to' type="date" />
+            <input className='border border-solid pl-1 pr-1' name='to' type="date" onChange={e => dispatch({to: new Date(e.target.value), id: Math.random()})}/>
           </div>
 
           <p className='text-lg'>Tid</p>
@@ -64,7 +64,19 @@ const Form: FC<SessionData> = initState => {
         </div>
 
         <div className='flex flex-col space-y-1 bg-white mt-10'>
-          <input className='cursor-pointer text-base font-semibold bg-red-400 text-white pt-1 pb-1 rounded border border-red-500 transition-all ease-out hover:shadow-inner active:shadow-inner active:bg-red-600 active:border-red-700' type='submit' value='Spara' />
+          <input className='cursor-pointer text-base font-semibold bg-red-400 text-white pt-1 pb-1 rounded border border-red-500 transition-all ease-out hover:shadow-
+          inner active:shadow-inner active:bg-red-600 active:border-red-700' type='submit' value='Spara' onClick={() => fetch('http://localhost:8080/events/newsession',{
+            method: 'POST',
+            headers: {
+                        'Content-Type': "application/json",
+            },
+            body: JSON.stringify({state})
+        })
+        .then(response => response.json())
+        .then((data) => console.log(data))
+        .catch(error =>{
+                console.log(error)
+            })}/>
           <button className='text-base font-semibold pt-1 pb-1 rounded border border-solid border-gray-200 transition-all ease-out active:bg-gray-200 hover:shadow-inne active:shadow-inner active:border-gray-400'>Avbryt</button>
         </div>
       </div>
