@@ -103,7 +103,7 @@ const TextSelector: FC<TSelectorData> = ({placeholder, selectables, onChange}) =
             <div className="peer-focus:block group-hover:block dropdown-menu absolute hidden h-auto border-2 rounded z-20 bg-white" role="menu">
                 {
                     predictionsValue.filter(s => s !== "").map((itm, i) => (
-                        <li className={"text-gray-700 block px-4 py-2 text-sm hover:bg-gray-400 border-b-2 rounded z-20" + (i == predictionIndex ? " bg-red-200 border-red-400" : "")} role="menuitem" 
+                        <li className={"text-gray-700 block px-4 py-2 text-sm hover:bg-gray-400 border-b-2 rounded z-20" + (i === predictionIndex ? " bg-red-200 border-red-400" : "")} role="menuitem" 
                             key={i + '_' + itm}
                             onClick={_ => onInputChange(itm)} >
                             {itm}
@@ -132,8 +132,8 @@ function predictions(partial: string, collection: string[]): string[] {
 	for (var str of collection) {
 		const len = str.length;
 		const lowerStr = toLower(str);
-        
-        if(lowerStr == lowerPartial)
+
+        if(lowerStr === lowerPartial)
             continue;
 
 		for (let i = 0; i < len; i++) {
