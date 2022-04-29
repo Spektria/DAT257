@@ -5,11 +5,11 @@
  * ***REMOVED***
  */
 
-import { toLower, map } from "ramda"
+import { toLower } from "ramda"
 import { FC, useState } from "react"
 
 /**
- * @field placeholder - Placeholder for input
+ * @field placeholder - Placeholder for text input
  * @field selectables - Approved inputs
  * @field onChange    - Callback for when input changes
  */
@@ -18,6 +18,14 @@ import { FC, useState } from "react"
     selectables: string[]
     onChange: (str: string) => void
 }
+
+/**
+ * TextSelector component allows text input selection of approved selectables with dropdown a dropdown menue of
+ * searchable selectables. 
+ * Contains a callback for when the input has been changed to a new, approved input. 
+ * @param param0 - The TextSelector data argument
+ * @returns - The component
+ */
 const TextSelector: FC<TSelectorData> = ({placeholder, selectables, onChange}) => {
     // User text input value
     const [inputValue, inputSetter] = useState("");
@@ -25,32 +33,51 @@ const TextSelector: FC<TSelectorData> = ({placeholder, selectables, onChange}) =
     const [predictionsValue, predictionsSetter]  = useState(['']);
     // Index for the prediction. Note: -1 is for no prediction selected.
     const [predictionIndex, setPredictionIndex] = useState(-1);
-    
+
+    // Handles navigating the dropdown menu.
     function onKeyDown(ev: React.KeyboardEvent<HTMLInputElement>){
         if(ev.key === "ArrowDown"){
             setPredictionIndex(Math.min(predictionIndex + 1, predictionsValue.length - 1));
         }
+
         if(ev.key === "ArrowUp"){
-            setPredictionIndex(Math.max(predictionIndex - 1,-1));
+            setPredictionIndex(Math.max(predictionIndex - 1, -1));
         }
+
         if(ev.key === "Enter" && predictionIndex !== -1){
             onInputChange(predictionsValue[predictionIndex]);
         }
-        console.log("Selected " + predictionIndex + ", " + predictionsValue[predictionIndex])
     }
+
+    /**
+     * Main logic loop handling changes to the primary text input. 
+     * @param str - The new text input value.
+     */
     function onInputChange(str: string){
         inputSetter(str);
+
+        // Create new predictions
         predictionsSetter(str !== '' ? predictions(str, selectables) : []);
+
+        // Reset dropdown menu index selection
         setPredictionIndex(-1);
 
         // Only if it is a valid string do we notify listener. 
         if(selectables.includes(str))
             onChange(str);
     }
+
+
     return (
         <div className='group relative dropdown  px-4 cursor-pointer font-bold tracking-wide'>
-            <input className='input text-lg' autoComplete='true' placeholder={placeholder} value={inputValue}
-            onChange={ev => onInputChange(ev.target.value)} onKeyDown={onKeyDown}/>
+
+            <input 
+            className='input text-lg' 
+            placeholder={placeholder} 
+            value={inputValue}
+            onChange={ev => onInputChange(ev.target.value)} 
+            onKeyDown={onKeyDown}/>
+
             <div className="group-hover:block dropdown-menu absolute hidden h-auto border-2 rounded z-20 bg-white" role="menu">
                 {
                     predictionsValue.filter(s => s !== "").map((itm, i) => (
