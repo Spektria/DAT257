@@ -3,9 +3,7 @@ import Session from './components/Session';
 import SessionEditor from './components/SessionEditor';
 import NotFound from './components/NotFound';
 import Calendar from './components/Calendar';
-import { Event_, Date_ } from 'react-awesome-calendar'
-import { SessionData } from '../types/types';
-import { find, map } from 'ramda'
+import { Date_ } from 'react-awesome-calendar'
 import sessions from './Data'
 import {
   BrowserRouter,
@@ -15,25 +13,28 @@ import {
   useLocation,
   Params,
 } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
+import { find } from 'ramda'
 
 const App: FC = () => {
-  const events = map(toEvent, sessions)
-
   return (
-    <div>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Calendar events={events} />} />
+          <Route path="/" element={<Calendar />} />
           <Route path="/newsession" element={<NewSession />} />
           <Route path="/session/:id" element={<ViewSession />} />
           <Route path="/session/:id/edit" element={<EditSession />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
-    </div>
+      <ReactQueryDevtools />
+    </QueryClientProvider>
   );
 }
 
+const queryClient = new QueryClient()
 
 const NewSession = () => <SessionEditor {...{left: (useLocation().state as {date : Date_}).date}}/>
 
@@ -61,17 +62,5 @@ function WithParam<T>(f: (ps: Readonly<Params<string>>) => T | undefined, g: (t 
     return <NotFound />
   return comp
 } 
-
-function toEvent(session: SessionData): Event_ {
-  return (
-    {
-      id: session.id,
-      color: '#fd3153',
-      from: session.from,
-      to: session.to,
-      title: session.title,
-    }
-  )
-}
 
 export default App;
