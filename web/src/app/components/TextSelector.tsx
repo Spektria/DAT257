@@ -132,6 +132,9 @@ function predictions(partial: string, collection: string[]): string[] {
 	for (var str of collection) {
 		const len = str.length;
 		const lowerStr = toLower(str);
+        
+        if(lowerStr == lowerPartial)
+            continue;
 
 		for (let i = 0; i < len; i++) {
 			if (i + partialLen > len) {
