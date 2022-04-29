@@ -100,7 +100,7 @@ const TextSelector: FC<TSelectorData> = ({placeholder, selectables, onChange}) =
             onKeyDown={onKeyDown}
             />
 
-            <div className="peer-focus:block dropdown-menu absolute hidden h-auto border-2 rounded z-20 bg-white" role="menu">
+            <div className="peer-focus:block group-hover:block dropdown-menu absolute hidden h-auto border-2 rounded z-20 bg-white" role="menu">
                 {
                     predictionsValue.filter(s => s !== "").map((itm, i) => (
                         <li className={"text-gray-700 block px-4 py-2 text-sm hover:bg-gray-400 border-b-2 rounded z-20" + (i == predictionIndex ? " bg-red-200 border-red-400" : "")} role="menuitem" 
