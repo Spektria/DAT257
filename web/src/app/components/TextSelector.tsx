@@ -20,11 +20,12 @@ import { FC, useState } from "react"
 }
 const TextSelector: FC<TSelectorData> = ({placeholder, selectables, onChange}) => {
     // User text input value
-    let [inputValue, inputSetter] = useState("");
+    const [inputValue, inputSetter] = useState("");
     // All current predictions
-    let [predictionsValue, predictionsSetter]  = useState(['']);
+    const [predictionsValue, predictionsSetter]  = useState(['']);
     // Index for the prediction. Note: -1 is for no prediction selected.
-    let [predictionIndex, setPredictionIndex] = useState(-1);
+    const [predictionIndex, setPredictionIndex] = useState(-1);
+    
     function onKeyDown(ev: React.KeyboardEvent<HTMLInputElement>){
         if(ev.key === "ArrowDown"){
             setPredictionIndex(Math.min(predictionIndex + 1, predictionsValue.length - 1));
