@@ -10,6 +10,7 @@ package com.defLeppard.services;
         import java.io.IOException;
         import java.util.ArrayList;
         import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+        import org.springframework.stereotype.Service;
 
 /**
  *
@@ -19,7 +20,7 @@ package com.defLeppard.services;
  *
  * @author William Schmitz, Jonas Röst
   */
-@SpringBootApplication
+@Service
 @JsonIgnoreProperties (ignoreUnknown = true)
 class DatabaseService implements CommandLineRunner {
     @Autowired
