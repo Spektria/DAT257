@@ -33,6 +33,8 @@ const TextSelector: FC<TSelectorData> = ({placeholder, selectables, onChange}) =
     const [predictionsValue, predictionsSetter]  = useState(['']);
     // Index for the prediction. Note: -1 is for no prediction selected.
     const [predictionIndex, setPredictionIndex] = useState(-1);
+    // If unapproved input warning shoud be showed
+    const [badInputNotify, setBadInputNotify] = useState(false);
 
     // Handles navigating the dropdown menu.
     function onKeyDown(ev: React.KeyboardEvent<HTMLInputElement>){
@@ -43,9 +45,13 @@ const TextSelector: FC<TSelectorData> = ({placeholder, selectables, onChange}) =
         if(ev.key === "ArrowUp"){
             setPredictionIndex(Math.max(predictionIndex - 1, -1));
         }
-
-        if(ev.key === "Enter" && predictionIndex !== -1){
-            onInputChange(predictionsValue[predictionIndex]);
+        
+        if(ev.key === "Enter"){
+            if(predictionIndex !== -1)
+                onInputChange(predictionsValue[predictionIndex]);
+            else
+                setBadInputNotify(!pushOnChange(inputValue));
+            
         }
     }
 
@@ -62,21 +68,37 @@ const TextSelector: FC<TSelectorData> = ({placeholder, selectables, onChange}) =
         // Reset dropdown menu index selection
         setPredictionIndex(-1);
 
-        // Only if it is a valid string do we notify listener. 
-        if(selectables.includes(str))
-            onChange(str);
+        // Reset bad input too
+        setBadInputNotify(false);
+        
+        pushOnChange(str);
     }
 
+    /**
+     * Push a given string to callback if it is an approved string.
+     * @param str - The string to be pushed to callback
+     * @returns - If it was pushed to callback
+     */
+    function pushOnChange(str: string): boolean{
+        // Only if it is a valid string do we notify listener. 
+        if(selectables.includes(str)){
+            onChange(str);
+            return true;
+        }
+        return false;
+    }
 
     return (
         <div className='group relative dropdown  px-4 cursor-pointer font-bold tracking-wide'>
 
-            <input 
-            className='peer input text-lg' 
+            <input type="text" 
+            className='peer input text-lg'
+            style={badInputNotify ? {"borderColor" : "red", "borderWidth" : 2} : {}}
             placeholder={placeholder} 
             value={inputValue}
             onChange={ev => onInputChange(ev.target.value)} 
-            onKeyDown={onKeyDown}/>
+            onKeyDown={onKeyDown}
+            />
 
             <div className="peer-focus:block dropdown-menu absolute hidden h-auto border-2 rounded z-20 bg-white" role="menu">
                 {
