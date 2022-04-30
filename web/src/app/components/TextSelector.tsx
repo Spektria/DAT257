@@ -92,8 +92,7 @@ const TextSelector: FC<TSelectorData> = ({placeholder, selectables, onChange}) =
         <div className='group relative dropdown  px-4 cursor-pointer font-bold tracking-wide'>
 
             <input type="text" 
-            className='peer input text-lg'
-            style={badInputNotify ? {"borderColor" : "red", "borderWidth" : 2} : {}}
+            className={`peer input text-lg ${badInputNotify ? 'border-red-400 focus:border-red-400 focus:outline-red-400' : ''}`}
             placeholder={placeholder} 
             value={inputValue}
             onChange={ev => onInputChange(ev.target.value)} 
