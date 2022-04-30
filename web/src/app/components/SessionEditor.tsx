@@ -5,7 +5,8 @@ import MultiInput from './MultiInput'
 import { FaLongArrowAltRight } from 'react-icons/fa'
 import { getStudents } from '../apis/StudentApi';
 import { getInstructors } from '../apis/InstructorApi';
-import orElse from '../helpers/Helpers';
+import { orElse } from '../helpers/Helpers';
+
 
 const SessionEditor: FC<Either<Date_, SessionData>> = ({ left, right }) => {
   if (right !== undefined)

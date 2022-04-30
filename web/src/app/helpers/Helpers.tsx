@@ -6,7 +6,7 @@
  * @param _else - The fallback value
  * @returns - The new well defined function
  */
-export default function orElse<X,Y>(f: (_: X | void) => Y | undefined, _else: Y): (_: X) => Y {
+export function orElse<X,Y>(f: (_: X | void) => Y | undefined, _else: Y): (_: X) => Y {
     return (x: X) => {
         const y = f(x);
         if(y === undefined)
