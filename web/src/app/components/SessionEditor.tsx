@@ -31,19 +31,19 @@ const Form: FC<SessionData> = initState => {
   const [state, dispatch] = useReducer(reducer, initState)
 
   // Fetch names...
-  const [students, setStudents] = useState<[StudentData]>();
+  const [students, setStudents] = useState<StudentData[]>([{name: "1", email: "1"}, {name: "2", email: "2"}]);
   useEffect(() => {
     getStudents().then(s => setStudents(s));
   }, []);
   
-  const [instructors, setInstructors] = useState<[InstructorData]>();
+  const [instructors, setInstructors] = useState<InstructorData[]>();
   useEffect(() => {
     getInstructors().then(i => setInstructors(i));
   }, []);
 
   // Generalize extraction of names
   interface HasName { name: string }
-  const getNames = (list: [HasName] | undefined) => orElse(() => list?.map(s => s.name), [])(null);
+  const getNames = (list: HasName[] | undefined) => orElse(() => list?.map(s => s.name), [])(null);
 
   return (
     <div className='flex flex-col items-center bg-gray-500 h-screen'>
