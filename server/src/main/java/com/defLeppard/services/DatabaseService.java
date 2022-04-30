@@ -23,20 +23,33 @@ class DatabaseService implements CommandLineRunner {
     private JdbcTemplate jdbcTemplate;
 
     /**
-     * Runs the methods for inserting read students into the database
      *
+     * Runs the methods for inserting read students into the database
      *
      */
     @Override
     public void run(String[] args) throws IOException {
-        List<Student> studentList = Student.createStudents("src/main/java/com/defLeppard/services/testJSON.json");
-        System.out.println(addStudents(studentList));
+
     }
 
     /**
+     *
+     * Runs the methods for inserting students into the database
+     * @param jsonArray the json array as a Java string that contains the students that should be inserted into the database
+     * @return the number of rows affected in the database
+     *
+     */
+    public int addStudentsToDatabase(String jsonArray) throws IOException {
+        List<Student> studentList = Student.createStudents(jsonArray);
+        return addStudents(studentList);
+    }
+
+    /**
+     *
      * Inserts students into the internal database
      * @param student the student which is to be inserted into the database.
      * @return the number of rows affected in the database
+     *
      */
     private int addStudent(Student student) {
 
@@ -50,10 +63,12 @@ class DatabaseService implements CommandLineRunner {
 
 
     /**
+     *
      * Will be implemented later on to read several students and put these in an arraylist to
      * be able to read more than one student at a time from a JSON file
      * @param students the students which are to be inserted into the database.
      * @return the number of rows affected in the database
+     *
      */
     private int addStudents(List<Student> students) {
         int totalRowsAffected = 0;

@@ -3,7 +3,7 @@ package com.defLeppard.services;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.File;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -26,7 +26,7 @@ private String studentName;
 
         ObjectMapper mapper = new ObjectMapper();
 
-        List<Student> students = mapper.readValue(new File(json), new TypeReference<List<Student>>(){});
+        List<Student> students = mapper.readValue(json, new TypeReference<List<Student>>(){});
 
         return students;
     }
