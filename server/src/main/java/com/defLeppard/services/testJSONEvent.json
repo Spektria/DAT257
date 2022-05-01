@@ -1,14 +1,14 @@
 [{
-  "eventIdnr": "345",
+  "eventIdnr": "1",
   "eventTitle": "kund@gmail.com1",
   "eventFromDate": "1970-01-01 00:00:01",
   "eventToDate": "1970-01-01 00:00:01",
-  "eventLocation": "Nilsson1"
+  "eventLocation": "Helsingborg"
 },
   {
-    "eventIdnr": "567",
+    "eventIdnr": "2",
     "eventTitle": "kund@gmail.com2",
     "eventFromDate": "1970-01-01 00:00:01",
     "eventToDate": "1970-01-01 00:00:01",
-    "eventLocation": "Nilsson2"
+    "eventLocation": "Helsingborg"
   }]

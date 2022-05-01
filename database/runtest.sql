@@ -8,9 +8,8 @@ GRANT ALL ON SCHEMA public TO postgres;
 \set QUIET false
 */
 
---INSERT INTO Location VALUES('Nilsson2'); 
 
 SELECT * FROM Student; 
 SELECT * FROM Session; 
---SELECT * FROM Location; 
+SELECT * FROM Location; 
 --\ir database.sql
