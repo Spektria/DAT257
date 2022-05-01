@@ -39,9 +39,15 @@ class DatabaseService implements CommandLineRunner {
      * @return the number of rows affected in the database
      *
      */
+
     public int addStudentsToDatabase(String jsonArray) throws IOException {
         List<Student> studentList = Student.createStudents(jsonArray);
         return addStudents(studentList);
+    }
+
+    public int addEventsToDatabase(String jsonArray) throws IOException {
+        List<Event> eventList = Event.createEvents(jsonArray);
+        return addEvent(eventList);
     }
 
     /**
@@ -60,7 +66,15 @@ class DatabaseService implements CommandLineRunner {
         return rowsAffected;
     }
 
+    private int addEvent(Event event) {
 
+        String sqlStatement = "INSERT INTO Session VALUES ('" +event.getEventIdnr() + "', '" +event.getEventTitle() + "', '" +event.getEventFromDate() +
+                "', '" +event.getEventToDate() + "', '" +event.getEventLocation() + "')";
+
+        int rowsAffected = jdbcTemplate.update(sqlStatement);
+
+        return rowsAffected;
+    }
 
     /**
      *
@@ -80,8 +94,14 @@ class DatabaseService implements CommandLineRunner {
         return totalRowsAffected;
     }
 
+    private int addEvent(List<Event> events) {
+        int totalRowsAffected = 0;
 
+        for (Event event : events) {
+            totalRowsAffected += addEvent(event);
+        }
 
-
+        return totalRowsAffected;
+    }
 
 }
