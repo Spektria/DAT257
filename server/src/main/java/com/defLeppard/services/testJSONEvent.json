@@ -1,0 +1,14 @@
+[{
+  "eventIdnr": "345",
+  "eventTitle": "kund@gmail.com1",
+  "eventFromDate": "1970-01-01 00:00:01",
+  "eventToDate": "1970-01-01 00:00:01",
+  "eventLocation": "Nilsson1"
+},
+  {
+    "eventIdnr": "567",
+    "eventTitle": "kund@gmail.com2",
+    "eventFromDate": "1970-01-01 00:00:01",
+    "eventToDate": "1970-01-01 00:00:01",
+    "eventLocation": "Nilsson2"
+  }]
