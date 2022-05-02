@@ -23,7 +23,7 @@ const MultiInput: FC<Props> = ({ name, options, placeholder }) => {
   const [input, setInput] = useState("")
 
   return (
-    <form className='flex flex-col mt-2' onSubmit={onSubmit(input, setInput, dispatch)}>
+    <div className='flex flex-col mt-2'>
       <ul>
         {map(({ name, id }) =>
           <ListProfile
@@ -35,13 +35,18 @@ const MultiInput: FC<Props> = ({ name, options, placeholder }) => {
           , inputs)}
       </ul>
       <div className='flex flex-row items-center'>
-        <label>
-          <input className='hidden' type='submit' />
-          <MdAddCircle className='cursor-pointer ml-1 mr-1 inline pb-{1}' size='26px' />
-        </label>
-        <TextSelector onChange={setInput} placeholder={placeholder} selectables={options}/>
+        <MdAddCircle
+          className='cursor-pointer ml-1 mr-1 inline pb-{1}'
+          size='26px'
+          onClick={_ => dispatch({ name: input, id: Math.random() })}
+        />
+        <TextSelector
+          onChange={i => { setInput(i); dispatch({ name: i, id: Math.random() }) }}
+          placeholder={placeholder}
+          selectables={options}
+        />
       </div>
-    </form>
+    </div>
   )
 }
 
@@ -54,23 +59,6 @@ const MultiInput: FC<Props> = ({ name, options, placeholder }) => {
 function reducer(prevState: Input[], newInput: Input): Input[] {
   const pred = (x: Input) => x.id === newInput.id
   return none(pred, prevState) ? [...prevState, newInput] : map(input => pred(input) ? newInput : input, prevState)
-}
-
-/**
-* Submit handler that dispatch the new input
-* @param input - New Input
-* @param setInput - set function of useState
-* @param dispatch - dispatch function of useReducer
-* @returns FormEventHandler
-*/
-function onSubmit(input: string, setInput: React.Dispatch<React.SetStateAction<string>>, dispatch: React.Dispatch<Input>): FormEventHandler {
-  return (e: React.FormEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    if (input !== '') {
-      dispatch({ name: input, id: Math.random() })
-      setInput("")
-    }
-  }
 }
 
 export default MultiInput
