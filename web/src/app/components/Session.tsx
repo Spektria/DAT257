@@ -21,7 +21,11 @@ const Session : FC<SessionData> = data => {
 		<div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
 		<div className="flex items-end justify-center font-sans h-screen sm:min-h-screen pt-10 sm:px-4 sm:pb-20 text-center sm:block sm:p-0">
 
-			<div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+			<div 
+        className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+        aria-hidden="true"
+        onClick={() => navigate(-1)}
+      />
 
 			<span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
