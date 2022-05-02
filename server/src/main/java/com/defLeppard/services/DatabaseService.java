@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
  * @author William Schmitz, Jonas Röst
  */
 @Service
-@JsonIgnoreProperties (ignoreUnknown = true)
 public
 class DatabaseService {
     @Autowired

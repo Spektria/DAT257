@@ -8,6 +8,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ *
+ * Data object for representing a student
+ * @author William Schmitz, Jonas Röst
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Student {
 private String studentEmail;

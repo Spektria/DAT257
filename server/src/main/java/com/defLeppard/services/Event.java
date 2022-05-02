@@ -8,6 +8,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ *
+ * Data object to represent an Event
+ * @author Jonas Röst, William Schmitz
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Event {
     private String eventIdnr;
