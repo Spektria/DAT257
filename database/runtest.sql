@@ -9,7 +9,8 @@ GRANT ALL ON SCHEMA public TO postgres;
 */
 
 
+
 SELECT * FROM Student; 
-SELECT * FROM Session; 
-SELECT * FROM Location; 
+--SELECT * FROM Session; 
+--SELECT * FROM Location; 
 --\ir database.sql

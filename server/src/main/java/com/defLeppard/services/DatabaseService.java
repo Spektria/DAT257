@@ -18,19 +18,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @JsonIgnoreProperties (ignoreUnknown = true)
-class DatabaseService implements CommandLineRunner {
+public
+class DatabaseService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    /**
-     *
-     * Runs the methods for inserting read students into the database
-     *
-     */
-    @Override
-    public void run(String[] args) throws IOException {
-
-    }
 
     /**
      *
