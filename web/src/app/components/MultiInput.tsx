@@ -57,7 +57,8 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange }) => {
   )
 
   function updateList(input: string) {
-    dispatch({ name: input, id: Math.random() })
+    if(input !== '')
+      dispatch({ name: input, id: Math.random() })
   }
 
 
