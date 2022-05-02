@@ -94,7 +94,7 @@ const Form: FC<SessionData> = (initState) => {
               type='time'
               defaultValue={(() => {
                 const d = initState.from
-                return timeStr(d.getHours() >= 22 ?
+                return timeStr((d.getHours() >= 22 || d.getHours() == 0) ?
                   new Date(d.getFullYear(), d.getMonth(), d.getDay(), 24, 0) :
                   new Date(d.getTime() + 2 * 3600000))
               })()}
