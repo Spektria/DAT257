@@ -48,7 +48,6 @@ const Form: FC<SessionData> = (initState) => {
   // Generalize extraction of names
   interface HasName { name: string }
   const getNames = (list: HasName[] | undefined) => orElse(() => list?.map(s => s.name), [])(null);
-  const navigate = useNavigate()
 
   return (
     <div className='fixed inset-0 z-10 scroll overflow-y-hidden'>
