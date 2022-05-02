@@ -51,8 +51,12 @@ const Form: FC<SessionData> = (initState) => {
 
   return (
     <div className='fixed inset-0 z-10 scroll overflow-y-hidden'>
-      <div className='flex flex-col items-center bg-gray-500 bg-opacity-75 h-screen'>
-        <div className='bg-white mt-10 w-full md:w-fit rounded-t md:rounded pl-4 pr-4 pt-4 pb-4 flex flex-col h-full md:h-fit justify-between border'>
+      <div 
+        className='bg-gray-500 bg-opacity-75 h-screen' 
+        onClick={() => navigate(-1)} 
+      />
+      <div className='absolute inset-0 mx-auto z-20 w-full md:w-fit mt-10'>
+        <div className='bg-white w-full md:w-fit rounded-t md:rounded pl-4 pr-4 pt-4 pb-4 flex flex-col h-full md:h-fit justify-between border'>
           <div className='flex flex-col'>
             <div className='flex-row justify-between mt-1 mb-1 '>
               <input className='input text-lg' name='title' type="text" placeholder="Titel" />
