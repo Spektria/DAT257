@@ -41,7 +41,7 @@ const Calendar: FC = () => {
     >
       <AwesomeCalendar
         events={map(toEvent, data === undefined ? [] : data)}
-        onChange={state => { dispatch(state.year); }}
+        onChange={state => dispatch(state.year) }
         onClickEvent={id => navigate(`session/${id}`, { state: { background: location } })}
         onClickTimeLine={date => navigate('/newsession', { state: { background: location, date: date } })}
         ref={ref as unknown as LegacyRef<Component<CalendarProps, any, any>> | undefined}
