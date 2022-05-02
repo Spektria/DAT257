@@ -47,16 +47,20 @@ const Form: FC<SessionData> = (initState) => {
   interface HasName { name: string }
   const getNames = (list: HasName[] | undefined) => orElse(() => list?.map(s => s.name), [])(null);
 
+  // Fetch title and location
+  const [title, setTitle] = useState(initState.title);
+  const [location, setLocation] = useState(initState.location);
+
   return (
     <div className='flex flex-col items-center bg-gray-500 h-screen'>
       <div className='bg-white mt-10 w-full md:w-fit rounded-t md:rounded pl-4 pr-4 pt-4 pb-4 flex flex-col h-full md:h-fit justify-between border'>
         <div className='flex flex-col'>
           <div className='flex-row justify-between mt-1 mb-1 '>
-            <input className='input text-lg' name='title' type="text" placeholder="Titel" />
+            <input className='input text-lg' name='title' type="text" placeholder="Titel" value={title} onChange={e => setTitle(e.target.value)}/>
           </div>
 
           <div className='flex-row justify-between mt-1 mb-3 border-b-2 pb-4'>
-            <input className='input text-lg' name='place' type="text" placeholder="Plats" />
+            <input className='input text-lg' name='place' type="text" placeholder="Plats" value={location} onChange={e => setLocation(e.target.value)}/>
           </div>
 
           <p className='text-lg'>Datum</p>
