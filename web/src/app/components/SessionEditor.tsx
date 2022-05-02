@@ -101,7 +101,7 @@ const Form: FC<SessionData> = (initState) => {
             />
           </div>
 
-          <div className='mt-1 mb-1'>
+          <div className='mt-1 mb-3 border-b-2 pb-4'>
             <label
               className='text-lg'
               htmlFor="instructors">
