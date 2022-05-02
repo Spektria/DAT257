@@ -12,7 +12,6 @@ const Calendar: FC = () => {
   const queryClient = useQueryClient()
   const [year, dispatch] = useReducer(
     (prevYear: number, newYear: number) => {
-      console.log(prevYear + "  " + newYear)
       if (prevYear !== newYear)
         queryClient.invalidateQueries('events')
       return newYear

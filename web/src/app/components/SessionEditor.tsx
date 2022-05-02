@@ -94,7 +94,7 @@ const Form: FC<SessionData> = (initState) => {
               type='time'
               defaultValue={(() => {
                 const d = initState.from
-                return timeStr((d.getHours() >= 22 || d.getHours() == 0) ?
+                return timeStr((d.getHours() >= 22 || d.getHours() === 0) ?
                   new Date(d.getFullYear(), d.getMonth(), d.getDay(), 24, 0) :
                   new Date(d.getTime() + 2 * 3600000))
               })()}
@@ -108,7 +108,6 @@ const Form: FC<SessionData> = (initState) => {
               Instruktörer:
             </label>
             <MultiInput
-              name="instructors"
               options={getNames(instructors)}
               placeholder='Lägg till en instruktör'
             />
@@ -116,7 +115,6 @@ const Form: FC<SessionData> = (initState) => {
           <div className='mt-1 mb-1'>
             <label className='text-lg' htmlFor="students">Elever: </label>
             <MultiInput
-              name="students"
               options={getNames(students)}
               placeholder='Lägg till en elev'
             />
