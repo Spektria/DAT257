@@ -1,3 +1,5 @@
+import { Date_ } from 'react-awesome-calendar'
+
 export type SessionData = 
   { id           : number
   , title        : string
@@ -16,7 +18,11 @@ export type StudentData =
 export type InstructorData = 
   { name    : string
   , email   : string
-    // TODO potentially hash for password? Maybe only server side.
+  }  // TODO potentially hash for password? Maybe only server side.
+
+export type LocationState = 
+  { background : Location 
+  , date       : Date_
   }
 
 export type Left<T> = {

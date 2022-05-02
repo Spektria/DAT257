@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { SessionData } from '../../types/types';
 import { zipWith } from 'ramda'
+import { useNavigate } from 'react-router-dom'
 
 // Converts an array of strings to an HTML list of those strings
 function listPeople(arr: string[]) {
@@ -15,11 +16,16 @@ function listPeople(arr: string[]) {
 
 //Element for showing water scooter driving session with CSS styling
 const Session : FC<SessionData> = data => {
+  const navigate = useNavigate()
 	return (
 		<div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
 		<div className="flex items-end justify-center font-sans h-screen sm:min-h-screen pt-10 sm:px-4 sm:pb-20 text-center sm:block sm:p-0">
 
-			<div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+			<div 
+        className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+        aria-hidden="true"
+        onClick={() => navigate(-1)}
+      />
 
 			<span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
@@ -50,8 +56,18 @@ const Session : FC<SessionData> = data => {
 					</div>
 				</div>
 				<div className="absolute bottom-0 w-full sm:relative bg-gray-50 px-4 py-6 sm:px-6 sm:flex sm:flex-row-reverse">
-					<button type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-theme-pink text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-pink sm:ml-3 sm:w-auto sm:text-sm">Redigera</button>
-					<button type="button" className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">Avbryt</button>
+					<button 
+            type="button" 
+            className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-theme-pink text-base font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-theme-pink sm:ml-3 sm:w-auto sm:text-sm"
+            onClick={() => navigate(-1)}
+            >Redigera
+          </button>
+					<button 
+            type="button" 
+            className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+            onClick={() => navigate(-1)}
+            >Avbryt
+          </button>
 				</div>
 			</div>
 		</div>
