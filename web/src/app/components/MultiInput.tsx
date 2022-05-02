@@ -1,25 +1,32 @@
-import { FC, FormEventHandler, useReducer, useState } from 'react'
-import { map, addIndex, none, zipWith } from 'ramda'
+import { FC, useReducer, useState } from 'react'
+import { map, none } from 'ramda'
 import ListProfile from './ListProfile'
 import { MdAddCircle } from 'react-icons/md'
 import TextSelector from './TextSelector'
 
 /**
-* @field name - Name attribute of JSX element
 * @field options - Options for input
 * @field placeholder - Placeholder for input
+* @field onChange - Callback for when the list updates
 */
-type Props = { name: string, options: string[], placeholder?: string }
+type Props = {
+  options: string[]
+  placeholder?: string
+  onChange?: (arr: Input[]) => void
+}
 
 /**
 *  @field name - Name of person/item
 *  @field id - Id of person/item
 */
-type Input = { name: string, id: number }
+type Input = {
+  name: string
+  id: number
+}
 
 /** Mutli input component with searchable options. */
-const MultiInput: FC<Props> = ({ name, options, placeholder }) => {
-  const [inputs, dispatch] = useReducer(reducer, [])
+const MultiInput: FC<Props> = ({ options, placeholder, onChange }) => {
+  const [list, dispatch] = useReducer(reducer, [])
   const [input, setInput] = useState("")
 
   return (
@@ -28,37 +35,46 @@ const MultiInput: FC<Props> = ({ name, options, placeholder }) => {
         {map(({ name, id }) =>
           <ListProfile
             key={id}
-            onChange={e => dispatch({ name: e.target.value, id })}
+            onChange={e => updateList(e.target.value)}
             name={name}
             id={id}
           />
-          , inputs)}
+          , list)}
       </ul>
       <div className='flex flex-row items-center'>
         <MdAddCircle
           className='cursor-pointer ml-1 mr-1 inline pb-{1}'
           size='26px'
-          onClick={_ => dispatch({ name: input, id: Math.random() })}
+          onClick={_ => updateList(input)}
         />
         <TextSelector
-          onChange={i => { setInput(i); dispatch({ name: i, id: Math.random() }) }}
+          onChange={i => { setInput(i); updateList(i) }}
           placeholder={placeholder}
           selectables={options}
         />
       </div>
     </div>
   )
-}
 
-/** 
-* Reducer for appending or changing a input.
-* @param prevState - Previous inputs
-* @param newInput - New input
-* @returns Updated inputs
-*/
-function reducer(prevState: Input[], newInput: Input): Input[] {
-  const pred = (x: Input) => x.id === newInput.id
-  return none(pred, prevState) ? [...prevState, newInput] : map(input => pred(input) ? newInput : input, prevState)
+  function updateList(input: string) {
+    dispatch({ name: input, id: Math.random() })
+  }
+
+
+  /** 
+  * Reducer for appending or changing a input. Also triggers the 
+  * onChange callback if there is a new state.
+  * @param prevState - Previous list of items
+  * @param newInput - New input
+  * @returns Updated list of inputs
+  */
+  function reducer(prevState: Input[], newInput: Input): Input[] {
+    const sameId = (x: Input) => x.id === newInput.id
+    const nextState = none(sameId, prevState) ? [...prevState, newInput] : map(input => sameId(input) ? newInput : input, prevState)
+    if (onChange && prevState !== nextState)
+      onChange(nextState)
+    return nextState
+  }
 }
 
 export default MultiInput
