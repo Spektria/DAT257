@@ -1,4 +1,4 @@
-import { Date_ } from 'react-awesome-calendar'
+import { CalendarDate } from 'react-awesome-calendar'
 
 export type SessionData = 
   { id           : number
@@ -22,7 +22,7 @@ export type InstructorData =
 
 export type LocationState = 
   { background : Location 
-  , date       : Date_
+  , date       : CalendarDate
   }
 
 export type Left<T> = {
