@@ -101,13 +101,7 @@ const Form: FC<SessionData> = (initState) => {
             />
           </div>
 
-          <div className='mt-1 mb-3 border-b-2 pb-4'>
-            <label className='text-lg' htmlFor="instructors">Instruktörer: </label>
-            <MultiInput name="instructors" options={getNames(instructors)} placeholder='Lägg till en instruktör' />
-          </div>
           <div className='mt-1 mb-1'>
-            <label className='text-lg' htmlFor="students">Elever: </label>
-            <MultiInput name="students" options={getNames(students)} placeholder='Lägg till en elev' />
             <label
               className='text-lg'
               htmlFor="instructors">
