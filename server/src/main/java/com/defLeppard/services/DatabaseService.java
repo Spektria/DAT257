@@ -1,15 +1,12 @@
 package com.defLeppard.services;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.beans.factory.annotation.Autowired;
+import java.io.IOException;
+import java.util.List;
 
-        import org.springframework.boot.SpringApplication;
-        import org.springframework.jdbc.core.JdbcTemplate;
-        import org.springframework.boot.CommandLineRunner;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import com.fasterxml.jackson.databind.ObjectMapper;
-        import org.springframework.boot.autoconfigure.SpringBootApplication;
-        import java.io.File;
-        import java.io.IOException;
-        import java.util.ArrayList;
-        import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.stereotype.Service;
 
 /**
  *
@@ -18,57 +15,61 @@ package com.defLeppard.services;
  *
  *
  * @author William Schmitz, Jonas Röst
-  */
-@SpringBootApplication
+ */
+@Service
 @JsonIgnoreProperties (ignoreUnknown = true)
 class DatabaseService implements CommandLineRunner {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    private String studentEmail;
-    private String studentName;
 
     /**
+     *
      * Runs the methods for inserting read students into the database
      *
-     *
      */
-
     @Override
     public void run(String[] args) throws IOException {
 
-        //create ObjectMapper instance
-
-        //read json file and convert to student object
-        addStudent(returnStudent());
-
     }
 
     /**
      *
-     *
-     * Reads a JSON file and returns the content as Java objects
-     * Will implement to be able to read several JSON objects simultaneously
-     * @return Returns the read JSON objects into java objects
+     * Runs the methods for inserting students into the database
+     * @param jsonArray the json array as a Java string that contains the students that should be inserted into the database
+     * @return the number of rows affected in the database
      *
      */
-    private DatabaseService returnStudent() throws IOException {
 
-        ObjectMapper objectMapper = new ObjectMapper();
+    public int addStudentsToDatabase(String jsonArray) throws IOException {
+        List<Student> studentList = Student.createStudents(jsonArray);
+        return addStudents(studentList);
+    }
 
-        DatabaseService student = objectMapper.readValue(new File("src/main/java/com/defLeppard/services/testJSON.json"), DatabaseService.class);
-
-        return student;
-
+    public int addEventsToDatabase(String jsonArray) throws IOException {
+        List<Event> eventList = Event.createEvents(jsonArray);
+        return addEvent(eventList);
     }
 
     /**
+     *
      * Inserts students into the internal database
      * @param student the student which is to be inserted into the database.
      * @return the number of rows affected in the database
+     *
      */
-    private int addStudent(DatabaseService student) {
+    private int addStudent(Student student) {
 
-        String sqlStatement = "INSERT INTO Student VALUES ('" +student.studentEmail + "', '" +student.studentName + "')";
+        String sqlStatement = "INSERT INTO Student VALUES ('" +student.getStudentEmail() + "', '" +student.getStudentName() + "')";
+
+        int rowsAffected = jdbcTemplate.update(sqlStatement);
+
+        return rowsAffected;
+    }
+
+    private int addEvent(Event event) {
+
+        String sqlStatement = "INSERT INTO Session VALUES ('" +event.getEventIdnr() + "', '" +event.getEventTitle() + "', '" +event.getEventFromDate() +
+                "', '" +event.getEventToDate() + "', '" +event.getEventLocation() + "')";
 
         int rowsAffected = jdbcTemplate.update(sqlStatement);
 
@@ -76,41 +77,31 @@ class DatabaseService implements CommandLineRunner {
     }
 
     /**
+     *
      * Will be implemented later on to read several students and put these in an arraylist to
      * be able to read more than one student at a time from a JSON file
      * @param students the students which are to be inserted into the database.
      * @return the number of rows affected in the database
+     *
      */
-
-    private int addStudents(ArrayList<DatabaseService> students) {
+    private int addStudents(List<Student> students) {
         int totalRowsAffected = 0;
 
-        for (DatabaseService student : students) {
+        for (Student student : students) {
             totalRowsAffected += addStudent(student);
         }
 
         return totalRowsAffected;
     }
 
-    /**
-     * Help methods to return and get students name and email
-     *
-     */
-        public String getStudentName() {
-            return studentName;
+    private int addEvent(List<Event> events) {
+        int totalRowsAffected = 0;
+
+        for (Event event : events) {
+            totalRowsAffected += addEvent(event);
         }
 
-        public String getStudentEmail() {
-            return studentEmail;
-        }
-
-        public void setStudentName(String studentName) {
-            this.studentName = studentName;
-        }
-
-        public void setStudentEmail(String studentEmail) {
-            this.studentEmail = studentEmail;
-        }
-
-
+        return totalRowsAffected;
     }
+
+}
