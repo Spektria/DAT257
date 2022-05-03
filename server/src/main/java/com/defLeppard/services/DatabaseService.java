@@ -94,4 +94,38 @@ class DatabaseService {
         return totalRowsAffected;
     }
 
+    /***
+     *
+     * Fetch all rows from the table Student in the database
+     * @return the list of all students as Student objects that exist in the database
+     *
+     */
+
+    public List<Student> fetchAllStudentsFromDatabase() {
+        String sqlQuery = "SELECT * FROM Student";
+
+        List<Student> allStudents = jdbcTemplate.query(sqlQuery,new BeanPropertyRowMapper<>(Student.class));
+
+        for (int i = 0; i<=6; i++) {
+            System.out.println(allStudents.get(i));
+        }
+
+        return allStudents;
+    }
+
+    /***
+     *
+     * Fetch a student from the database that matches the given email
+     * @param studentEmail email of the student that is being queried for
+     * @return the student with the given email, with type Student
+     */
+    public Student fetchOneStudent(String studentEmail) {
+        String sqlQuery = "SELECT email, name FROM Student WHERE email = ?";
+
+        Student student = jdbcTemplate.queryForObject(sqlQuery, new Object[]{studentEmail}, new BeanPropertyRowMapper(Student.class));
+
+        return student;
+
+    }
+
 }
