@@ -103,8 +103,14 @@ export async function get_instructors(request){
        .find()
        .then( (results) => {
 
-         // Prune not needed data to minimize internal data accessible.
-         const pruned = results.items.map( (obj) => ( ({ nickname }) => ({ nickname }) )(obj));
+         const pruned = results.items
+            // Change nickname to name
+            .map( (obj) => {
+                 obj.name = obj.nickname;
+                 return obj;
+            })
+            // Prune not needed data to minimize internal data accessible.
+            .map( (obj) => ( ({ name }) => ({ name }) )(obj));
          response.body = JSON.stringify(pruned);
 
          return ok(response);
