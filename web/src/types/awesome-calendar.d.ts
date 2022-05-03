@@ -27,7 +27,7 @@ declare module 'react-awesome-calendar' {
 
   export type CalendarHeader = {
     current: Exclude<CalendarMode, CalendarState>
-    mode: CalendarMOde
+    mode: CalendarMode
     prev: Exclude<CalendarMode, CalendarState>
     next: Exclude<CalendarMode, CalendarState>
     onClickPrev: () => void
