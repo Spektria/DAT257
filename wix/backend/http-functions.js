@@ -85,3 +85,43 @@ export async function get_services(request){
    return badRequest(response);
 }
 
+
+/**
+ * Exposes endpoint for fetching instructor names. 
+ * Requires API-key auth.
+ */
+export async function get_instructors(request){
+  const response = {
+       "headers": {
+           "Content-Type": "application/json"
+       },
+       "body": ""
+   };
+
+  if(await verify(request)){
+     return wixData.query('Members/PublicData')
+       .find()
+       .then( (results) => {
+
+         // Prune not needed data to minimize internal data accessible.
+         const pruned = results.items.map( (obj) => ( ({ nickname }) => ({ nickname }) )(obj));
+         response.body = JSON.stringify(pruned);
+
+         return ok(response);
+        }).catch(err => {
+          console.log(err);
+
+          // We do not want to respond with error because of security
+          response.body = "Query error";  
+
+          return serverError(response);
+        });
+   }
+   else {
+
+      response.body = "Invalid API key";
+
+      return badRequest(response);
+   }
+}
+
