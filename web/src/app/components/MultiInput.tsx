@@ -13,6 +13,7 @@ type Props = {
   options: string[]
   placeholder?: string
   onChange?: (arr: Input[]) => void
+  defaultValue?: Input[]
 }
 
 /**
@@ -25,8 +26,8 @@ type Input = {
 }
 
 /** Mutli input component with searchable options. */
-const MultiInput: FC<Props> = ({ options, placeholder, onChange }) => {
-  const [list, dispatch] = useReducer(reducer, [])
+const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue }) => {
+  const [list, dispatch] = useReducer(reducer, defaultValue ? defaultValue : [])
   const [input, setInput] = useState("")
 
   return (
@@ -57,7 +58,8 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange }) => {
   )
 
   function updateList(input: string) {
-    dispatch({ name: input, id: Math.random() })
+    if (input !== '')
+      dispatch({ name: input, id: Math.random() })
   }
 
 

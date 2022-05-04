@@ -1,5 +1,5 @@
 import { FC, useReducer } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import AwesomeCalendar, { Event_ } from 'react-awesome-calendar';
 import { useQuery, useQueryClient } from 'react-query'
 import { getEvents } from '../apis/EventApi'
@@ -8,6 +8,7 @@ import { map } from 'ramda'
 
 /** Calendar component */
 const Calendar: FC = () => {
+  const location = useLocation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [year, dispatch] = useReducer(
@@ -33,8 +34,8 @@ const Calendar: FC = () => {
       <AwesomeCalendar
         events={map(toEvent, data === undefined ? [] : data)}
         onChange={state => dispatch(state.year)}
-        onClickEvent={id => navigate(`session/${id}`)}
-        onClickTimeLine={date => navigate('/newsession', { state: { date } })}
+        onClickEvent={id => navigate(`session/${id}`, { state: { background: location } })}
+        onClickTimeLine={date => navigate('/newsession', { state: { background: location, date: date } })}
       />
     </div>
   );
