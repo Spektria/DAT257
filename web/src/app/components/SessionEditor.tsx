@@ -34,24 +34,20 @@ const Form: FC<SessionData> = (initState) => {
   const [fromDate, setFromDate] = useState(dateStr(initState.from))
   const [toDate, setToDate] = useState(fromDate)
 
-  return (
-    <div className='flex flex-col items-center bg-gray-500 h-screen'>
-      <div className='bg-white mt-10 w-full md:w-fit rounded-t md:rounded pl-4 pr-4 pt-4 pb-4 flex flex-col h-full md:h-fit justify-between border'>
-        <div className='flex flex-col'>
-          <div className='flex-row justify-between mt-1 mb-1 '>
-            <input className='input text-lg' name='title' type="text" placeholder="Titel" onChange={e => dispatch({title: e.target.value, id: Math.random()})}/>
-          </div>
+  // Fetch names...
+  const [students, setStudents] = useState<StudentData[]>([{ name: "1", email: "1" }, { name: "2", email: "2" }]);
+  useEffect(() => {
+    getStudents().then(s => setStudents(s));
+  }, []);
 
-          <div className='flex-row justify-between mt-1 mb-3 border-b-2 pb-4'>
-            <input className='input text-lg' name='place' type="text" placeholder="Plats" onChange={e => dispatch({location: e.target.value, id: Math.random()})}/>
-          </div>
+  const [instructors, setInstructors] = useState<InstructorData[]>();
+  useEffect(() => {
+    getInstructors().then(i => setInstructors(i));
+  }, []);
 
-          <p className='text-lg'>Datum</p>
-          <div className='flex mt-1 mb-3 border-b-2 pb-4 items-center justify-between' >
-            <input className='border border-solid pl-1 pr-1' name='from' type="date" onChange={e => dispatch({from: new Date(e.target.value), id: Math.random()})}/>
-            <FaLongArrowAltRight className='inline ml-2 mr-2' />
-            <input className='border border-solid pl-1 pr-1' name='to' type="date" onChange={e => dispatch({to: new Date(e.target.value), id: Math.random()})}/>
-          </div>
+  // Generalize extraction of names
+  interface HasName { name: string }
+  const getNames = (list: HasName[] | undefined) => orElse(() => list?.map(s => s.name), [])(null);
 
   return (
     <div className='fixed inset-0 z-10 scroll overflow-y-hidden'>
@@ -132,19 +128,27 @@ const Form: FC<SessionData> = (initState) => {
             </div>
           </div>
 
-        <div className='flex flex-col space-y-1 bg-white mt-10'>
-          <input className='cursor-pointer text-base font-semibold bg-red-400 text-white pt-1 pb-1 rounded border border-red-500 transition-all ease-out hover:shadow-
-          inner active:shadow-inner active:bg-red-600 active:border-red-700' type='submit' value='Spara' onClick={() => fetch('http://localhost:8080/events/newsession',{
-            method: 'POST',
-            headers: {
-                        'Content-Type': "application/json",
-            },
-            body: JSON.stringify(state)
-        })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.log(error))}/>
-          <button className='text-base font-semibold pt-1 pb-1 rounded border border-solid border-gray-200 transition-all ease-out active:bg-gray-200 hover:shadow-inne active:shadow-inner active:border-gray-400'>Avbryt</button>
+          <div className='flex flex-col space-y-1 bg-white mt-10'>
+            <button
+              className='cursor-pointer text-base font-semibold bg-red-400 
+                       text-white pt-1 pb-1 rounded border border-red-500 
+                       transition-all ease-out hover:shadow-inner 
+                       active:shadow-inner active:bg-red-600
+                       active:border-red-700'
+              type='submit'
+              onClick={() => navigate(-1)}
+            > Spara
+            </button>
+            <button
+              className='text-base font-semibold pt-1 pb-1 rounded border 
+                       border-solid border-gray-200 transition-all 
+                       ease-out active:bg-gray-200 hover:shadow-inne 
+                       active:shadow-inner active:border-gray-400'
+          
+              onClick={() => navigate(-1)}
+            > Avbryt
+            </button>
+          </div>
         </div>
       </div>
     </div>
