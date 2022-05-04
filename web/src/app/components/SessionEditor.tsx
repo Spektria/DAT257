@@ -70,13 +70,11 @@ const Form: FC<SessionData> = initState => {
             headers: {
                         'Content-Type': "application/json",
             },
-            body: JSON.stringify({state})
+            body: JSON.stringify(state)
         })
         .then(response => response.json())
-        .then((data) => console.log(data))
-        .catch(error =>{
-                console.log(error)
-            })}/>
+        .then(data => console.log(data))
+        .catch(error => console.log(error))}/>
           <button className='text-base font-semibold pt-1 pb-1 rounded border border-solid border-gray-200 transition-all ease-out active:bg-gray-200 hover:shadow-inne active:shadow-inner active:border-gray-400'>Avbryt</button>
         </div>
       </div>
