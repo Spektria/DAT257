@@ -8,11 +8,13 @@ export type SessionData =
   , participants : string[]
   };
 
-export type StudentData = 
+export type StudentEducationalMomentsData = 
   { student      : string,
-    moments      : string[],
-    finishedMoments : String[]
+    email        : string,
+    educationalMoments: string[],
+    completed    : boolean[]
   };
+
 
 export type Left<T> = {
   left: T;
