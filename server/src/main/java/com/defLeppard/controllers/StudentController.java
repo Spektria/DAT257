@@ -24,7 +24,7 @@ class StudentController {
 
     // Dummy list
     // TODO: replace with database
-    private List<Student> students = DatabaseService.fetchAllStudentsFromDatabase();
+   // private List<Student> students = DatabaseService.fetchAllStudentsFromDatabase();
 
 
     /**
@@ -33,8 +33,8 @@ class StudentController {
      */
     @GetMapping("")
     @ResponseBody
-    ResponseEntity<List<Map<String, String>>> getStudents(){
-        return ResponseEntity.status(HttpStatus.OK).body(students);
+    ResponseEntity<List<Student>> getStudents(){
+        return ResponseEntity.status(HttpStatus.OK).body(DatabaseService.fetchAllStudentsFromDatabase());
     }
 
     /**
@@ -51,9 +51,15 @@ class StudentController {
                 .findFirst()
                 .orElse(new HashMap<>());
 
-        return ResponseEntity.status(HttpStatus.OK).body(property.map(student::get).isPresent()
-                ? student.get(property.get())
-                : student);
+        Student student = DatabaseService.fetchOneStudent(email.toLowerCase());
+        if student = null {
+            System.out.println("There is no student with the given email")
+        } else{
+
+            return ResponseEntity.status(HttpStatus.OK).body(property.map(student::get).isPresent()
+                    ? student.get(property.get())
+                    : student);
+        }
     }
 
 }

@@ -1,5 +1,7 @@
 package com.defLeppard.controllers;
 
+import com.defLeppard.services.DatabaseService;
+import com.defLeppard.services.Event;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +28,7 @@ public class EventsController {
     // Dummy list
     // TODO: replace with database
     private final DateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-    private List<Map<String, ?>> events =
+    /*private List<Map<String, ?>> events =
             List.of(
                     Map.of(
                             "id", "1",
@@ -48,6 +50,7 @@ public class EventsController {
                             "instructors", new String[]{"Oscean man", "Take me by the hand"}
                             )
                     );
+    */
 
     public EventsController() throws ParseException {
     }
@@ -62,7 +65,7 @@ public class EventsController {
      */
     @GetMapping("")
     @ResponseBody
-    ResponseEntity<List<Map<String,?>>> getEvents(@RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<Date> from,
+    ResponseEntity<List<Event>> getEvents(@RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<Date> from,
                                                   @RequestParam("to")   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<Date> to){
 
         // Note: date is in ISO format. For example if we want dates from 2022-01-01 to 2023-01-01 we
@@ -71,9 +74,9 @@ public class EventsController {
 
         // TODO Replace with database sql call
 
-        var ret = events;
+        //var ret = events;
 
-        if(from.isPresent() && to.isPresent()){
+        if(from.isPresent() && to.isPresent()){ //STILL TODO
 
             // Check if argument from is before argument to time wise.
             if(!from.get().before(to.get()))
@@ -91,7 +94,7 @@ public class EventsController {
             }).collect(Collectors.toList());
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(ret);
+        return ResponseEntity.status(HttpStatus.OK).body(DatabaseService.fetchAllEventsFromDatabase());
     }
 
 

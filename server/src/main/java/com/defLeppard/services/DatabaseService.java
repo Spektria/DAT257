@@ -100,7 +100,6 @@ class DatabaseService {
      * @return the list of all students as Student objects that exist in the database
      *
      */
-
     public static List<Student> fetchAllStudentsFromDatabase() {
         String sqlQuery = "SELECT * FROM Student";
 
@@ -118,17 +117,47 @@ class DatabaseService {
      *
      * Fetch a student from the database that matches the given email
      * @param studentEmail email of the student that is being queried for
-     * @return the student with the given email, with type Student
+     * @return the student with the given email, as type Student
+     *
      */
     public static Student fetchOneStudent(String studentEmail) {
-        String sqlQuery = "SELECT email, name FROM Student WHERE email = ?";
-
-        Student student = jdbcTemplate.queryForObject(sqlQuery, new Object[]{studentEmail}, new BeanPropertyRowMapper(Student.class));
-
+        String sqlQuery = "SELECT * FROM Student WHERE email = ?";
+        try {
+            Student student = jdbcTemplate.queryForObject(sqlQuery, new Object[]{studentEmail}, new BeanPropertyRowMapper(Student.class));
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
         return student;
     }
 
+    /***
+     *
+     * Fetch all rows from the table Session in the database
+     * @return the list of all events as Event objects that exist in the database
+     *
+     */
+    public static List<Event> fetchAllEventsFromDatabase() {
+        String sqlQuery = "SELECT * FROM Session";
 
+        List<Event> allEvents = jdbcTemplate.query(sqlQuery,new BeanPropertyRowMapper<>(Event.class));
+
+        return allEvents;
+    }
+
+    /***
+     *
+     * Fetch an event from the database that matches the given event idnr
+     * @param evntId event idnr of the event that is being queried for
+     * @return the event with the given idnr, as type Event
+     *
+     */
+    public static Event fetchEventsInIntervall(Timestamp from, Timestamp to) {
+        String sqlQuery = "SELECT * FROM Session WHERE (fromdate < ? AND todate > ?";
+
+        Student event = jdbcTemplate.query(sqlQuery, new BeanPropertyRowMapper(Event.class), from, to);
+
+        return event;
+    }
 
 
 
