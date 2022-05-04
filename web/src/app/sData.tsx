@@ -1,16 +1,17 @@
-import { StudentData } from '../types/types'
+import { StudentEducationalMomentsData } from '../types/types'
 
-const studentProfile: StudentData[] = [
+const studentProfileData: StudentEducationalMomentsData[] = [
   {
   "student": "Alice Albertsson",
-  "moments": ["Starta", "Köra på vågor", "Parkera", "uppkörning"],
-  "finishedMoments": ["Starta", "parkera"]
+  "email": "AliceA@outlook.com",
+  "educationalMoments": ["Starta", "Köra på vågor", "Parkera", "uppkörning"],
+  "completed": [true, false, true, false]
   }
 ]
 
 
 
-export default StudentData
+export default studentProfileData
 
 
 
