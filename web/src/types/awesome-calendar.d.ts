@@ -1,7 +1,7 @@
 declare module 'react-awesome-calendar' {
-  import { ComponentClass, Component } from 'react'
+  import { ComponentClass } from 'react'
 
-  export type Event_ = {
+  export type CalendarEvent = {
     id: number
     color: string
     from: Date
@@ -9,29 +9,51 @@ declare module 'react-awesome-calendar' {
     title: string
   }
   
-  export type Date_ = {
+  export type CalendarDate = {
     year: number 
     month: number
     day: number
     hour: number   
   }
+  
+  export type CalendarMode = 'dailyMode' | 'monthlyMode' | 'yearlyMode'
 
   export type CalendarState = {
-    mode: string
+    mode: CalendarMode
     year: number
     month: number
     day: number
   }
 
-  export type CalendarProps = {
-    events?: Event_[]
-    header?: Component
-    onChange?: (newState : CalendarState) => void
-    onClickEvent?: (id: number) => void 
-    onClickTimeLine?: (date: Date_) => void
+  export type CalendarHeader = {
+    current: Exclude<CalendarMode, CalendarState>
+    mode: CalendarMode
+    prev: Exclude<CalendarMode, CalendarState>
+    next: Exclude<CalendarMode, CalendarState>
+    onClickPrev: () => void
+    onClickNext: () => void
   }
 
-  const Calendar: ComponentClass<CalendarProps>
+  export type CalendarProps = {
+    events?: CalendarEvent[]
+    header?: CalendarHeader
+    onChange?: (newState : CalendarState) => void
+    onClickEvent?: (id: number) => void 
+    onClickTimeLine?: (date: CalendarDate) => void
+  }
+
+  export interface AwesomeCalendarComponent extends ComponentClass<CalendarProps>{
+    getDetails(): () => CalendarDate
+    returnDailyEvents: () => CalendarEvent[]
+    onClickTimeLine: (hour: number) => void
+    onClickDay: (date: Date) => void
+    onClickMonth: (month: number) => void
+    onClickPrev: () => void
+    onClickNext: () => void
+    onClickMode: (mode: CalendarMode) => void
+  }
+
+  const Calendar: AwesomeCalendarComponent
   export default Calendar
 }
 

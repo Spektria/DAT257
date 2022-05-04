@@ -1,10 +1,11 @@
-import { FC, useReducer } from 'react'
+import { FC, useReducer, Component, LegacyRef, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import AwesomeCalendar, { Event_ } from 'react-awesome-calendar';
+import AwesomeCalendar, { CalendarEvent, AwesomeCalendarComponent, CalendarProps } from 'react-awesome-calendar';
 import { useQuery, useQueryClient } from 'react-query'
 import { getEvents } from '../apis/EventApi'
 import { SessionData } from '../../types/types'
 import { map } from 'ramda'
+import { useSwipeable } from 'react-swipeable'
 
 /** Calendar component */
 const Calendar: FC = () => {
@@ -18,9 +19,13 @@ const Calendar: FC = () => {
       return newYear
     }
     , new Date().getFullYear())
-
   const { isLoading, error, data } =
-    useQuery<SessionData[], Error>('events', () => getEvents(year), { staleTime:600000 })
+    useQuery<SessionData[], Error>('events', () => getEvents(year), { staleTime: 600000 })
+  const ref = useRef<AwesomeCalendarComponent>(null)
+  const swipeHandlers = useSwipeable({
+    onSwipedRight: _ => ref.current?.onClickPrev(),
+    onSwipedLeft: _ => ref.current?.onClickNext()
+  })
 
 
   if (isLoading) return <p className='text-center p-10'>Loading...</p>
@@ -30,12 +35,16 @@ const Calendar: FC = () => {
     </p>)
 
   return (
-    <div className='pl-4 pr-4'>
+    <div
+      className='pl-4 pr-4'
+      {...swipeHandlers}
+    >
       <AwesomeCalendar
         events={map(toEvent, data === undefined ? [] : data)}
-        onChange={state => dispatch(state.year)}
+        onChange={state => dispatch(state.year) }
         onClickEvent={id => navigate(`session/${id}`, { state: { background: location } })}
         onClickTimeLine={date => navigate('/newsession', { state: { background: location, date: date } })}
+        ref={ref as unknown as LegacyRef<Component<CalendarProps, any, any>> | undefined}
       />
     </div>
   );
@@ -47,7 +56,7 @@ const Calendar: FC = () => {
 * @param session
 * @returns a calendar event
 */
-function toEvent(session: SessionData): Event_ {
+function toEvent(session: SessionData): CalendarEvent {
   return (
     {
       id: session.id,
