@@ -1,9 +1,19 @@
 import { zipWith } from 'ramda';
 import { FC } from 'react'
 import { StudentEducationalMomentsData } from '../../types/types';
+import { useNavigate } from "react-router-dom";
 import studentProfileData from '../sData';
 
+// Creates a button that makes the user go back one step in their history.
+function NavigateBack() {
+  const navigate = useNavigate();
+  return (
+      <button onClick={() => navigate(-1)}>Back</button>
+  );
 }
+//Completed version should submit the finished moments to the database accordingly.
+function submitInfo(){}
+
 
 
 // Converts an array of strings to an HTML list of those strings as well as a check box. 
@@ -27,6 +37,7 @@ function createMoments(arr: string[]) {
 const StudentProfile : FC<StudentEducationalMomentsData> = data =>{
   return (
     <div className="flex flex-col">
+      <div>{NavigateBack()}</div>
       <div  className="text-center mb-4">
         <h1 className="text-xl font-bold text-4xl my-4">{data.student}</h1>
         <p>{data.email}</p>
