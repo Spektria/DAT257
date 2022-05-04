@@ -1,77 +1,81 @@
-import { FC, FormEventHandler, useReducer, useState } from 'react'
-import { map, addIndex, none } from 'ramda'
+import { FC, useReducer, useState } from 'react'
+import { map, none } from 'ramda'
 import ListProfile from './ListProfile'
 import { MdAddCircle } from 'react-icons/md'
+import TextSelector from './TextSelector'
 
 /**
-* @field name - Name attribute of JSX element
 * @field options - Options for input
 * @field placeholder - Placeholder for input
+* @field onChange - Callback for when the list updates
 */
-type Props = { name: string, options: string[], placeholder?: string }
+type Props = {
+  options: string[]
+  placeholder?: string
+  onChange?: (arr: Input[]) => void
+  defaultValue?: Input[]
+}
 
 /**
 *  @field name - Name of person/item
 *  @field id - Id of person/item
 */
-type Input = { name: string, id: number }
+type Input = {
+  name: string
+  id: number
+}
 
 /** Mutli input component with searchable options. */
-const MultiInput: FC<Props> = ({ name, options, placeholder }) => {
-  const [inputs, dispatch] = useReducer(reducer, [])
+const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue }) => {
+  const [list, dispatch] = useReducer(reducer, defaultValue ? defaultValue : [])
   const [input, setInput] = useState("")
 
   return (
-    <form className='flex flex-col mt-2' onSubmit={onSubmit(input, setInput, dispatch)}>
+    <div className='flex flex-col mt-2'>
       <ul>
         {map(({ name, id }) =>
           <ListProfile
             key={id}
-            onChange={e => dispatch({ name: e.target.value, id })}
+            onChange={e => updateList(e.target.value)}
             name={name}
             id={id}
           />
-          , inputs)}
+          , list)}
       </ul>
       <div className='flex flex-row items-center'>
-        <label>
-          <input className='hidden' type='submit' />
-          <MdAddCircle className='cursor-pointer ml-1 mr-1 inline pb-{1}' size='26px' />
-        </label>
-        <input className='input text-lg' list={name + '-list'} name={name} placeholder={placeholder} value={input} onChange={e => setInput(e.target.value)} />
-        <datalist id={name + '-list'}>
-          {addIndex<string>(map)((x, i) => <option key={x + i}>{x}</option>, options)}
-        </datalist>
+        <MdAddCircle
+          className='cursor-pointer ml-1 mr-1 inline pb-{1}'
+          size='26px'
+          onClick={_ => updateList(input)}
+        />
+        <TextSelector
+          onChange={i => { setInput(i); updateList(i) }}
+          placeholder={placeholder}
+          selectables={options}
+        />
       </div>
-    </form>
+    </div>
   )
-}
 
-/** 
-* Reducer for appending or changing a input.
-* @param prevState - Previous inputs
-* @param newInput - New input
-* @returns Updated inputs
-*/
-function reducer(prevState: Input[], newInput: Input): Input[] {
-  const pred = (x: Input) => x.id === newInput.id
-  return none(pred, prevState) ? [...prevState, newInput] : map(input => pred(input) ? newInput : input, prevState)
-}
-
-/**
-* Submit handler that dispatch the new input
-* @param input - New Input
-* @param setInput - set function of useState
-* @param dispatch - dispatch function of useReducer
-* @returns FormEventHandler
-*/
-function onSubmit(input: string, setInput: React.Dispatch<React.SetStateAction<string>>, dispatch: React.Dispatch<Input>): FormEventHandler {
-  return (e: React.FormEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    if (input !== '') {
+  function updateList(input: string) {
+    if (input !== '')
       dispatch({ name: input, id: Math.random() })
-      setInput("")
-    }
+  }
+
+
+  /** 
+  * Reducer for appending or changing a input. Also triggers the 
+  * onChange callback if there is a new state.
+  * @param prevState - Previous list of items
+  * @param newInput - New input
+  * @returns Updated list of inputs
+  */
+  function reducer(prevState: Input[], newInput: Input): Input[] {
+    const sameId = (x: Input) => x.id === newInput.id
+    const nextState = none(sameId, prevState) ? [...prevState, newInput] : map(input => sameId(input) ? newInput : input, prevState)
+    if (onChange && prevState !== nextState)
+      onChange(nextState)
+    return nextState
   }
 }
 

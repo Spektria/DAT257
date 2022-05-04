@@ -1,50 +1,69 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import Session from './components/Session';
 import SessionEditor from './components/SessionEditor';
 import NotFound from './components/NotFound';
 import Calendar from './components/Calendar';
-import { Event_, Date_ } from 'react-awesome-calendar'
-import { SessionData } from '../types/types';
-import { find, map } from 'ramda'
+import { LocationState } from '../types/types';
+import { find } from 'ramda'
 import sessions from './Data'
 import {
-  BrowserRouter,
   Routes,
   Route,
   useParams,
   useLocation,
   Params,
+  Navigate,
 } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
 
 const App: FC = () => {
-  const [events, setEvents] = useState<Event_[]>(() => map(toEvent, sessions))
+  const location = useLocation()
+  const state = location.state as Partial<LocationState>
+  const RouteCalendarModal = (path: string) => (
+    <Route path={path}
+      element={state?.background ?
+        <Calendar /> :
+        <Navigate
+          to={location.pathname}
+          state={{ ...state, background: location }} />}
+    />)
+
 
   return (
-    <div>
-      <BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <Routes>
+        <Route path="/" element={<Calendar />} />
+        <Route path="*" element={<NotFound />} />
+        { RouteCalendarModal("/newsession") } 
+        { RouteCalendarModal("session/:id") }
+        { RouteCalendarModal("session/:id/edit") }
+      </Routes>
+
+      {state?.background && (
         <Routes>
-          <Route path="/" element={<Calendar events={events} />} />
           <Route path="/newsession" element={<NewSession />} />
           <Route path="/session/:id" element={<ViewSession />} />
           <Route path="/session/:id/edit" element={<EditSession />} />
-          <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
-    </div>
+      )}
+      <ReactQueryDevtools />
+    </QueryClientProvider>
   );
 }
 
+const queryClient = new QueryClient()
 
-const NewSession = () => <SessionEditor {...{left: (useLocation().state as {date : Date_}).date}}/>
+const NewSession = () => <SessionEditor {...{ left: (useLocation().state as LocationState).date }} />
 
 const ViewSession = () => WithParam<Number>(checkIdParam, id => {
   const session = find(e => e.id === id, sessions)
-  return session === undefined ? undefined : <Session {...session}/>
+  return session === undefined ? undefined : <Session {...session} />
 })
 
 const EditSession = () => WithParam<Number>(checkIdParam, id => {
   const session = find(e => e.id === id, sessions)
-  return session === undefined ? undefined : <SessionEditor {...{right: session}}/>
+  return session === undefined ? undefined : <SessionEditor {...{ right: session }} />
 })
 
 function checkIdParam(ps: Readonly<Params<string>>): Number | undefined {
@@ -52,7 +71,7 @@ function checkIdParam(ps: Readonly<Params<string>>): Number | undefined {
   return (id === undefined || isNaN(+id)) ? undefined : parseInt(id)
 }
 
-function WithParam<T>(f: (ps: Readonly<Params<string>>) => T | undefined, g: (t : T) => JSX.Element | undefined): JSX.Element {
+function WithParam<T>(f: (ps: Readonly<Params<string>>) => T | undefined, g: (t: T) => JSX.Element | undefined): JSX.Element {
   const x = f(useParams())
   if (x === undefined)
     return <NotFound />
@@ -60,18 +79,6 @@ function WithParam<T>(f: (ps: Readonly<Params<string>>) => T | undefined, g: (t 
   if (comp === undefined)
     return <NotFound />
   return comp
-} 
-
-function toEvent(session: SessionData): Event_ {
-  return (
-    {
-      id: session.id,
-      color: '#fd3153',
-      from: session.from,
-      to: session.to,
-      title: session.title,
-    }
-  )
 }
 
 export default App;
