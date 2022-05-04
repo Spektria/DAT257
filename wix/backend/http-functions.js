@@ -110,7 +110,7 @@ export async function get_instructors(request){
                  return obj;
             })
             // Prune not needed data to minimize internal data accessible.
-            .map( (obj) => ( ({ name }) => ({ name }) )(obj));
+            .map( ({ name }) => ({ name }) );
          response.body = JSON.stringify(pruned);
 
          return ok(response);
