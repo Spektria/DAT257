@@ -1,5 +1,7 @@
 package com.defLeppard.controllers;
 
+import com.defLeppard.services.DatabaseService;
+import com.defLeppard.services.Student;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,23 +24,7 @@ class StudentController {
 
     // Dummy list
     // TODO: replace with database
-    private List<Map<String, String>> students =
-            List.of(
-                    Map.of(
-                            "name", "student1",
-                            "email", "studnet1@mail.com"
-                    ),
-
-                    Map.of(
-                            "name", "student2",
-                            "email", "studnet2@mail.com"
-                    ),
-
-                    Map.of(
-                            "name", "student3",
-                            "email", "studnet3@mail.com"
-                    )
-            );
+    private List<Student> students = DatabaseService.fetchAllStudentsFromDatabase();
 
 
     /**

@@ -101,11 +101,12 @@ class DatabaseService {
      *
      */
 
-    public List<Student> fetchAllStudentsFromDatabase() {
+    public static List<Student> fetchAllStudentsFromDatabase() {
         String sqlQuery = "SELECT * FROM Student";
 
         List<Student> allStudents = jdbcTemplate.query(sqlQuery,new BeanPropertyRowMapper<>(Student.class));
 
+        //Wanted to try how the output looked but have no data in the database at the moment
         for (int i = 0; i<=6; i++) {
             System.out.println(allStudents.get(i));
         }
@@ -119,13 +120,16 @@ class DatabaseService {
      * @param studentEmail email of the student that is being queried for
      * @return the student with the given email, with type Student
      */
-    public Student fetchOneStudent(String studentEmail) {
+    public static Student fetchOneStudent(String studentEmail) {
         String sqlQuery = "SELECT email, name FROM Student WHERE email = ?";
 
         Student student = jdbcTemplate.queryForObject(sqlQuery, new Object[]{studentEmail}, new BeanPropertyRowMapper(Student.class));
 
         return student;
-
     }
+
+
+
+
 
 }
