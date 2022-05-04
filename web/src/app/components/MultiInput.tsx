@@ -20,13 +20,13 @@ type Props = {
 *  @field name - Name of person/item
 *  @field id - Id of person/item
 */
-type Input = {
+export type Input = {
   name: string
   id: number
 }
 
 /** Mutli input component with searchable options. */
-const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue }) => {
+export const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue }) => {
   const [list, dispatch] = useReducer(reducer, defaultValue ? defaultValue : [])
   const [input, setInput] = useState("")
 
@@ -78,5 +78,3 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue })
     return nextState
   }
 }
-
-export default MultiInput

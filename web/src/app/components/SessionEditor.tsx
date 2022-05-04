@@ -1,12 +1,13 @@
 import { useReducer, FC, useState, useEffect } from 'react';
 import { Date_ } from 'react-awesome-calendar'
 import { SessionData, Either, StudentData, InstructorData } from '../../types/types'
-import MultiInput from './MultiInput'
+import { MultiInput, Input } from './MultiInput'
 import { FaLongArrowAltRight } from 'react-icons/fa'
 import { getStudents } from '../apis/StudentApi';
 import { getInstructors } from '../apis/InstructorApi';
 import { orElse } from '../helpers/Helpers';
 import { useNavigate } from 'react-router-dom'
+import { identical, map } from 'ramda';
 
 const SessionEditor: FC<Either<Date_, SessionData>> = ({ left, right }) => {
   if (right !== undefined)
@@ -35,14 +36,14 @@ const Form: FC<SessionData> = (initState) => {
   const [toDate, setToDate] = useState(fromDate)
 
   // Fetch names...
-  const [students, setStudents] = useState<StudentData[]>([{ name: "1", email: "1" }, { name: "2", email: "2" }]);
+  const [students, setStudents] = useState<StudentData[]>(map(s => { return {name: s, email: ""} }, initState.participants));
   useEffect(() => {
     getStudents().then(s => setStudents(s));
   }, []);
 
-  const [instructors, setInstructors] = useState<InstructorData[]>();
+  const [instructors, setInstructors] = useState<InstructorData[]>(map(i => { return {name: i, email: ""} }, initState.instructors));
   useEffect(() => {
-    getInstructors().then(i => setInstructors(i));
+    getStudents().then(s => setStudents(s));
   }, []);
 
   // Generalize extraction of names
@@ -121,6 +122,7 @@ const Form: FC<SessionData> = (initState) => {
               <MultiInput
                 options={getNames(instructors)}
                 placeholder='Lägg till en instruktör'
+				defaultValue={map(i => { return {name: i.name, id: 0}}, instructors)}
               />
             </div>
             <div className='mt-1 mb-1'>
@@ -128,6 +130,7 @@ const Form: FC<SessionData> = (initState) => {
               <MultiInput
                 options={getNames(students)}
                 placeholder='Lägg till en elev'
+				defaultValue={map(i => { return {name: i.name, id: 0}}, students)}
               />
             </div>
           </div>
