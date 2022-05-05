@@ -16,25 +16,25 @@
 }
 
 .button-solid{
-
+  @apply w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-button-solid text-base font-medium text-text-main hover:text-button-solid hover:bg-text-main focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-text-main sm:ml-3 sm:w-auto sm:text-sm
 }
 
 .button-outline{
-
+  @apply mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-button-outline bg-opacity-30 text-base font-medium text-text-main hover:bg-text-main hover:text-button-solid focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-text-main sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm
 }
 
 .card-modal{
-
+  @apply relative inline-block h-full sm:h-auto align-bottom mb-0 bg-background-dark rounded-t sm:rounded-lg text-left overflow-hidden sm:shadow-xl transform transition-all sm:align-middle sm:max-w-lg w-full
 }
 
 .title-page{
-
+  @apply text-2xl leading-8 font-medium text-text-main
 }
 
 .title-content{
-
+  @apply font-medium text-text-main
 }
 
 .subtitle-content{
-
+  @apply text-sm text-text-sec opacity-70
 }
