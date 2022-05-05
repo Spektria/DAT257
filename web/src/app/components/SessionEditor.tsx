@@ -42,8 +42,8 @@ const Form: FC<SessionData> = (initState) => {
         , async () => [await getStudents(), await getInstructors()]
         , { staleTime: 600000 })
 
-  if(isLoading) return <p className='text-center p-10'>Loading...</p>;
-  if(error !== null) return (<p className='text-center p-10'>An error has occurred: {error.message}</p>);
+  if(isLoading) return <p className='fixed text-center p-10 top-20 z-20'>Loading...</p>;
+  if(error) return <p className='fixed text-center p-10 top-20 z-20'>An error has occurred: {error.message}</p>;
   
   if(students === undefined)
     setStudents(orElse(() => data?.[0], []));
