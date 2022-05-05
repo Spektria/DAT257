@@ -32,16 +32,16 @@ const Form: FC<SessionData> = (initState) => {
   const [state, dispatch] = useReducer(
     (prevState: SessionData, newFields: Partial<SessionData>) => ({ ...prevState, ...newFields })
     , initState)
-  const [fromDate, setFromDate] = useState(dateStr(initState.from))
+  const [fromDate, setFromDate] = useState(dateStr(state.from))
   const [toDate, setToDate] = useState(fromDate)
 
   // Fetch names...
-  const [students, setStudents] = useState<StudentData[]>(map(s => { return {name: s, email: ""} }, initState.participants));
+  const [students, setStudents] = useState<StudentData[]>(map(s => { return {name: s, email: ""} }, state.participants));
   useEffect(() => {
     getStudents().then(s => setStudents(s));
   }, []);
 
-  const [instructors, setInstructors] = useState<InstructorData[]>(map(i => { return {name: i, email: ""} }, initState.instructors));
+  const [instructors, setInstructors] = useState<InstructorData[]>(map(i => { return {name: i, email: ""} }, state.instructors));
   useEffect(() => {
     getStudents().then(s => setStudents(s));
   }, []);
@@ -51,8 +51,8 @@ const Form: FC<SessionData> = (initState) => {
   const getNames = (list: HasName[] | undefined) => orElse(() => list?.map(s => s.name), [])(null);
 
   // Fetch title and location
-  const [title, setTitle] = useState(initState.title);
-  const [location, setLocation] = useState(initState.location);
+  const [title, setTitle] = useState(state.title);
+  const [location, setLocation] = useState(state.location);
 
   return (
     <div className='fixed inset-0 z-10 scroll overflow-y-hidden'>
@@ -97,7 +97,7 @@ const Form: FC<SessionData> = (initState) => {
                 className='border border-solid pl-1 pr-1'
                 name='from'
                 type="time"
-                defaultValue={timeStr(initState.from)}
+                defaultValue={timeStr(state.from)}
               />
               <FaLongArrowAltRight className='inline ml-2 mr-2' />
               <input
@@ -105,7 +105,7 @@ const Form: FC<SessionData> = (initState) => {
                 name='to'
                 type='time'
                 defaultValue={(() => {
-                  const d = initState.from
+                  const d = state.from
                   return timeStr((d.getHours() >= 22 || d.getHours() === 0) ?
                     new Date(d.getFullYear(), d.getMonth(), d.getDay(), 24, 0) :
                     new Date(d.getTime() + 2 * 3600000))
@@ -143,7 +143,7 @@ const Form: FC<SessionData> = (initState) => {
                        active:shadow-inner active:bg-red-600
                        active:border-red-700'
               type='submit'
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/session/" + initState.id)}
             > Spara
             </button>
             <button
@@ -152,7 +152,7 @@ const Form: FC<SessionData> = (initState) => {
                        ease-out active:bg-gray-200 hover:shadow-inne 
                        active:shadow-inner active:border-gray-400'
           
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/session/" + initState.id)}
             > Avbryt
             </button>
           </div>
