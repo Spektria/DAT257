@@ -30,7 +30,7 @@ const App: FC = () => {
           <Route path="/newsession" element={<NewSession />} />
           <Route path="/session/:id" element={<ViewSession />} />
           <Route path="/session/:id/edit" element={<EditSession />} />
-          <Route path="/session/studentprofile" element={<StudentProfile student='Alice Albertsson' email='AliceA@outlook.com' educationalMoments={['test','test','test','test','test']} completed={[true, false, true, true, false]} />} />
+          <Route path="/session/studentprofile" element={<StudentProfile student='Alice Albertsson' email='AliceA@outlook.com' educationalMoments={["Starta", "Köra på vågor", "Parkera", "uppkörning"]} completed={[true, false, true, false]} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
