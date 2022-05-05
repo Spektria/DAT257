@@ -42,9 +42,10 @@ const StudentProfile : FC<StudentEducationalMomentsData> = data =>{
         <h1 className="text-xl font-bold text-4xl my-4">{data.student}</h1>
         <p>{data.email}</p>
       </div>
+      <p className="font-bold">Utbildningsmoment:</p>
       <ol>{listMoments(data.educationalMoments)}</ol>
       <div className="px-24 flex flex-col content-center">
-        <button type="submit" onSubmit={submitInfo} className="rounded-md text-center bg-cyan-500 hover:bg-cyan-600 ">Save</button>
+        <button type="submit" onSubmit={submitInfo} className="w-16 h-5 rounded-md text-center bg-cyan-500 hover:bg-cyan-600 ">Save</button>
       </div>
     </div>
   )
