@@ -46,12 +46,4 @@ public class Application {
 
 	@Autowired
 	private WixService wixService;
-
-	@Scheduled(fixedRate = 1000 * 10) // ms, i.e. 10 sec
-	private void pingWix(){
-		System.out.println(wixService.call(String.class,"hello", new String[]{}).getBody());
-		HashMap<String, String> b = wixService.call(HashMap.class, "services", new String[]{}).getBody();
-		System.out.println(b);
-	}
-
 }
