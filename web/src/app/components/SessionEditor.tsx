@@ -1,5 +1,5 @@
 import { useReducer, FC, useState, useEffect } from 'react';
-import { Date_ } from 'react-awesome-calendar'
+import { CalendarDate } from 'react-awesome-calendar'
 import { SessionData, Either, StudentData, InstructorData } from '../../types/types'
 import { MultiInput, Input } from './MultiInput'
 import { FaLongArrowAltRight } from 'react-icons/fa'
@@ -9,7 +9,7 @@ import { orElse } from '../helpers/Helpers';
 import { useNavigate } from 'react-router-dom'
 import { identical, map } from 'ramda';
 
-const SessionEditor: FC<Either<Date_, SessionData>> = ({ left, right }) => {
+const SessionEditor: FC<Either<CalendarDate, SessionData>> = ({ left, right }) => {
   if (right !== undefined)
     return (<Form {...right} />)
   const { year, month, day, hour } = left
