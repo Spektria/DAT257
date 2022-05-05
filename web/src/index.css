@@ -12,7 +12,15 @@
 @tailwind utilities;
 
 .input {
-  @apply border rounded outline-none  border-gray-200 focus:border-sky-300  focus:outline-sky-200 focus:outline-offset-0 transition-all pl-2 pr-2
+  @apply rounded outline-none leading-8 font-medium text-text-main transition-all pl-2 pr-2 bg-button-outline bg-opacity-30 focus:border-text-main   focus:outline-text-main focus:bg-text-main focus:text-background-dark focus:outline-offset-0
+}
+
+.listitem {
+  @apply bg-button-solid text-base font-medium text-text-main rounded hover:text-background-dark hover:bg-text-main
+}
+
+.listitem-text {
+  @apply bg-button-solid text-text-main bg-transparent w-full hover:text-background-dark border-transparent outline-none  focus:border-solid focus:border-text-main  focus:outline-offset-0 transition-all pl-2 pr-2
 }
 
 .button-solid{
@@ -37,4 +45,8 @@
 
 .subtitle-content{
   @apply text-sm text-text-sec opacity-70
+}
+
+.misc {
+  @apply bg-white w-full md:w-fit rounded-t md:rounded pl-4 pr-4 pt-4 pb-4 flex flex-col h-full md:h-fit justify-between border
 }

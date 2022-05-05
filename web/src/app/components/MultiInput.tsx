@@ -42,9 +42,9 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue })
           />
           , list)}
       </ul>
-      <div className='flex flex-row items-center'>
+      <div className='flex flex-row items-center '>
         <MdAddCircle
-          className='cursor-pointer ml-1 mr-1 inline pb-{1}'
+          className='cursor-pointer fill-text-main ml-1 mr-1 inline pb-{1}'
           size='26px'
           onClick={_ => updateList(input)}
         />
