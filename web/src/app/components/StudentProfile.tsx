@@ -2,24 +2,32 @@ import { FC, useState } from 'react'
 import { StudentEducationalMomentsData } from '../../types/types';
 import { useNavigate } from "react-router-dom";
 
-// Creates a button that makes the user go back one step in their history.
+/**
+ * Creates a button that makes the user go back one step in their browser history history.
+ * @author Renato Roos Radevski
+*/
 function NavigateBack() {
   const navigate = useNavigate();
   return (
       <button onClick={() => navigate(-1)}>Back</button>
   );
 }
-//Completed version should submit the finished moments to the database accordingly.
-function submitInfo(){}
-
+/**
+ * Handles the submitted data and updates the status of finished educational moments.
+ * @author Renato Roos Radevski
+*/
 function submitInfo(){
   console.log("This function will then manage the sent data and update accordingly.");
 }
 
 
-// Converts an array of strings to an HTML list of those strings as well as a check box. 
-// Needs to fix checked={} onChange={} functions where if you press Save on 
-function listMoments(arr: string[]) {
+/**
+ * iterates a list of strings and booleans to create individual list items in an unorderedlist with a checkbox inside the item box. 
+ * @author Renato Roos Radevski
+ * @param educationalMoments
+ * @param completedMoments
+ * 
+ */
 function listMoments(educationalMoments: string[], completedMoments: boolean[]) {
 	return(
     <div>
@@ -35,6 +43,15 @@ function listMoments(educationalMoments: string[], completedMoments: boolean[]) 
   );
 }
 
+/**
+ * Creates a studentProfile view following the data structure of StudentEducationalMomentsData. The view includes:
+ * -navigate back button
+ * -Student name and email
+ * -list of educational moments both completed and uncompleted
+ * @author Renato Roos Radevski
+ * @param data 
+ * @returns 
+ */
 const StudentProfile : FC<StudentEducationalMomentsData> = data =>{
   return (
     <div className="flex flex-col">
