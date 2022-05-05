@@ -5,6 +5,8 @@ import com.defLeppard.services.Student;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.Optional;
 /**
  * REST controller for handling student information.
  *
- * @author Hugo Ekstrand
+ * @author Hugo Ekstrand, Jonas Röst
  */
 @CrossOrigin
 @RestController
@@ -34,7 +36,7 @@ class StudentController {
     @GetMapping("")
     @ResponseBody
     ResponseEntity<List<Student>> getStudents(){
-        return ResponseEntity.status(HttpStatus.OK).body(DatabaseService.fetchAllStudentsFromDatabase());
+        return ResponseEntity.status(HttpStatus.OK).body(DatabaseService.fetchAllStudents());
     }
 
     /**
@@ -46,20 +48,20 @@ class StudentController {
     @GetMapping("/{email}")
     @ResponseBody
     ResponseEntity<?> getStudent(@PathVariable("email") String email, @RequestParam("property") Optional<String> property){
-        var student = students.stream()
-                .filter(s -> s.get("email").equals(email.toLowerCase()))
-                .findFirst()
-                .orElse(new HashMap<>());
+        try {
+            var stud = DatabaseService.fetchOneStudent(email.toLowerCase());
 
-        Student student = DatabaseService.fetchOneStudent(email.toLowerCase());
-        if student = null {
-            System.out.println("There is no student with the given email")
-        } else{
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not found");
 
-            return ResponseEntity.status(HttpStatus.OK).body(property.map(student::get).isPresent()
-                    ? student.get(property.get())
-                    : student);
         }
+
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        var student = new JSONObject(ow.writeValueAsString(stud))
+
+        return ResponseEntity.status(HttpStatus.OK).body(property.map(student::get).isPresent()
+                ? student.get(property.get())
+                : student);
     }
 
 }

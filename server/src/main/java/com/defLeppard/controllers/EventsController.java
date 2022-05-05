@@ -59,43 +59,43 @@ public class EventsController {
     /**
      * Returns all events within an interval. If no interval is specified all events are returned.
      * Returns bad request if "from" date is before "to" date.
+     *
      * @param from the start date
-     * @param to the end date
+     * @param to   the end date
      * @return the list of events
      */
     @GetMapping("")
     @ResponseBody
     ResponseEntity<List<Event>> getEvents(@RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<Date> from,
-                                                  @RequestParam("to")   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<Date> to){
+                                          @RequestParam("to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Optional<Date> to) {
 
         // Note: date is in ISO format. For example if we want dates from 2022-01-01 to 2023-01-01 we
         //   should write:
         //  "/events?from=2022-01-01T00:00:00.000-00:00&to=2023-01-01T00:00:00.000-00:00"
 
-        // TODO Replace with database sql call
-
         //var ret = events;
 
-        if(from.isPresent() && to.isPresent()){ //STILL TODO
+        if (from.isPresent() && to.isPresent()) { //STILL TODO
 
             // Check if argument from is before argument to time wise.
-            if(!from.get().before(to.get()))
+            if (!from.get().before(to.get()))
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ArrayList<>());
 
-            // Filter events so they are withing the given interval.
-            ret = ret.stream().filter(ev -> {
-                Date evDFrom = (Date)ev.get("from");
-                Date evDTo = (Date)ev.get("from");
+            // Have to change the date format to SQL timestamp
+            try {
+                var ret = DatabaseService.fetchEventsInIntervall(from, to);
+            } catch (EmptyResultDataAccessException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not found");
+            }
 
-                BiPredicate<Date, Date> afterInclusive = (d1, d2) -> d1.equals(d2) || d1.after(d2);
-                BiPredicate<Date, Date> beforeInclusive = (d1, d2) -> d1.equals(d2) || d1.before(d2);
-
-                return afterInclusive.test(evDFrom, from.get()) && beforeInclusive.test(evDTo, to.get());
-            }).collect(Collectors.toList());
+            // BiPredicate<Date, Date> afterInclusive = (d1, d2) -> d1.equals(d2) || d1.after(d2);
+            // BiPredicate<Date, Date> beforeInclusive = (d1, d2) -> d1.equals(d2) || d1.before(d2);
+            return ResponseEntity.status(HttpStatus.OK).body(ret);
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(DatabaseService.fetchAllEventsFromDatabase());
+        return ResponseEntity.status(HttpStatus.OK).body(DatabaseService.fetchAllEvents());
     }
+}}
 
 
 

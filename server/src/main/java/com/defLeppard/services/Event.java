@@ -35,7 +35,7 @@ public class Event {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        List<Event> events = mapper.readValue(new File(json), new TypeReference<List<Event>>(){});
+        List<Event> events = mapper.readValue(new File(json), new TypeReference<List<Event>>(){});//Om input ej är en fil: ta bort new File() runt json
 
         return events;
     }

@@ -9,10 +9,8 @@ CREATE TABLE Session(
 	location TEXT REFERENCES Location(name) NOT NULL,
 	PRIMARY KEY (idnr, location)); 
 
-CREATE TABLE Instructor( 
-	login TEXT PRIMARY KEY NOT NULL, 
-	email TEXT NOT NULL, 
-	name TEXT NOT NULL); 
+CREATE TABLE Instructor(
+	name TEXT PRIMARY KEY NOT NULL);
 
 CREATE TABLE Student(  
 	email TEXT PRIMARY KEY NOT NULL,
@@ -30,7 +28,7 @@ CREATE TABLE StudentEducationalMoments(
 
 CREATE TABLE Attend( 
 	studentEmail TEXT REFERENCES Student(email) NOT NULL,
-	instructor TEXT REFERENCES Instructor(login) NOT NULL,
+	instructor TEXT REFERENCES Instructor(name) NOT NULL,
 	sessionIdnr INT NOT NULL,
 	sessionLocation TEXT NOT NULL,
 	FOREIGN KEY(sessionIdnr, sessionLocation) REFERENCES Session(idnr,location)); 

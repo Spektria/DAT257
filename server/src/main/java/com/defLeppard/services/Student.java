@@ -34,7 +34,7 @@ private String studentName;
 
         ObjectMapper mapper = new ObjectMapper();
 
-        List<Student> students = mapper.readValue(new File(json), new TypeReference<List<Student>>(){});
+        List<Student> students = mapper.readValue(new File(json), new TypeReference<List<Student>>(){});//Om input ej är en fil: ta bort new File() runt json
 
         return students;
     }
