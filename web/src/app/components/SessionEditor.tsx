@@ -62,102 +62,99 @@ const Form: FC<SessionData> = (initState) => {
         onClick={() => navigate(-1)} 
       />
       <div className='absolute inset-0 mx-auto z-20 w-full md:w-fit mt-10'>
-        <div className='bg-white w-full md:w-fit rounded-t md:rounded pl-4 pr-4 pt-4 pb-4 flex flex-col h-full md:h-fit justify-between border'>
+        <div className='card-modal-add'>
           <div className='flex flex-col'>
-            <div className='flex-row justify-between mt-1 mb-1 '>
-              <input className='input text-lg' name='title' type="text" placeholder="Titel" />
+            <div className="border-b-2 border-light-secondary border-opacity-20 pb-5">
+              <h1 className="title-page">Lägg till uppkörningstillfälle</h1>
+            </div>
+            <div className='flex-row justify-between mt-5 mb-1 '>
+              <input className='input' name='title' type="text" placeholder="Titel" />
             </div>
 
-            <div className='flex-row justify-between mt-1 mb-3 border-b-2 pb-4'>
-              <input className='input text-lg' name='place' type="text" placeholder="Plats" />
+            <div className='flex-row justify-between mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4'>
+              <input className='input' name='place' type="text" placeholder="Plats" />
             </div>
 
-            <p className='text-lg'>Datum</p>
-            <div className='flex mt-1 mb-3 border-b-2 pb-4 items-center justify-between' >
+            <p className='title-content'>Datum</p>
+            <div className='flex mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4 items-center justify-between' >
               <input
-                className='border border-solid pl-1 pr-1'
-                name='from'
-                type="date"
-                value={fromDate}
-                onChange={e => setFromDate(e.target.value)}
+                  className='input'
+                  name='from'
+                  type="date"
+                  value={fromDate}
+                  onChange={e => setFromDate(e.target.value)}
               />
-              <FaLongArrowAltRight className='inline ml-2 mr-2' />
+              <FaLongArrowAltRight className='inline fill-light-secondary ml-2 mr-2' />
               <input
-                className='border border-solid pl-1 pr-1'
-                name='to'
-                type="date"
-                min={fromDate}
-                value={toDate}
-                onChange={e => setToDate(e.target.value)}
-              />
-            </div>
-
-            <p className='text-lg'>Tid</p>
-            <div className='flex mt-1 mb-3 border-b-2 pb-4 items-center justify-between' >
-              <input
-                className='border border-solid pl-1 pr-1'
-                name='from'
-                type="time"
-                defaultValue={timeStr(initState.from)}
-              />
-              <FaLongArrowAltRight className='inline ml-2 mr-2' />
-              <input
-                className='border border-solid pl-1 pr-1'
-                name='to'
-                type='time'
-                defaultValue={(() => {
-                  const d = initState.from
-                  return timeStr((d.getHours() >= 22 || d.getHours() === 0) ?
-                    new Date(d.getFullYear(), d.getMonth(), d.getDay(), 24, 0) :
-                    new Date(d.getTime() + 2 * 3600000))
-                })()}
+                  className='input'
+                  name='to'
+                  type="date"
+                  min={fromDate}
+                  value={toDate}
+                  onChange={e => setToDate(e.target.value)}
               />
             </div>
 
-            <div className='mt-1 mb-3 border-b-2 pb-4'>
+            <p className='title-content'>Tid</p>
+            <div className='flex mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4 items-center justify-between' >
+              <input
+                  className='input'
+                  name='from'
+                  type="time"
+                  defaultValue={timeStr(initState.from)}
+              />
+              <FaLongArrowAltRight className='inline fill-light-secondary ml-2 mr-2' />
+              <input
+                  className='input'
+                  name='to'
+                  type='time'
+                  defaultValue={(() => {
+                    const d = initState.from
+                    return timeStr((d.getHours() >= 22 || d.getHours() === 0) ?
+                        new Date(d.getFullYear(), d.getMonth(), d.getDay(), 24, 0) :
+                        new Date(d.getTime() + 2 * 3600000))
+                  })()}
+              />
+            </div>
+
+            <div className='mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4'>
               <label
-                className='text-lg'
-                htmlFor="instructors">
+                  className='title-content'
+                  htmlFor="instructors">
                 Instruktörer:
               </label>
               <MultiInput
-                options={getNames(instructors)}
-                placeholder='Lägg till en instruktör'
+                  options={getNames(instructors)}
+                  placeholder='Lägg till en instruktör'
               />
             </div>
             <div className='mt-1 mb-1'>
-              <label className='text-lg' htmlFor="students">Elever: </label>
+              <label className='title-content' htmlFor="students">Elever: </label>
               <MultiInput
-                options={getNames(students)}
-                placeholder='Lägg till en elev'
+                  options={getNames(students)}
+                  placeholder='Lägg till en elev'
               />
             </div>
           </div>
 
-          <div className='flex flex-col space-y-1 bg-white mt-10'>
+          <div className='flex flex-col space-y-1 mt-10'>
             <button
-              className='cursor-pointer text-base font-semibold bg-red-400 
-                       text-white pt-1 pb-1 rounded border border-red-500 
-                       transition-all ease-out hover:shadow-inner 
-                       active:shadow-inner active:bg-red-600
-                       active:border-red-700'
-              type='submit'
-              onClick={() => navigate(-1)}
+                className='button-solid'
+                type='submit'
+                onClick={() => navigate(-1)}
             > Spara
             </button>
             <button
-              className='text-base font-semibold pt-1 pb-1 rounded border 
-                       border-solid border-gray-200 transition-all 
-                       ease-out active:bg-gray-200 hover:shadow-inne 
-                       active:shadow-inner active:border-gray-400'
-          
-              onClick={() => navigate(-1)}
+                className='button-outline'
+
+                onClick={() => navigate(-1)}
             > Avbryt
             </button>
           </div>
         </div>
       </div>
     </div>
+
   )
 }
 
