@@ -97,6 +97,7 @@ function App() {
  *  
  * This is the only instance, components that which
  * to use a QueryClient access it through useQueryClient()
+ * 
  * @see {@link https://react-query.tanstack.com/reference/useQueryClient}
  */
 const queryClient = new QueryClient()
@@ -108,6 +109,7 @@ const queryClient = new QueryClient()
  * 
  * This is intended for when a users wants to create a new session, 
  * which is why it sets the left value of Either<CalendarDate, SessionData>.
+ *
  * @see {@link https://reactrouter.com/docs/en/v6/api#uselocation}
  */
 function NewSession() {
