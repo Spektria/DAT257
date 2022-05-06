@@ -57,17 +57,17 @@ const Session : FC<SessionData> = data => {
 				</div>
 				<div className="absolute bottom-0 w-full sm:relative px-4 py-6 sm:px-6 sm:flex sm:flex-row-reverse">
 					<button 
-            type="button" 
-            className="button-solid"
-            onClick={() => navigate(-1)}
-            >Redigera
-          </button>
+					type="button"
+					className="button-solid"
+					onClick={() => navigate(-1)}
+					>Redigera
+				  </button>
 					<button 
-            type="button" 
-            className="button-outline"
-            onClick={() => navigate(-1)}
-            >Avbryt
-          </button>
+					type="button"
+					className="button-outline"
+					onClick={() => navigate(-1)}
+					>Avbryt
+				  </button>
 				</div>
 			</div>
 		</div>

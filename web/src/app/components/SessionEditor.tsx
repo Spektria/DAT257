@@ -61,13 +61,13 @@ const Form: FC<SessionData> = (initState) => {
         className='bg-gray-500 bg-opacity-75 h-screen' 
         onClick={() => navigate(-1)} 
       />
-      <div className='fixed inset-0 mx-auto z-10 w-full mt-10 md:w-fit md:mt-2'>
-        <div className='card-modal'>
-          <div className='relative px-8 pt-8 sm:p-6 sm:pb-10'>
+      <div className='absolute inset-0 mx-auto z-20 w-full md:w-fit mt-10'>
+        <div className='card-modal-add'>
+          <div className='flex flex-col'>
             <div className="border-b-2 border-light-secondary border-opacity-20 pb-5">
               <h1 className="title-page">Lägg till uppkörningstillfälle</h1>
             </div>
-            <div className='flex-row justify-between mt-5 mb-1'>
+            <div className='flex-row justify-between mt-5 mb-1 '>
               <input className='input' name='title' type="text" placeholder="Titel" />
             </div>
 
@@ -78,81 +78,83 @@ const Form: FC<SessionData> = (initState) => {
             <p className='title-content'>Datum</p>
             <div className='flex mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4 items-center justify-between' >
               <input
-                className='input'
-                name='from'
-                type="date"
-                value={fromDate}
-                onChange={e => setFromDate(e.target.value)}
+                  className='input'
+                  name='from'
+                  type="date"
+                  value={fromDate}
+                  onChange={e => setFromDate(e.target.value)}
               />
               <FaLongArrowAltRight className='inline fill-light-secondary ml-2 mr-2' />
               <input
-                className='input'
-                name='to'
-                type="date"
-                min={fromDate}
-                value={toDate}
-                onChange={e => setToDate(e.target.value)}
+                  className='input'
+                  name='to'
+                  type="date"
+                  min={fromDate}
+                  value={toDate}
+                  onChange={e => setToDate(e.target.value)}
               />
             </div>
 
             <p className='title-content'>Tid</p>
             <div className='flex mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4 items-center justify-between' >
               <input
-                className='input'
-                name='from'
-                type="time"
-                defaultValue={timeStr(initState.from)}
+                  className='input'
+                  name='from'
+                  type="time"
+                  defaultValue={timeStr(initState.from)}
               />
-              <FaLongArrowAltRight className='inline fill-light-primary ml-2 mr-2' />
+              <FaLongArrowAltRight className='inline fill-light-secondary ml-2 mr-2' />
               <input
-                className='input'
-                name='to'
-                type='time'
-                defaultValue={(() => {
-                  const d = initState.from
-                  return timeStr((d.getHours() >= 22 || d.getHours() === 0) ?
-                    new Date(d.getFullYear(), d.getMonth(), d.getDay(), 24, 0) :
-                    new Date(d.getTime() + 2 * 3600000))
-                })()}
+                  className='input'
+                  name='to'
+                  type='time'
+                  defaultValue={(() => {
+                    const d = initState.from
+                    return timeStr((d.getHours() >= 22 || d.getHours() === 0) ?
+                        new Date(d.getFullYear(), d.getMonth(), d.getDay(), 24, 0) :
+                        new Date(d.getTime() + 2 * 3600000))
+                  })()}
               />
             </div>
 
             <div className='mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4'>
               <label
-                className='title-content'
-                htmlFor="instructors">
+                  className='title-content'
+                  htmlFor="instructors">
                 Instruktörer:
               </label>
               <MultiInput
-                options={getNames(instructors)}
-                placeholder='Lägg till en instruktör'
+                  options={getNames(instructors)}
+                  placeholder='Lägg till en instruktör'
               />
             </div>
             <div className='mt-1 mb-1'>
               <label className='title-content' htmlFor="students">Elever: </label>
               <MultiInput
-                options={getNames(students)}
-                placeholder='Lägg till en elev'
+                  options={getNames(students)}
+                  placeholder='Lägg till en elev'
               />
             </div>
           </div>
 
-          <div className='absolute bottom-0 w-full md:relative px-4 py-6 md:px-6 md:flex md:flex-row-reverse'>
+          <div className='flex flex-col space-y-1 mt-10'>
             <button
-              className='button-solid'
-              type='submit'
-              onClick={() => navigate(-1)}
-            > Lägg till
+                className='button-solid'
+                type='submit'
+                onClick={() => navigate(-1)}
+            > Spara
             </button>
             <button
-              className='button-outline'
-              onClick={() => navigate(-1)}
+                className='button-outline'
+
+                onClick={() => navigate(-1)}
             > Avbryt
             </button>
           </div>
         </div>
       </div>
     </div>
+
   )
 }
 
