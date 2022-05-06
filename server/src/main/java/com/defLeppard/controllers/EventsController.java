@@ -73,13 +73,11 @@ public class EventsController {
         //   should write:
         //  "/events?from=2022-01-01T00:00:00.000-00:00&to=2023-01-01T00:00:00.000-00:00"
 
-        //var ret = events;
-
         if (from.isPresent() && to.isPresent()) { //STILL TODO
 
             // Check if argument from is before argument to time wise.
             if (!from.get().before(to.get()))
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ArrayList<>());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("End date is before start date");;
 
             // Have to change the date format to SQL timestamp
             try {

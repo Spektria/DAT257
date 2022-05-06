@@ -172,11 +172,6 @@ class DatabaseService {
 
         List<Student> allStudents = jdbcTemplate.query(sqlQuery,new BeanPropertyRowMapper<>(Student.class));
 
-        //Wanted to try how the output looked but have no data in the database at the moment
-        for (int i = 0; i<=6; i++) {
-            System.out.println(allStudents.get(i));
-        }
-
         return allStudents;
     }
 
@@ -208,17 +203,18 @@ class DatabaseService {
 
     /***
      *
-     * Fetch an event from the database that matches the given event idnr
-     * @param evntId event idnr of the event that is being queried for
-     * @return the event with the given idnr, as type Event
+     * Fetch events from the database that are scheduled in a specified interval
+     * @param from start date of the inverval
+     * @param to end date of the interval
+     * @return the events within the given interval
      *
      */
     public static List<Event> fetchEventsInIntervall(Timestamp from, Timestamp to) throws EmptyResultDataAccessException  {
         String sqlQuery = "SELECT * FROM Session WHERE (fromdate < ? AND todate > ?";
 
-        Student event = jdbcTemplate.query(sqlQuery, new BeanPropertyRowMapper(Event.class), from, to);
+        List<Event> events = jdbcTemplate.query(sqlQuery, new BeanPropertyRowMapper(Event.class), from, to);
 
-        return event;
+        return events;
     }
 
 

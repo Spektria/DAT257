@@ -14,6 +14,7 @@ import java.util.Optional;
 @RequestMapping("/instructors")
 public class InstructorController {
 
+    /*
     // Dummy list
     // TODO: replace with database
     private List<Map<String, String>> instructors =
@@ -37,14 +38,38 @@ public class InstructorController {
                     )
             );
 
+    */
 
     @GetMapping("")
     @ResponseBody
-    ResponseEntity<List<Map<String, String>>> getInstructors(){
-        return ResponseEntity.status(HttpStatus.OK).body(instructors);
+    ResponseEntity<List<Instructor>> getInstructors(){
+        return ResponseEntity.status(HttpStatus.OK).body(DatabaseService.fetchAllInstructors());
     }
 
 
+    /**
+     * Returns a specific instructor given an instructors name.
+     * @param name the name of the instructor
+     * @return the instructor in JSON format
+     */
+    @GetMapping("/{name}") //Osäker på detta
+    @ResponseBody
+    ResponseEntity<?> getStudent(@PathVariable("name") String name) {
+        try {
+            var instruct = DatabaseService.fetchOneInstructor(name);
+
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not found");
+
+        }
+
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        var instructor = new JSONObject(ow.writeValueAsString(stud))
+
+        return ResponseEntity.status(HttpStatus.OK).body(instructor);
+    }
+
+    //Possibly remove as only using admin login
     /**
      * Returns instructor account data
      * @param username the username of the instructor

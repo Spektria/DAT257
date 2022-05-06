@@ -8,6 +8,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ *
+ * Data object for representing a instructor
+ * @author Jonas Röst
+ *
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Instructor {
     private String name;
