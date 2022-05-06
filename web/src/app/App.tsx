@@ -2,7 +2,7 @@
  *  File contains the root component and utilities 
  *  regarding routing and querying.
  * 
- */ 
+ */
 import Session from './components/Session';
 import SessionEditor from './components/SessionEditor';
 import NotFound from './components/NotFound';
@@ -34,26 +34,24 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 function App() {
   const location = useLocation()
   const state = location.state as Partial<LocationState>
-  const RouteCalendarModal = (path: string) => (
-    <Route path={path}
-      element={state?.background ?
-        <Calendar /> :
-        <Navigate
-          to={location.pathname}
-          state={{ ...state, background: location }} />}
-    />)
-
 
   return (
     <QueryClientProvider client={queryClient}>
       <Routes>
+        { /* Routes to normal fullscreen views */}
         <Route path="/" element={<Calendar />} />
         <Route path="*" element={<NotFound />} />
+        { /* Routes to modal views */}
         {RouteCalendarModal("/newsession")}
         {RouteCalendarModal("session/:id")}
         {RouteCalendarModal("session/:id/edit")}
       </Routes>
 
+      {
+        /* Shows the modal pane whenever the background property 
+         * of the location state is defined.
+         */
+      }
       {state?.background && (
         <Routes>
           <Route path="/newsession" element={<NewSession />} />
@@ -64,6 +62,32 @@ function App() {
       <ReactQueryDevtools />
     </QueryClientProvider>
   );
+
+  /**
+   * Route for modal components that wants the calendar 
+   * in the background
+   * 
+   * @param path - The url path  
+   * 
+   * @remarks  
+   * 
+   * Sets the background property of location state to the 
+   * calendar and then navigate to the same url path, assuming
+   * the background property isn't already present.
+   *
+   * @see {@link https://reactrouter.com/docs/en/v6/api#navigate}
+   * @see {@link https://github.com/remix-run/history/blob/main/docs/api-reference.md#location}
+   * 
+   */
+  function RouteCalendarModal(path: string) {
+    return (<Route path={path}
+      element={state?.background ?
+        <Calendar /> :
+        <Navigate
+          to={location.pathname}
+          state={{ ...state, background: location }} />}
+    />)
+  }
 }
 
 /** 
