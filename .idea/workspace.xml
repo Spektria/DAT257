@@ -3,10 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="003e7083-9e3e-4c8d-a605-162a4faa6c80" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/app/components/ListProfile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/app/components/ListProfile.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/app/components/MultiInput.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/app/components/MultiInput.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/app/components/SessionEditor.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/app/components/SessionEditor.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/tailwind.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +45,8 @@
       <workItem from="1651481090794" duration="255000" />
       <workItem from="1651481356928" duration="600000" />
       <workItem from="1651757067611" duration="6983000" />
-      <workItem from="1651770833572" duration="6252000" />
+      <workItem from="1651770833572" duration="6503000" />
+      <workItem from="1651828685292" duration="1396000" />
     </task>
     <servers />
   </component>

@@ -33,14 +33,14 @@ const Session : FC<SessionData> = data => {
 				<div className="relative px-8 pt-8 sm:p-6 sm:pb-10">
 					<div className="flex items-start">
 						<div className="mt-3 sm:mt-0 sm:ml-4 text-left w-full">
-							<div className="border-b-2 border-text-sec border-opacity-20 pb-5">
+							<div className="border-b-2 border-light-secondary border-opacity-20 pb-5">
 								<h1 className="title-page">Uppkörningstillfälle</h1>
 							</div>
 							<div className="mt-5">
 								<span className="title-content">Plats:</span>
 								<p className="subtitle-content">{data.location}</p>
 							</div>
-							<div className="mt-5 pb-5 border-b-2 border-text-sec border-opacity-20">
+							<div className="mt-5 pb-5 border-b-2 border-light-secondary border-opacity-20">
 								<span className="title-content">Tid:</span>
 								<p className="subtitle-content">{data.from.toString()}</p>
 							</div>

@@ -12,41 +12,38 @@
 @tailwind utilities;
 
 .input {
-  @apply rounded outline-none leading-8 font-medium text-text-main transition-all pl-2 pr-2 bg-button-outline bg-opacity-30 focus:border-text-main   focus:outline-text-main focus:bg-text-main focus:text-background-dark focus:outline-offset-0
+  @apply rounded outline-none leading-8 font-medium text-light-primary transition-all pl-2 pr-2 bg-button-outline bg-opacity-30 focus:border-light-primary   focus:outline-light-primary focus:bg-light-primary focus:text-dark-primary focus:outline-offset-0
 }
 
 .listitem {
-  @apply bg-button-solid text-base font-medium text-text-main rounded hover:text-background-dark hover:bg-text-main
+  @apply bg-button-solid text-base font-medium text-light-primary rounded hover:text-dark-primary hover:bg-light-primary
 }
 
 .listitem-text {
-  @apply bg-button-solid text-text-main bg-transparent w-full hover:text-background-dark border-transparent outline-none  focus:border-solid focus:border-text-main  focus:outline-offset-0 transition-all pl-2 pr-2
+  @apply bg-button-solid text-light-primary bg-transparent w-full hover:text-dark-primary border-transparent outline-none  focus:border-solid focus:border-light-primary  focus:outline-offset-0 transition-all pl-2 pr-2
 }
 
 .button-solid{
-  @apply w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-button-solid text-base font-medium text-text-main hover:text-background-dark hover:bg-text-main focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-text-main sm:ml-3 sm:w-auto sm:text-sm
+  @apply w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-button-solid text-base font-medium text-light-primary hover:text-dark-primary hover:bg-light-primary focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-light-primary sm:ml-3 sm:w-auto sm:text-sm
 }
 
 .button-outline{
-  @apply mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-button-outline bg-opacity-30 text-base font-medium text-text-main hover:bg-text-main hover:text-background-dark focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-text-main sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm
+  @apply mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-button-outline bg-opacity-30 text-base font-medium text-light-primary hover:bg-light-primary hover:text-dark-primary focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-light-primary sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm
 }
 
 .card-modal{
-  @apply relative inline-block h-full sm:h-auto align-bottom mb-0 bg-background-dark rounded-t sm:rounded-lg text-left overflow-hidden sm:shadow-xl transform transition-all sm:align-middle sm:max-w-lg w-full
+  @apply relative inline-block h-full sm:h-auto align-bottom mb-0 bg-dark-primary rounded-t sm:rounded-lg text-left overflow-hidden sm:shadow-xl transform transition-all sm:align-middle sm:max-w-lg w-full
 }
 
 .title-page{
-  @apply text-2xl leading-8 font-medium text-text-main
+  @apply text-2xl leading-8 font-medium text-light-primary
 }
 
 .title-content{
-  @apply font-medium text-text-main
+  @apply font-medium text-light-primary
 }
 
 .subtitle-content{
-  @apply text-sm text-text-sec opacity-70
+  @apply text-sm text-light-secondary opacity-70
 }
 
-.misc {
-  @apply bg-white w-full md:w-fit rounded-t md:rounded pl-4 pr-4 pt-4 pb-4 flex flex-col h-full md:h-fit justify-between border
-}
