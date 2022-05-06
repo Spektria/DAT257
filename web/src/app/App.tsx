@@ -1,4 +1,8 @@
-import { FC } from 'react';
+/** 
+ *  File contains the root component and utilities 
+ *  regarding routing and querying.
+ * 
+ */ 
 import Session from './components/Session';
 import SessionEditor from './components/SessionEditor';
 import NotFound from './components/NotFound';
@@ -17,7 +21,17 @@ import {
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 
-const App: FC = () => {
+/**
+ * Root component of the app
+ * 
+ * @remarks
+ * 
+ * App tries to be relatively small, but since it is the root 
+ * component it is suitable for facilitate communication 
+ * — between components — and handle global state.
+ * 
+ */
+function App() {
   const location = useLocation()
   const state = location.state as Partial<LocationState>
   const RouteCalendarModal = (path: string) => (
@@ -35,9 +49,9 @@ const App: FC = () => {
       <Routes>
         <Route path="/" element={<Calendar />} />
         <Route path="*" element={<NotFound />} />
-        { RouteCalendarModal("/newsession") } 
-        { RouteCalendarModal("session/:id") }
-        { RouteCalendarModal("session/:id/edit") }
+        {RouteCalendarModal("/newsession")}
+        {RouteCalendarModal("session/:id")}
+        {RouteCalendarModal("session/:id/edit")}
       </Routes>
 
       {state?.background && (
@@ -52,26 +66,83 @@ const App: FC = () => {
   );
 }
 
+/** 
+ * Instance of QueryClient
+ *  
+ * @remarks 
+ *  
+ * This is the only instance, components that which
+ * to use a QueryClient access it through useQueryClient()
+ * @see {@link https://react-query.tanstack.com/reference/useQueryClient}
+ */
 const queryClient = new QueryClient()
 
-const NewSession = () => <SessionEditor {...{ left: (useLocation().state as LocationState).date }} />
+/** 
+ * Wrapper for SessionEditor
+ *
+ * @remarks
+ * 
+ * This is intended for when a users wants to create a new session, 
+ * which is why it sets the left value of Either<CalendarDate, SessionData>.
+ * @see {@link https://reactrouter.com/docs/en/v6/api#uselocation}
+ */
+function NewSession() {
+  return <SessionEditor {...{ left: (useLocation().state as LocationState).date }} />
+}
 
-const ViewSession = () => WithParam<Number>(checkIdParam, id => {
-  const session = find(e => e.id === id, sessions)
-  return session === undefined ? undefined : <Session {...session} />
-})
 
-const EditSession = () => WithParam<Number>(checkIdParam, id => {
-  const session = find(e => e.id === id, sessions)
-  return session === undefined ? undefined : <SessionEditor {...{ right: session }} />
-})
+/** 
+ * Wrapper for SessionEditor
+ *
+ * @remarks
+ * 
+ * This is intended for when a users wants to edit an existing session, 
+ * which is why it sets the right value of Either<CalendarDate, SessionData>.
+ */
+function EditSession() {
+  return WithParam<Number>(checkIdParam, id => {
+    const session = find(e => e.id === id, sessions)
+    return session === undefined ? undefined : <SessionEditor {...{ right: session }} />
+  })
+}
 
-function checkIdParam(ps: Readonly<Params<string>>): Number | undefined {
-  const id = ps.id
+/** 
+ * Wrapper for Session
+ *
+ * @remarks 
+ *  
+ * Matches the id in the url params with the corresponding session.
+ */
+function ViewSession() {
+  return WithParam<Number>(checkIdParam, id => {
+    const session = find(e => e.id === id, sessions)
+    return session === undefined ? undefined : <Session {...session} />
+  })
+}
+
+
+/** 
+ * Checks if the url params contains an id, which
+ * is a number.
+ *
+ * @param params - Url parameters
+ */
+function checkIdParam(params: Readonly<Params<string>>): Number | undefined {
+  const id = params.id
   return (id === undefined || isNaN(+id)) ? undefined : parseInt(id)
 }
 
-function WithParam<T>(f: (ps: Readonly<Params<string>>) => T | undefined, g: (t: T) => JSX.Element | undefined): JSX.Element {
+/**
+ * HOC that generalise the task of checking and extracting the url params
+ * 
+ * @param f - Function that takes an params and return a maybe value of type T
+ * @param g - Component that takes T as props
+ * @typeParam T - Type of g's props
+ *  
+ * @see {@link https://reactjs.org/docs/higher-order-components.html}
+ * @see {@link https://reactrouter.com/docs/en/v6/api#useparams}
+ */
+function WithParam<T>(f: (params: Readonly<Params<string>>) => T | undefined, g: (t: T) => JSX.Element | undefined): JSX.Element {
   const x = f(useParams())
   if (x === undefined)
     return <NotFound />
