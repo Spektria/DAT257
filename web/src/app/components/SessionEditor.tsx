@@ -7,6 +7,7 @@ import { getStudents } from '../apis/StudentApi';
 import { getInstructors } from '../apis/InstructorApi';
 import { orElse } from '../helpers/Helpers';
 import { useNavigate } from 'react-router-dom'
+import { useQuery, useQueryClient } from 'react-query'
 
 const SessionEditor: FC<Either<CalendarDate, SessionData>> = ({ left, right }) => {
   if (right !== undefined)
@@ -34,16 +35,21 @@ const Form: FC<SessionData> = (initState) => {
   const [fromDate, setFromDate] = useState(dateStr(initState.from))
   const [toDate, setToDate] = useState(fromDate)
 
-  // Fetch names...
-  const [students, setStudents] = useState<StudentData[]>([{ name: "1", email: "1" }, { name: "2", email: "2" }]);
-  useEffect(() => {
-    getStudents().then(s => setStudents(s));
-  }, []);
-
+  const [students, setStudents] = useState<StudentData[]>();
   const [instructors, setInstructors] = useState<InstructorData[]>();
-  useEffect(() => {
-    getInstructors().then(i => setInstructors(i));
-  }, []);
+  const { isLoading, error, data } = useQuery<[StudentData[], InstructorData[]], Error>(
+        'student-instructor-names'
+        , async () => [await getStudents(), await getInstructors()]
+        , { staleTime: 600000 })
+
+  if(isLoading) return <p className='fixed text-center p-10 top-20 z-20'>Loading...</p>;
+  if(error) return <p className='fixed text-center p-10 top-20 z-20'>An error has occurred: {error.message}</p>;
+  
+  if(students === undefined)
+    setStudents(orElse(() => data?.[0], []));
+
+  if(instructors === undefined)
+    setInstructors(orElse(() => data?.[1], []));
 
   // Generalize extraction of names
   interface HasName { name: string }
