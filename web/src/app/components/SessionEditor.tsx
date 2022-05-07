@@ -7,16 +7,25 @@ import { getStudents } from '../apis/StudentApi';
 import { getInstructors } from '../apis/InstructorApi';
 import { orElse } from '../helpers/Helpers';
 import { useNavigate } from 'react-router-dom'
-import { useQuery, useQueryClient } from 'react-query'
+import { useQuery } from 'react-query'
 
-const SessionEditor: FC<Either<CalendarDate, SessionData>> = ({ left, right }) => {
+/**
+ * Component for creating and editing sessions
+ * 
+ * @param props
+ * @param props.left - Initial date of the new event
+ * @param props.right - Data of an existing session
+ */
+function SessionEditor({ left, right }: Either<CalendarDate, SessionData>) {
   if (right !== undefined)
     return (<Form {...right} />)
+  
+  /* Create Date fom CalendarDate */
   const { year, month, day, hour } = left
   const min = hour % 1 * 60
   return (
     <Form
-      id={0}  /* create a new id */
+      id={0}  /* TODO generate session id */
       title=""
       location=""
       from={new Date(year, month, day, hour, min)}
@@ -27,7 +36,12 @@ const SessionEditor: FC<Either<CalendarDate, SessionData>> = ({ left, right }) =
   )
 }
 
-const Form: FC<SessionData> = (initState) => {
+/**
+ * Component for input of session information
+ * 
+ * @param initState
+ */
+function Form(initState : SessionData) {
   const navigate = useNavigate()
   const [state, dispatch] = useReducer(
     (prevState: SessionData, newFields: Partial<SessionData>) => ({ ...prevState, ...newFields })
@@ -38,17 +52,17 @@ const Form: FC<SessionData> = (initState) => {
   const [students, setStudents] = useState<StudentData[]>();
   const [instructors, setInstructors] = useState<InstructorData[]>();
   const { isLoading, error, data } = useQuery<[StudentData[], InstructorData[]], Error>(
-        'student-instructor-names'
-        , async () => [await getStudents(), await getInstructors()]
-        , { staleTime: 600000 })
+    'student-instructor-names'
+    , async () => [await getStudents(), await getInstructors()]
+    , { staleTime: 600000 })
 
-  if(isLoading) return <p className='fixed text-center p-10 top-20 z-20'>Loading...</p>;
-  if(error) return <p className='fixed text-center p-10 top-20 z-20'>An error has occurred: {error.message}</p>;
-  
-  if(students === undefined)
+  if (isLoading) return <p className='fixed text-center p-10 top-20 z-20'>Loading...</p>;
+  if (error) return <p className='fixed text-center p-10 top-20 z-20'>An error has occurred: {error.message}</p>;
+
+  if (students === undefined)
     setStudents(orElse(() => data?.[0], []));
 
-  if(instructors === undefined)
+  if (instructors === undefined)
     setInstructors(orElse(() => data?.[1], []));
 
   // Generalize extraction of names
@@ -57,9 +71,9 @@ const Form: FC<SessionData> = (initState) => {
 
   return (
     <div className='fixed inset-0 z-10 scroll overflow-y-hidden'>
-      <div 
-        className='bg-gray-500 bg-opacity-75 h-screen' 
-        onClick={() => navigate(-1)} 
+      <div
+        className='bg-gray-500 bg-opacity-75 h-screen'
+        onClick={() => navigate(-1)}
       />
       <div className='absolute inset-0 mx-auto z-20 w-full md:w-fit mt-10'>
         <div className='card-modal-add'>
@@ -146,7 +160,6 @@ const Form: FC<SessionData> = (initState) => {
             </button>
             <button
                 className='button-outline'
-
                 onClick={() => navigate(-1)}
             > Avbryt
             </button>
@@ -158,10 +171,20 @@ const Form: FC<SessionData> = (initState) => {
   )
 }
 
+/** 
+ * Map date to time in format 'hh:mm'
+ * 
+ * @param date   
+ */
 function timeStr(date: Date): string {
   return date.toTimeString().substring(0, 5)
 }
 
+/** 
+ * Map date to date in format 'yyyy-mm-dd'
+ * 
+ * @param date   
+ */
 function dateStr(date: Date): string {
   return date.toISOString().substring(0, 10)
 }

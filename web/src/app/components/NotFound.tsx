@@ -1,5 +1,8 @@
 import { Link } from 'react-router-dom'
 
+/**
+ * Not found component with an redirect button
+ */ 
 const NotFound = () => {
   return (
     <div className='text-center'>
