@@ -16,7 +16,6 @@ function listPeople(arr: string[]) {
 
 //Element for showing water scooter driving session with CSS styling
 const Session : FC<SessionData> = data => {
-  console.log(data)
   const navigate = useNavigate()
 	return (
 		<div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
