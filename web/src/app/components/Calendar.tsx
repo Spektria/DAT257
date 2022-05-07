@@ -1,19 +1,26 @@
-import { useReducer, Component, LegacyRef, useRef } from 'react'
+import { Component, LegacyRef, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import AwesomeCalendar, { CalendarEvent, AwesomeCalendarComponent, CalendarProps } from 'react-awesome-calendar';
-import { useQuery, useQueryClient } from 'react-query'
-import { getEvents } from '../apis/EventApi'
+import AwesomeCalendar, { CalendarEvent, AwesomeCalendarComponent, CalendarProps, CalendarState } from 'react-awesome-calendar';
 import { SessionData } from '../../types/types'
 import { map } from 'ramda'
 import { useSwipeable } from 'react-swipeable'
 
+
+type Props = 
+  { onChange : (s: CalendarState) => void 
+    sessions : SessionData[]
+  }
+
 /** 
  *  Wrapper for AwesomeCalendar
+ * 
+ * @param props
+ * @param props.onChange - Change handler for CalendarState
+ * @param props.sessions 
  */
-function Calendar() {
+function Calendar({ onChange, sessions } : Props) {
   const location = useLocation()
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
 
 
   /**
@@ -40,41 +47,6 @@ function Calendar() {
     onSwipedLeft: _ => ref.current?.onClickNext()
   })
 
-  /**
-   * Reducer for fetching new events on year onChange
-   * 
-   * @remarks 
-   *
-   * It keeps track of selected year and invalidates
-   * the event query on year change
-   * @see {@link https://react-query.tanstack.com/guides/query-invalidation}
-   * @see {@link https://reactjs.org/docs/hooks-reference.html#usereducer}
-   */
-  const [year, dispatch] = useReducer(
-    (prevYear: number, newYear: number) => {
-      if (prevYear !== newYear)
-        queryClient.invalidateQueries('events')
-      return newYear
-    }
-    , new Date().getFullYear())
-
-
-  /**
-   * Queries events and display and returns early if loading or error
-   *
-   * @remarks staleTime is used extended (from 0) to avoid refetching.
-   *  
-   * @see {@link https://react-query.tanstack.com/reference/useQuery}
-   * @see {@link https://react-query.tanstack.com/guides/initial-query-data#staletime-and-initialdataupdatedat}
-   */
-  const { isLoading, error, data } =
-    useQuery<SessionData[], Error>('events', () => getEvents(year), { staleTime: 600000 })
-  if (isLoading) return <p className='text-center p-10'>Loading...</p>
-  if (error) return (
-    <p className='text-center p-10'>
-      An error has occurred: {error.message}
-    </p>)
-
 
   return (
     <div
@@ -82,8 +54,8 @@ function Calendar() {
       {...swipeHandlers}
     >
       <AwesomeCalendar
-        events={map(toEvent, data === undefined ? [] : data)}
-        onChange={state => dispatch(state.year)}
+        events={map(toEvent, sessions)}
+        onChange={onChange}
         onClickEvent={id => navigate(`session/${id}`, { state: { background: location } })}
         onClickTimeLine={date => navigate('/newsession', { state: { background: location, date: date } })}
         ref={ref as unknown as LegacyRef<Component<CalendarProps, any, any>> | undefined}
