@@ -42,14 +42,19 @@ public class Application {
 	private DatabaseService databaseService;
 	@EventListener(ApplicationReadyEvent.class)
 	public void addStudents () throws IOException {
-		//databaseService.addStudentsToDatabase(wixService.call(String.class, "students",new String[]{}).getBody());
 	}
 
 	@Autowired
 	private WixService wixService;
 
-	@Scheduled(fixedRate = 1000 * 10) // ms, i.e. 10 sec
-	private void pingWix() throws IOException {
+	/**
+	 *
+	 * Fetches the students from Wix and inserts them into our database
+	 * Updates every 3 hours
+	 * 
+	 */
+	@Scheduled(fixedRate = 1000 * 60 * 60 * 3) // ms, i.e. 10 800 seconds
+	private void fetchStudents() throws IOException {
 		databaseService.addStudentsToDatabase(wixService.call(String.class, "students",new String[]{}).getBody());
 	}
 
