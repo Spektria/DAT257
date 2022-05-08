@@ -48,4 +48,9 @@ public class Application {
 	@Autowired
 	private WixService wixService;
 
+	@Scheduled(fixedRate = 1000 * 10) // ms, i.e. 10 sec
+	private void pingWix() throws IOException {
+		databaseService.addStudentsToDatabase(wixService.call(String.class, "students",new String[]{}).getBody());
+	}
+
 }
