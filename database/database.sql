@@ -15,7 +15,7 @@ CREATE TABLE Instructor(
 	name TEXT NOT NULL); 
 
 CREATE TABLE Student(  
-	email TEXT PRIMARY KEY NOT NULL,
+	loginEmail TEXT PRIMARY KEY NOT NULL,
 	name TEXT NOT NULL);
 	 
 
