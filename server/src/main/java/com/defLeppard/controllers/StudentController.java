@@ -58,15 +58,19 @@ class StudentController {
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             var student = new JSONObject(ow.writeValueAsString(stud));
 
-            return ResponseEntity.status(HttpStatus.OK).body(property.map(student::get).isPresent()
-                    ? student.get(property.get())
-                    : student);
+            System.out.println(student);
+            if (property.isPresent())
+                return ResponseEntity.status(HttpStatus.OK).body(student.get(property.get()));
+            else
+                return ResponseEntity.status(HttpStatus.OK).body(student);
+
 
         } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not found");
 
         } catch (JSONException j) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid JSON");
+
         } catch (JsonProcessingException jp) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("JSON processing error");
         }
