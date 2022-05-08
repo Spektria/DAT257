@@ -57,7 +57,7 @@ public class Event {
     public String getEventToDate() {
         return eventToDate;
     }
-    public String getLocation() {
+    public String getEventLocation() {
         return eventLocation;
     }
 

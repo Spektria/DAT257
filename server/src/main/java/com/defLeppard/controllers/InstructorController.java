@@ -1,18 +1,26 @@
 package com.defLeppard.controllers;
 
+import com.defLeppard.services.DatabaseService;
+import com.defLeppard.services.Instructor;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import org.json.JSONException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.json.JSONObject;
 
-import java.util.HashMap;
+import java.text.ParseException;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/instructors")
 public class InstructorController {
+
+    private DatabaseService dbs = new DatabaseService();
 
     public InstructorController() throws ParseException {
     }
@@ -24,7 +32,7 @@ public class InstructorController {
     @GetMapping("")
     @ResponseBody
     ResponseEntity<List<Instructor>> getInstructors(){
-        return ResponseEntity.status(HttpStatus.OK).body(DatabaseService.fetchAllInstructors());
+        return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchAllInstructors());
     }
 
 
@@ -35,19 +43,21 @@ public class InstructorController {
      */
     @GetMapping("/{name}")
     @ResponseBody
-    ResponseEntity<?> getInstructor(@PathVariable("name") String name) {
+    ResponseEntity<?> getInstructor(@PathVariable("name") String name) throws JsonProcessingException {
         try {
-            var ret = DatabaseService.fetchOneInstructor(name);
+            Object ret = dbs.fetchOneInstructor(name);
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            var instructor = new JSONObject(ow.writeValueAsString(ret));
 
+            return ResponseEntity.status(HttpStatus.OK).body(instructor);
         } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not found");
 
+        } catch (JSONException j) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid JSON");
         }
 
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        var instructor = new JSONObject(ow.writeValueAsString(ret))
 
-        return ResponseEntity.status(HttpStatus.OK).body(instructor);
     }
 
     //Possibly remove as only using admin login

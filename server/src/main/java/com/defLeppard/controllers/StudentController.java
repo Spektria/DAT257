@@ -2,12 +2,17 @@ package com.defLeppard.controllers;
 
 import com.defLeppard.services.DatabaseService;
 import com.defLeppard.services.Student;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.json.JSONException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +29,8 @@ import java.util.Optional;
 @RequestMapping("/students")
 class StudentController {
 
+    private DatabaseService dbs = new DatabaseService();
+
     public StudentController() throws ParseException {
     }
 
@@ -34,7 +41,7 @@ class StudentController {
     @GetMapping("")
     @ResponseBody
     ResponseEntity<List<Student>> getStudents(){
-        return ResponseEntity.status(HttpStatus.OK).body(DatabaseService.fetchAllStudents());
+        return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchAllStudents());
     }
 
     /**
@@ -45,21 +52,26 @@ class StudentController {
      */
     @GetMapping("/{email}")
     @ResponseBody
-    ResponseEntity<?> getStudent(@PathVariable("email") String email, @RequestParam("property") Optional<String> property){
+    ResponseEntity<?> getStudent(@PathVariable("email") String email, @RequestParam("property") Optional<String> property)  {
         try {
-            var stud = DatabaseService.fetchOneStudent(email.toLowerCase());
+            var stud = dbs.fetchOneStudent(email.toLowerCase());
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            var student = new JSONObject(ow.writeValueAsString(stud));
+
+            return ResponseEntity.status(HttpStatus.OK).body(property.map(student::get).isPresent()
+                    ? student.get(property.get())
+                    : student);
 
         } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not found");
 
+        } catch (JSONException j) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid JSON");
+        } catch (JsonProcessingException jp) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("JSON processing error");
         }
 
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        var student = new JSONObject(ow.writeValueAsString(stud))
 
-        return ResponseEntity.status(HttpStatus.OK).body(property.map(student::get).isPresent()
-                ? student.get(property.get())
-                : student);
     }
 
 }

@@ -1,11 +1,13 @@
 package com.defLeppard.services;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.stereotype.Service;
 
 /**
@@ -25,7 +27,7 @@ class DatabaseService {
     /**
      *
      * Inserts students into the database
-     * @param jsonArray the json array as a Java string that contains the students that should be inserted into the database
+     * @param json the json as a Java string that contains the students that should be inserted into the database
      * @return the number of rows affected in the database
      *
      */
@@ -73,7 +75,7 @@ class DatabaseService {
     /**
      *
      * Inserts events into the database
-     * @param jsonArray the json array as a Java string that contains the events that should be inserted into the database
+     * @param json the json as a Java string that contains the events that should be inserted into the database
      * @return the number of rows affected in the database
      *
      */
@@ -122,7 +124,7 @@ class DatabaseService {
     /**
      *
      * Inserts instructors into the database
-     * @param jsonArray the json array as a Java string that contains the instructors that should be inserted into the database
+     * @param json the json as a Java string that contains the instructors that should be inserted into the database
      * @return the number of rows affected in the database
      *
      */
@@ -152,7 +154,7 @@ class DatabaseService {
     /***
      *
      * Inserts a list of events into the internal database
-     * @param events list of events to be inserted into the database
+     * @param instructors list of instructors to be inserted into the database
      * @return the number of rows affected in the database
      *
      */
@@ -172,7 +174,7 @@ class DatabaseService {
      * @return the list of all students as Student objects that exist in the database
      *
      */
-    public static List<Student> fetchAllStudents() {
+    public List<Student> fetchAllStudents() {
         String sqlQuery = "SELECT * FROM Student";
 
         List<Student> allStudents = jdbcTemplate.query(sqlQuery,new BeanPropertyRowMapper<>(Student.class));
@@ -188,9 +190,9 @@ class DatabaseService {
      * @return the student with the given email, as type Student
      *
      */
-    public static Student fetchOneStudent(String studentEmail) throws EmptyResultDataAccessException {
+    public Object fetchOneStudent(String studentEmail) throws EmptyResultDataAccessException {
         String sqlQuery = "SELECT * FROM Student WHERE email = ?";
-        return jdbcTemplate.queryForObject(sqlQuery, new Object[]{studentEmail}, new BeanPropertyRowMapper(Student.class));
+        return jdbcTemplate.queryForObject(sqlQuery, new BeanPropertyRowMapper(Student.class), studentEmail);
     }
 
 
@@ -200,7 +202,7 @@ class DatabaseService {
      * @return the list of all events as Event objects that exist in the database
      *
      */
-    public static List<Event> fetchAllEvents() {
+    public List<Event> fetchAllEvents() {
         String sqlQuery = "SELECT * FROM Session";
 
         List<Event> allEvents = jdbcTemplate.query(sqlQuery,new BeanPropertyRowMapper<>(Event.class));
@@ -212,12 +214,14 @@ class DatabaseService {
     /***
      *
      * Fetch events from the database that are scheduled in a specified interval
-     * @param from start date of the inverval
-     * @param to end date of the interval
+     * @param fromDate start date of the inverval
+     * @param toDate end date of the interval
      * @return the events within the given interval
      *
      */
-    public static List<Event> fetchEventsInIntervall(Timestamp from, Timestamp to) throws EmptyResultDataAccessException  {
+    public List<Event> fetchEventsInIntervall(Date fromDate, Date toDate) throws EmptyResultDataAccessException  {
+        Timestamp from = new Timestamp(fromDate.getTime());
+        Timestamp to = new Timestamp(toDate.getTime());
         String sqlQuery = "SELECT * FROM Session WHERE (fromdate < ? AND todate > ?";
 
         List<Event> events = jdbcTemplate.query(sqlQuery, new BeanPropertyRowMapper(Event.class), from, to);
@@ -232,7 +236,7 @@ class DatabaseService {
      * @return the list of all instructors as Instructor objects that exist in the database
      *
      */
-    public static List<Instructor> fetchAllInstructors() {
+    public List<Instructor> fetchAllInstructors() {
         String sqlQuery = "SELECT * FROM Instructor";
 
         List<Instructor> allInstructors = jdbcTemplate.query(sqlQuery,new BeanPropertyRowMapper<>(Instructor.class));
@@ -244,14 +248,14 @@ class DatabaseService {
     /***
      *
      * Fetch a student from the database that matches the given email
-     * @param studentEmail email of the student that is being queried for
+     * @param instructorName email of the student that is being queried for
      * @return the student with the given email, as type Student
      *
      */
-    public static Instructor fetchOneInstructor(String instructorName) throws EmptyResultDataAccessException {
+    public Object fetchOneInstructor(String instructorName) throws EmptyResultDataAccessException {
         String sqlQuery = "SELECT * FROM Instructor WHERE name = ?";
 
-        Instructor instructor = jdbcTemplate.queryForObject(sqlQuery, new Object[]{instructorName}, new BeanPropertyRowMapper(Instructor.class));
+        Object instructor = jdbcTemplate.queryForObject(sqlQuery, new BeanPropertyRowMapper(Instructor.class), instructorName);
 
         return instructor;
     }
