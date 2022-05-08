@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 public class EventsController {
 
     private final DateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+  
     private DatabaseService dbs = new DatabaseService();
-
 
     public EventsController() throws ParseException {
     }

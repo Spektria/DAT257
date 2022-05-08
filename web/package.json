@@ -14,13 +14,14 @@
     "@types/react-router-dom": "^5.3.3",
     "ramda": "^0.28.0",
     "react": "^18.0.0",
-    "react-awesome-calendar": "fredins/react-awesome-calendar.git#6028a1914ef4cd50bbdff2f7cecf32a931e3d957",
     "react-dom": "^18.0.0",
     "react-icons": "^4.3.1",
+    "react-awesome-calendar": "fredins/react-awesome-calendar.git#ac4822146f8bcff8dee89f330b69ac7286e92631",
     "react-query": "^3.38.0",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
+    "react-swipeable": "^7.0.0",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
