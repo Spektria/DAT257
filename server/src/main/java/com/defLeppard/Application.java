@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.HashMap;
 
 
@@ -41,9 +42,10 @@ public class Application {
 	private DatabaseService databaseService;
 	@EventListener(ApplicationReadyEvent.class)
 	public void addStudents () throws IOException {
-		//databaseService.addStudentsToDatabase("src/main/java/com/defLeppard/services/testJSONStudent.json");
+		//databaseService.addStudentsToDatabase(wixService.call(String.class, "students",new String[]{}).getBody());
 	}
 
 	@Autowired
 	private WixService wixService;
+
 }
