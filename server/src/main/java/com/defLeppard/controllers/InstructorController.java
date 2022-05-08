@@ -14,32 +14,13 @@ import java.util.Optional;
 @RequestMapping("/instructors")
 public class InstructorController {
 
-    /*
-    // Dummy list
-    // TODO: replace with database
-    private List<Map<String, String>> instructors =
-            List.of(
-                    Map.of(
-                            "name", "instructor1",
-                            "login", "123",
-                            "email", "instructor1@skoter.com"
-                    ),
+    public InstructorController() throws ParseException {
+    }
 
-                    Map.of(
-                            "name", "instructor2",
-                            "login", "321",
-                            "email", "instructor2@skoter.com"
-                    ),
-
-                    Map.of(
-                            "name", "instructor3",
-                            "login", "admin",
-                            "email", "instructor3@skoter.com"
-                    )
-            );
-
-    */
-
+    /**
+     * Returns a list of all instructors in JSON format.
+     * @return the list of instructors
+     */
     @GetMapping("")
     @ResponseBody
     ResponseEntity<List<Instructor>> getInstructors(){
@@ -52,11 +33,11 @@ public class InstructorController {
      * @param name the name of the instructor
      * @return the instructor in JSON format
      */
-    @GetMapping("/{name}") //Osäker på detta
+    @GetMapping("/{name}")
     @ResponseBody
-    ResponseEntity<?> getStudent(@PathVariable("name") String name) {
+    ResponseEntity<?> getInstructor(@PathVariable("name") String name) {
         try {
-            var instruct = DatabaseService.fetchOneInstructor(name);
+            var ret = DatabaseService.fetchOneInstructor(name);
 
         } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not found");
@@ -64,7 +45,7 @@ public class InstructorController {
         }
 
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        var instructor = new JSONObject(ow.writeValueAsString(stud))
+        var instructor = new JSONObject(ow.writeValueAsString(ret))
 
         return ResponseEntity.status(HttpStatus.OK).body(instructor);
     }

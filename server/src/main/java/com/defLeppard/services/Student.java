@@ -28,8 +28,6 @@ private String studentName;
      * @return Returns the read JSON objects into java objects
      *
      */
-
-
     public static List<Student> createStudents(String json) throws IOException {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -41,13 +39,12 @@ private String studentName;
 
     /**
      * 
-     * Help methods to return and get students name and email
+     * Helper methods to return and get students name and email
      *
      */
     public String getStudentName() {
         return studentName;
     }
-
     public String getStudentEmail() {
         return studentEmail;
     }
@@ -55,7 +52,6 @@ private String studentName;
     public void setStudentName(String studentName) {
         this.studentName = studentName;
     }
-
     public void setStudentEmail(String studentEmail) {
         this.studentEmail = studentEmail;
     }

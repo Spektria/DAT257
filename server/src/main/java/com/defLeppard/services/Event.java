@@ -15,11 +15,11 @@ import java.util.List;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Event {
-    private String idnr;
-    private String title;
-    private String fromDate;
-    private String toDate;
-    private String location;
+    private String eventIdnr;
+    private String eventTitle;
+    private String eventFromDate;
+    private String eventToDate;
+    private String eventLocation;
 
     public Event()  {
 
@@ -45,38 +45,36 @@ public class Event {
      * Getters and setters for the class
      *
      */
-
     public String getEventIdnr() {
-        return idnr;
+        return eventIdnr;
     }
     public String getEventTitle() {
-        return title;
+        return eventTitle;
     }
     public String getEventFromDate() {
-        return fromDate;
+        return eventFromDate;
     }
     public String getEventToDate() {
-        return toDate;
+        return eventToDate;
     }
     public String getLocation() {
-        return location;
+        return eventLocation;
     }
 
     public void setEventIdnr(String eventIdnr) {
         this.eventIdnr = eventIdnr;
     }
-
     public void setEventTitle(String eventTitle) {
-        this.title = eventTitle;
+        this.eventTitle = eventTitle;
     }
     public void setEventFromDate(String eventFromDate) {
-        this.fromDate = eventFromDate;
+        this.eventFromDate = eventFromDate;
     }
     public void setEventToDate(String eventToDate) {
-        this.toDate = eventToDate;
+        this.eventToDate = eventToDate;
     }
     public void setLocation(String location) {
-        this.location = location;
+        this.eventLocation = location;
     }
 
 

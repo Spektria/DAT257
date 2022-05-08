@@ -29,10 +29,11 @@ class DatabaseService {
      * @return the number of rows affected in the database
      *
      */
-    public int addStudentsToDatabase(String jsonArray) throws IOException {
-        List<Student> studentList = Student.createStudents(jsonArray);
+    public int addStudentsToDatabase(String json) throws IOException {
+        List<Student> studentList = Student.createStudents(json);
         return addStudents(studentList);
     }
+
 
     /**
      *
@@ -49,6 +50,7 @@ class DatabaseService {
 
         return rowsAffected;
     }
+
 
     /**
      *
@@ -75,10 +77,11 @@ class DatabaseService {
      * @return the number of rows affected in the database
      *
      */
-    public int addEventsToDatabase(String jsonArray) throws IOException {
-        List<Event> eventList = Event.createEvents(jsonArray);
+    public int addEventsToDatabase(String json) throws IOException {
+        List<Event> eventList = Event.createEvents(json);
         return addEvents(eventList);
     }
+
 
     /**
      *
@@ -115,6 +118,7 @@ class DatabaseService {
         return totalRowsAffected;
     }
 
+
     /**
      *
      * Inserts instructors into the database
@@ -122,10 +126,11 @@ class DatabaseService {
      * @return the number of rows affected in the database
      *
      */
-    public int addInstructorsToDatabase(String jsonArray) throws IOException {
-        List<Instructor> instructorList = Instructor.createInstructors(jsonArray);
-        return addInstructors(eventList);
+    public int addInstructorsToDatabase(String json) throws IOException {
+        List<Instructor> instructorList = Instructor.createInstructors(json);
+        return addInstructors(instructorList);
     }
+
 
     /**
      *
@@ -175,6 +180,7 @@ class DatabaseService {
         return allStudents;
     }
 
+
     /***
      *
      * Fetch a student from the database that matches the given email
@@ -186,6 +192,7 @@ class DatabaseService {
         String sqlQuery = "SELECT * FROM Student WHERE email = ?";
         return jdbcTemplate.queryForObject(sqlQuery, new Object[]{studentEmail}, new BeanPropertyRowMapper(Student.class));
     }
+
 
     /***
      *
@@ -200,6 +207,7 @@ class DatabaseService {
 
         return allEvents;
     }
+
 
     /***
      *
@@ -240,13 +248,11 @@ class DatabaseService {
      * @return the student with the given email, as type Student
      *
      */
-    public static Instructor fetchOneInstructor(String instructorName) {
+    public static Instructor fetchOneInstructor(String instructorName) throws EmptyResultDataAccessException {
         String sqlQuery = "SELECT * FROM Instructor WHERE name = ?";
-        try {
-           Instructor instructor = jdbcTemplate.queryForObject(sqlQuery, new Object[]{instructorName}, new BeanPropertyRowMapper(Instructor.class));
-        } catch (EmptyResultDataAccessException e) {
-            return null;
-        }
+
+        Instructor instructor = jdbcTemplate.queryForObject(sqlQuery, new Object[]{instructorName}, new BeanPropertyRowMapper(Instructor.class));
+
         return instructor;
     }
 

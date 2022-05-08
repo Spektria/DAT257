@@ -24,10 +24,8 @@ import java.util.Optional;
 @RequestMapping("/students")
 class StudentController {
 
-    // Dummy list
-    // TODO: replace with database
-   // private List<Student> students = DatabaseService.fetchAllStudentsFromDatabase();
-
+    public StudentController() throws ParseException {
+    }
 
     /**
      * Returns a list of all students in JSON format.

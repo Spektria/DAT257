@@ -16,11 +16,10 @@ import java.util.List;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Instructor {
-    private String name;
+    private String instructorName;
 
     public Instructor() {
     }
-
 
     /**
      *
@@ -28,11 +27,11 @@ public class Instructor {
      * @return Returns the read JSON objects into java objects
      *
      */
-    public static List<Event> createInstructors(String json) throws IOException {
+    public static List<Instructor> createInstructors(String json) throws IOException {
 
         ObjectMapper mapper = new ObjectMapper();
 
-        List<Event> instructors = mapper.readValue(new File(json), new TypeReference<List<Instructor>>(){}); //Om input ej är en fil: ta bort new File() runt json
+        List<Instructor> instructors = mapper.readValue(new File(json), new TypeReference<List<Instructor>>(){}); //Om input ej är en fil: ta bort new File() runt json
 
         return instructors;
     }
@@ -44,7 +43,7 @@ public class Instructor {
      *
      */
     public String getName() {
-        return name;
+        return instructorName;
     }
     public void setInstructorName(String instructorName) {
         this.instructorName = instructorName;
