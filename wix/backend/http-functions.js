@@ -26,6 +26,40 @@ backend/http-functions.js
 import {getSecret} from 'wix-secrets-backend';
 import { ok, badRequest, notFound } from 'wix-http-functions';
 
+export function get_myFunction(request) {
+  let options = {
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  };
+  // query a collection to find matching items
+  return wixData.query("myUsersCollection")
+    .eq("firstName", request.path[0])
+    .eq("lastName", request.path[1])
+    .find()
+    .then( (results) => {
+      // matching items were found
+      if(results.items.length > 0) {
+        options.body = {
+          "items": results.items
+        };
+        return ok(options);
+      }
+      // no matching items found
+      options.body = {
+        "error": `${request.path[0]} ${request.path[1]} wasn't found`
+      };
+      return notFound(options);
+    } )
+    // something went wrong
+    .catch( (error) => {
+      options.body = {
+        "error": error
+      };
+      return serverError(options);
+    } );
+}
+
 // Used to verify that the request contains 
 // a valid API key in path 0.
 async function verify(request){
@@ -139,9 +173,15 @@ export async function get_students(request){
        "body": ""
    };
 
+      const options = {
+     "suppressAuth": true,
+     "suppressHooks": true
+     };
+
   if(await verify(request)){
      return wixData.query('Members/PrivateMembersData')
-       .find()
+       .limit(1000)
+       .find(options)
        .then( (results) => {
 
          const pruned = results.items
