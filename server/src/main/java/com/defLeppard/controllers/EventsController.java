@@ -57,10 +57,16 @@ public class EventsController {
 
             // Check if argument from is before argument to time wise.
             if (!from.get().before(to.get()))
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("End date is before start date");;
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("End date is before start date");
 
+            Date fromDate = from.get();
+            Date toDate = to.get();
+
+            Timestamp fromD = new Timestamp(fromDate.getTime());
+            Timestamp toD = new Timestamp(toDate.getTime());
             try {
-                var retEvents = dbs.fetchEventsInIntervall(from, to);
+
+                var retEvents = dbs.fetchEventsInIntervall(fromD, toD);
                 return ResponseEntity.status(HttpStatus.OK).body(retEvents);
 
             } catch (EmptyResultDataAccessException e) {
