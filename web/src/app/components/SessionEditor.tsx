@@ -57,6 +57,10 @@ function Form(initState : SessionData) {
     , async () => [await getStudents(), await getInstructors()]
     , { staleTime: 600000 })
 
+  // Fetch title and location
+  const [title, setTitle] = useState(state.title);
+  const [location, setLocation] = useState(state.location);
+
   if (isLoading) return <p className='fixed text-center p-10 top-20 z-20'>Loading...</p>;
   if (error) return <p className='fixed text-center p-10 top-20 z-20'>An error has occurred: {error.message}</p>;
 
@@ -69,10 +73,6 @@ function Form(initState : SessionData) {
   // Generalize extraction of names
   interface HasName { name: string }
   const getNames = (list: HasName[] | undefined) => orElse(() => list?.map(s => s.name), [])(null);
-
-  // Fetch title and location
-  const [title, setTitle] = useState(state.title);
-  const [location, setLocation] = useState(state.location);
 
   return (
     <div className='fixed inset-0 z-10 scroll overflow-y-hidden'>
