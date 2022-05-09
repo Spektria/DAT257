@@ -192,7 +192,9 @@ class DatabaseService {
      */
     public Object fetchOneStudent(String studentEmail) throws EmptyResultDataAccessException {
         String sqlQuery = "SELECT * FROM Student WHERE email = ?";
-        return jdbcTemplate.queryForObject(sqlQuery, new BeanPropertyRowMapper(Student.class), studentEmail);
+        Student s = (Student) jdbcTemplate.queryForObject(sqlQuery, new BeanPropertyRowMapper(Student.class), studentEmail);
+        System.out.println(s.getStudentEmail());
+        return s;
     }
 
 
