@@ -59,7 +59,7 @@ const Session : FC<SessionData> = data => {
 					<button 
 					type="button"
 					className="button-solid"
-					onClick={() => navigate(-1)}
+					onClick={() => navigate("/session/" + data.id + "/edit")}
 					>Redigera
 				  </button>
 					<button 
