@@ -59,11 +59,11 @@ const Form: FC<SessionData> = (initState) => {
         <div className='bg-white w-full md:w-fit rounded-t md:rounded pl-4 pr-4 pt-4 pb-4 flex flex-col h-full md:h-fit justify-between border'>
           <div className='flex flex-col'>
             <div className='flex-row justify-between mt-1 mb-1 '>
-              <input className='input text-lg' name='title' type="text" placeholder="Titel" />
+              <input className='input text-lg' name='title' type="text" placeholder="Titel" onChange={e => dispatch({title: e.target.value, id: Math.random()})}/>
             </div>
 
             <div className='flex-row justify-between mt-1 mb-3 border-b-2 pb-4'>
-              <input className='input text-lg' name='place' type="text" placeholder="Plats" />
+              <input className='input text-lg' name='place' type="text" placeholder="Plats" onChange={e => dispatch({location: e.target.value, id: Math.random()})}/>
             </div>
 
             <p className='text-lg'>Datum</p>
@@ -73,7 +73,18 @@ const Form: FC<SessionData> = (initState) => {
                 name='from'
                 type="date"
                 value={fromDate}
-                onChange={e => setFromDate(e.target.value)}
+                onChange={e => {
+                  setFromDate(e.target.value)
+                  const y = parseInt((e.target.value).substr(0, 4))
+                  const m = parseInt((e.target.value).substr(5, 6))
+                  const d = parseInt((e.target.value).substr(8, 9))
+                  const date = state.from
+                  date.setFullYear(y)
+                  date.setMonth(m-1)
+                  date.setDate(d)
+                  dispatch({from: new Date(date), id: Math.random()})
+                }}
+                
               />
               <FaLongArrowAltRight className='inline ml-2 mr-2' />
               <input
@@ -82,7 +93,18 @@ const Form: FC<SessionData> = (initState) => {
                 type="date"
                 min={fromDate}
                 value={toDate}
-                onChange={e => setToDate(e.target.value)}
+                onChange={e => {
+                  setToDate(e.target.value)
+                  const y = parseInt((e.target.value).substr(0, 4))
+                  const m = parseInt((e.target.value).substr(5, 6))
+                  const d = parseInt((e.target.value).substr(8, 9))
+                  const date = state.to
+                  date.setFullYear(y)
+                  date.setMonth(m-1)
+                  date.setDate(d)
+                  dispatch({to: new Date(date), id: Math.random()})
+                }}
+                
               />
             </div>
 
@@ -93,6 +115,14 @@ const Form: FC<SessionData> = (initState) => {
                 name='from'
                 type="time"
                 defaultValue={timeStr(initState.from)}
+                onChange={e => {
+                  const h = parseInt((e.target.value).substr(0, 2))
+                  const m = parseInt((e.target.value).substr(3, 5))
+                  const d = state.from
+                  d.setHours(h+2)
+                  d.setMinutes(m)
+                  dispatch({from: new Date(d), id: Math.random()})
+                }}
               />
               <FaLongArrowAltRight className='inline ml-2 mr-2' />
               <input
@@ -105,6 +135,14 @@ const Form: FC<SessionData> = (initState) => {
                     new Date(d.getFullYear(), d.getMonth(), d.getDay(), 24, 0) :
                     new Date(d.getTime() + 2 * 3600000))
                 })()}
+                onChange={e => {
+                  const h = parseInt((e.target.value).substr(0, 2))
+                  const m = parseInt((e.target.value).substr(3, 5))
+                  const d = state.to
+                  d.setHours(h+2)
+                  d.setMinutes(m)
+                  dispatch({to: new Date(d), id: Math.random()})
+                }}
               />
             </div>
 
@@ -136,7 +174,15 @@ const Form: FC<SessionData> = (initState) => {
                        active:shadow-inner active:bg-red-600
                        active:border-red-700'
               type='submit'
-              onClick={() => navigate(-1)}
+              onClick={() => {fetch('http://localhost:8080/events/new',
+              {method: 'POST',
+              headers: {'Content-Type': "application/json",},
+              body: JSON.stringify(state)})
+              .then(response => response.json())
+              .then(data => console.log(data))
+              .catch(error => console.log(error));
+              navigate(-1)}
+              }
             > Spara
             </button>
             <button
