@@ -184,8 +184,10 @@ const Form: FC<SessionData> = (initState) => {
               {method: 'POST',
               headers: {'Content-Type': "application/json",},
               body: JSON.stringify(state)})
-              .then(response => response.json())
-              .then(data => console.log(data))
+              .then(response => {
+                if (response.status === 200) {response.json()}
+                else{alert("Something went wrong! Your event was not saved.")}
+              })
               .catch(error => console.log(error));
               navigate(-1)}
               }
