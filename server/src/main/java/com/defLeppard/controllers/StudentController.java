@@ -78,7 +78,8 @@ class StudentController {
 
 
     /**
-     * Returns a list of educational moments for the given student.
+     * Returns a list of {@link EduMoment educational moments} for the given student or, given optional parameter,
+     * a single educational moment for the given student, given the name of the moment.
      * @param email the student's email.
      * @return the list of educational moments.
      */
