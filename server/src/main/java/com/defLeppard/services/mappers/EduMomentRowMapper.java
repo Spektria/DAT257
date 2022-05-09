@@ -13,6 +13,6 @@ import java.sql.SQLException;
 class EduMomentRowMapper implements RowMapper<EduMoment> {
     @Override
     public EduMoment mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new EduMoment(rs.getString("educationalmoment"), "EMPTY", rs.getBoolean("completed"));
+        return new EduMoment(rs.getString("educationalmoment"), rs.getString("description"), rs.getBoolean("completed"));
     }
 }

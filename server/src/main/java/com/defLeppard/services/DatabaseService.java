@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -29,8 +30,10 @@ class DatabaseService {
      * @return the list of educational moments
      */
     public List<EduMoment> getMoments(String studentEmail){
-        final String q = "SELECT * FROM studenteducationalmoments WHERE studentEmail = '" + studentEmail + "';";
-        return jdbcTemplate.query(q, RowMapperFactory.createRowMapper(EduMoment.class));
+
+        final String qMoments = "SELECT educationalMoment, description, completed FROM EducationalMoment," +
+                " StudentEducationalMoments WHERE studentEmail = '" + studentEmail + "';";
+        return  jdbcTemplate.query(qMoments, RowMapperFactory.createRowMapper(EduMoment.class));
     }
 
     /**
