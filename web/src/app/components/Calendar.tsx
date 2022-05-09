@@ -1,41 +1,64 @@
-import { FC, useReducer } from 'react'
+import { Component, LegacyRef, useRef } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import AwesomeCalendar, { Event_ } from 'react-awesome-calendar';
-import { useQuery, useQueryClient } from 'react-query'
-import { getEvents } from '../apis/EventApi'
+import AwesomeCalendar, { CalendarEvent, AwesomeCalendarComponent, CalendarProps, CalendarState } from 'react-awesome-calendar';
 import { SessionData } from '../../types/types'
 import { map } from 'ramda'
+import { useSwipeable } from 'react-swipeable'
 
-/** Calendar component */
-const Calendar: FC = () => {
+
+type Props = 
+  { onChange : (s: CalendarState) => void 
+    sessions : SessionData[]
+  }
+
+/** 
+ *  Wrapper for AwesomeCalendar
+ * 
+ * @param props
+ * @param props.onChange - Change handler for CalendarState
+ * @param props.sessions 
+ */
+function Calendar({ onChange, sessions } : Props) {
   const location = useLocation()
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
-  const [year, dispatch] = useReducer(
-    (prevYear: number, newYear: number) => {
-      if (prevYear !== newYear)
-        queryClient.invalidateQueries('events')
-      return newYear
-    }
-    , new Date().getFullYear())
-
-  const { isLoading, error, data } =
-    useQuery<SessionData[], Error>('events', () => getEvents(year), { staleTime:600000 })
 
 
-  if (isLoading) return <p className='text-center p-10'>Loading...</p>
-  if (error) return (
-    <p className='text-center p-10'>
-      An error has occurred: {error.message}
-    </p>)
+  /**
+   * Reference for AwesomeCalendar
+   * 
+   * @remarks 
+   *  
+   * Through the reference it is possible access all the methods defined in
+   * the AwesomeCalendarComponent interface, see file 'awesome-calendar.d.ts'.
+   * Currently only onClickPrev and onClickNext are used.
+   * 
+   * @see {@link https://reactjs.org/docs/hooks-reference.html#useref}
+   * @see {@link https://github.com/fredins/react-awesome-calendar}
+   */ 
+  const ref = useRef<AwesomeCalendarComponent>(null)
+
+  /**
+   * Swipe Handlers for changing year, month, or day
+   * 
+   * @see {@link https://github.com/FormidableLabs/react-swipeable}
+   */
+  const swipeHandlers = useSwipeable({
+    onSwipedRight: _ => ref.current?.onClickPrev(),
+    onSwipedLeft: _ => ref.current?.onClickNext()
+  })
+
 
   return (
-    <div className='pl-4 pr-4'>
+    <div
+      className='pl-4 pr-4'
+      {...swipeHandlers}
+    >
       <AwesomeCalendar
-        events={map(toEvent, data === undefined ? [] : data)}
-        onChange={state => dispatch(state.year)}
+        events={map(toEvent, sessions)}
+        onChange={onChange}
         onClickEvent={id => navigate(`session/${id}`, { state: { background: location } })}
         onClickTimeLine={date => navigate('/newsession', { state: { background: location, date: date } })}
+        ref={ref as unknown as LegacyRef<Component<CalendarProps, any, any>> | undefined}
       />
     </div>
   );
@@ -43,11 +66,11 @@ const Calendar: FC = () => {
 
 
 /** 
-* Function for mapping SessionData to a calendar event
+* Function for mapping SessionData to CalendarEvent 
 * @param session
 * @returns a calendar event
 */
-function toEvent(session: SessionData): Event_ {
+function toEvent(session: SessionData): CalendarEvent {
   return (
     {
       id: session.id,

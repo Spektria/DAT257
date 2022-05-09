@@ -13,6 +13,7 @@ type Props = {
   options: string[]
   placeholder?: string
   onChange?: (arr: Input[]) => void
+  defaultValue?: Input[]
 }
 
 /**
@@ -25,8 +26,8 @@ type Input = {
 }
 
 /** Mutli input component with searchable options. */
-const MultiInput: FC<Props> = ({ options, placeholder, onChange }) => {
-  const [list, dispatch] = useReducer(reducer, [])
+const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue }) => {
+  const [list, dispatch] = useReducer(reducer, defaultValue ? defaultValue : [])
   const [input, setInput] = useState("")
 
   return (
@@ -41,9 +42,9 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange }) => {
           />
           , list)}
       </ul>
-      <div className='flex flex-row items-center'>
+      <div className='flex flex-row items-center '>
         <MdAddCircle
-          className='cursor-pointer ml-1 mr-1 inline pb-{1}'
+          className='cursor-pointer fill-light-primary ml-1 mr-1 inline pb-{1}'
           size='26px'
           onClick={_ => updateList(input)}
         />
@@ -57,7 +58,7 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange }) => {
   )
 
   function updateList(input: string) {
-    if(input !== '')
+    if (input !== '')
       dispatch({ name: input, id: Math.random() })
   }
 

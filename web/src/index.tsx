@@ -4,13 +4,29 @@ import './index.css';
 import App from './app/App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from 'react-query'
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
+
+/** 
+ * Instance of QueryClient
+ *  
+ * @remarks 
+ *  
+ * This is the only instance, components that which
+ * to use a QueryClient access it through useQueryClient()
+ * 
+ * @see {@link https://react-query.tanstack.com/reference/useQueryClient}
+ */
+const queryClient = new QueryClient()
+
 root.render(
   <StrictMode>
     <BrowserRouter>
-      <App />
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
     </BrowserRouter>
   </StrictMode>,
 );
