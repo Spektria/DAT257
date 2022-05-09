@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS Instructor(
 	name TEXT NOT NULL); 
 
 CREATE TABLE IF NOT EXISTS Student(
-	email TEXT PRIMARY KEY NOT NULL,
+	loginEmail TEXT PRIMARY KEY NOT NULL,
 	name TEXT NOT NULL);
 	 
 
@@ -24,12 +24,13 @@ CREATE TABLE IF NOT EXISTS EducationalMoment(
 	description TEXT NOT NULL); 
 	
 CREATE TABLE IF NOT EXISTS StudentEducationalMoments(
-	educationalMoment TEXT REFERENCES EducationalMoment(name) PRIMARY KEY NOT NULL,
-	studentEmail TEXT REFERENCES Student(email),
-	completed BOOLEAN NOT NULL); 
+	educationalMoment TEXT REFERENCES EducationalMoment(name) NOT NULL,
+	studentEmail TEXT REFERENCES Student(loginEmail) NOT NULL,
+	completed BOOLEAN NOT NULL,
+	PRIMARY KEY (educationalMoment, studentEmail)); 
 
 CREATE TABLE IF NOT EXISTS Attend( 
-	studentEmail TEXT REFERENCES Student(email) NOT NULL,
+	studentEmail TEXT REFERENCES Student(loginEmail) NOT NULL,
 	instructor TEXT REFERENCES Instructor(login) NOT NULL,
 	sessionIdnr INT NOT NULL,
 	sessionLocation TEXT NOT NULL,
