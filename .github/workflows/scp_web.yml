@@ -1,4 +1,4 @@
-name: SCB web
+name: SCP web
 
 on:
   workflow_dispatch:
