@@ -37,6 +37,8 @@ function SessionEditor({ left, right }: Either<CalendarDate, SessionData>) {
   )
 }
 
+var nextId : number = 0
+
 /**
  * Component for input of session information
  * 
@@ -155,7 +157,7 @@ function Form(initState : SessionData) {
               <MultiInput
                 options={getNames(instructors)}
                 placeholder='Lägg till en instruktör'
-				        defaultValue={map(i => { return {name: i.name, id: 0}}, instructors!)}
+				        defaultValue={map(i => { return {name: i.name, id: nextId++}}, instructors!)}
               />
             </div>
             <div className='mt-1 mb-1'>
@@ -163,7 +165,7 @@ function Form(initState : SessionData) {
               <MultiInput
                 options={getNames(students)}
                 placeholder='Lägg till en elev'
-				        defaultValue={map(i => { return {name: i.name, id: 0}}, students!)}
+				        defaultValue={map(i => { return {name: i.name, id: nextId++}}, students!)}
               />
             </div>
           </div>
