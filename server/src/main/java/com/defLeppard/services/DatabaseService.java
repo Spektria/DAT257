@@ -25,8 +25,7 @@ import org.springframework.stereotype.Service;
  * @author William Schmitz, Jonas Röst
  */
 @Service
-public
-class DatabaseService {
+public class DatabaseService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
