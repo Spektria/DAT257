@@ -98,9 +98,9 @@ function Form(initState : SessionData) {
                 value={fromDate}
                 onChange={e => {
                   setFromDate(e.target.value)
-                  const y = parseInt((e.target.value).substr(0, 4))
-                  const m = parseInt((e.target.value).substr(5, 6))
-                  const d = parseInt((e.target.value).substr(8, 9))
+                  const y = parseInt((e.target.value).substring(0, 4))
+                  const m = parseInt((e.target.value).substring(5, 6))
+                  const d = parseInt((e.target.value).substring(8, 9))
                   const date = state.from
                   date.setFullYear(y)
                   date.setMonth(m-1)
@@ -118,9 +118,9 @@ function Form(initState : SessionData) {
                 value={toDate}
                 onChange={e => {
                   setToDate(e.target.value)
-                  const y = parseInt((e.target.value).substr(0, 4))
-                  const m = parseInt((e.target.value).substr(5, 6))
-                  const d = parseInt((e.target.value).substr(8, 9))
+                  const y = parseInt((e.target.value).substring(0, 4))
+                  const m = parseInt((e.target.value).substring(5, 6))
+                  const d = parseInt((e.target.value).substring(8, 9))
                   const date = state.to
                   date.setFullYear(y)
                   date.setMonth(m-1)
@@ -139,8 +139,8 @@ function Form(initState : SessionData) {
                 type="time"
                 defaultValue={timeStr(initState.from)}
                 onChange={e => {
-                  const h = parseInt((e.target.value).substr(0, 2))
-                  const m = parseInt((e.target.value).substr(3, 5))
+                  const h = parseInt((e.target.value).substring(0, 2))
+                  const m = parseInt((e.target.value).substring(3, 5))
                   const d = state.from
                   d.setHours(h+2)
                   d.setMinutes(m)
@@ -159,8 +159,8 @@ function Form(initState : SessionData) {
                     new Date(d.getTime() + 2 * 3600000))
                 })()}
                 onChange={e => {
-                  const h = parseInt((e.target.value).substr(0, 2))
-                  const m = parseInt((e.target.value).substr(3, 5))
+                  const h = parseInt((e.target.value).substring(0, 2))
+                  const m = parseInt((e.target.value).substring(3, 5))
                   const d = state.to
                   d.setHours(h+2)
                   d.setMinutes(m)
@@ -209,6 +209,7 @@ function Form(initState : SessionData) {
               })
               .catch(error => console.log(error));
               }
+            }
             > Spara
             </button>
             <button
