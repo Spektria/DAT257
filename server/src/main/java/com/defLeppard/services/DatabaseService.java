@@ -154,11 +154,8 @@ class DatabaseService {
      *
      */
     public List<Student> fetchAllStudents() {
-        String sqlQuery = "SELECT * FROM Student";
-
-        List<Student> allStudents = jdbcTemplate.query(sqlQuery,new BeanPropertyRowMapper<>(Student.class));
-
-        return allStudents;
+        final String sqlQuery = "SELECT * FROM Student";
+        return jdbcTemplate.query(sqlQuery, RowMapperFactory.createRowMapper(Student.class));
     }
 
 
