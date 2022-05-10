@@ -1,4 +1,6 @@
 package com.defLeppard.services;
+import com.defLeppard.enteties.EduMoment;
+import com.defLeppard.services.mappers.RowMapperFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -7,6 +9,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -23,6 +26,19 @@ public
 class DatabaseService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    /**
+     * Returns a list of educational moments for a given student identifier. If the identifier does
+     * not exist in the database the return value will be an empty list.
+     * @param studentEmail the student identifier
+     * @return the list of educational moments
+     */
+    public List<EduMoment> getMoments(String studentEmail){
+
+        final String qMoments = "SELECT educationalMoment, description, completed FROM EducationalMoment," +
+                " StudentEducationalMoments WHERE studentEmail = '" + studentEmail + "';";
+        return  jdbcTemplate.query(qMoments, RowMapperFactory.createRowMapper(EduMoment.class));
+    }
 
     /**
      *
