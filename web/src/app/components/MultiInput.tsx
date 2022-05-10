@@ -1,8 +1,10 @@
 import { FC, useReducer, useState } from 'react'
-import { map, none } from 'ramda'
+import { map, none, find } from 'ramda'
 import ListProfile from './ListProfile'
 import { MdAddCircle } from 'react-icons/md'
 import TextSelector from './TextSelector'
+import { StudentData } from '../../types/types'
+import { orElse } from '../helpers/Helpers'
 
 /**
 * @field options - Options for input
@@ -10,34 +12,29 @@ import TextSelector from './TextSelector'
 * @field onChange - Callback for when the list updates
 */
 type Props = {
-  options: string[]
+  options: StudentData[]
   placeholder?: string
-  onChange?: (arr: Input[]) => void
-  defaultValue?: Input[]
-}
-
-/**
-*  @field name - Name of person/item
-*  @field id - Id of person/item
-*/
-type Input = {
-  name: string
-  id: number
+  onChange?: (arr: StudentData[]) => void
+  defaultValue?: StudentData[]
 }
 
 /** Mutli input component with searchable options. */
 const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue }) => {
   const [list, dispatch] = useReducer(reducer, defaultValue ? defaultValue : [])
-  const [input, setInput] = useState("")
+  const [person, setPerson] = useState<StudentData>()
+
+  // Generalize extraction of names
+  interface HasName { name: string }
+  const getNames = (list: HasName[] | undefined) => orElse(() => list?.map(s => s.name), [])(null);
 
   return (
     <div className='flex flex-col mt-2'>
       <ul>
-        {map(({ name, id }) =>
+        {map(({ name, email }) =>
           <ListProfile
-            key={id}
+            key={name}
             name={name}
-            id={id}
+            email={email}
           />
           , list)}
       </ul>
@@ -45,22 +42,38 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue })
         <MdAddCircle
           className='cursor-pointer fill-light-primary ml-1 mr-1 inline pb-{1}'
           size='26px'
-          onClick={_ => updateList(input)}
+          onClick={_ => updateList(person)}
         />
         <TextSelector
-          onChange={i => { setInput(i); updateList(i) }}
+          onChange={textSelectorChange}
           placeholder={placeholder}
-          selectables={options}
+          selectables={getNames(options)}
         />
       </div>
     </div>
   )
 
-  function updateList(input: string) {
-    if (input !== '')
-      dispatch({ name: input, id: Math.random() })
+
+  /**
+   * Updates list if valid input
+   *
+   * @param input 
+   */
+  function updateList(input : StudentData | undefined){
+    if(input !== undefined)
+     dispatch(input) 
   }
 
+  /**
+   * onChange function for TextSelector
+   *
+   * @param input
+   */ 
+  function textSelectorChange(input : String) {
+    const person = find(x => x.name === input, options)! 
+    setPerson(person) 
+    dispatch(person) 
+  }
 
   /** 
   * Reducer for appending or changing a input. Also triggers the 
@@ -69,9 +82,9 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue })
   * @param newInput - New input
   * @returns Updated list of inputs
   */
-  function reducer(prevState: Input[], newInput: Input): Input[] {
-    const sameId = (x: Input) => x.id === newInput.id
-    const nextState = none(sameId, prevState) ? [...prevState, newInput] : map(input => sameId(input) ? newInput : input, prevState)
+  function reducer(prevState: StudentData[], newInput: StudentData): StudentData[] {
+    const sameEmail = (x: StudentData) => x.email === newInput.email
+    const nextState = none(sameEmail, prevState) ? [...prevState, newInput] : map(input => sameEmail(input) ? newInput : input, prevState)
     if (onChange && prevState !== nextState)
       onChange(nextState)
     return nextState
