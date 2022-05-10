@@ -13,10 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 
@@ -38,7 +35,6 @@ class StudentController {
      * @return the list of students
      */
     @GetMapping("")
-    @ResponseBody
     ResponseEntity<List<Student>> getStudents(){
         return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchAllStudents());
     }
@@ -50,7 +46,6 @@ class StudentController {
      * @return the student or student property in JSON format
      */
     @GetMapping("/{email}")
-    @ResponseBody
     ResponseEntity<?> getStudent(@PathVariable("email") String email, @RequestParam("property") Optional<String> property)  {
         try {
             var stud = dbs.fetchOneStudent(email.toLowerCase());

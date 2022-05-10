@@ -28,8 +28,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/events")
 public class EventsController {
 
-    private final DateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-
     @Autowired
     private DatabaseService dbs = new DatabaseService();
 

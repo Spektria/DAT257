@@ -12,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.json.JSONObject;
-
-import java.text.ParseException;
 import java.util.List;
 
 @CrossOrigin
@@ -29,7 +27,6 @@ public class InstructorController {
      * @return the list of instructors
      */
     @GetMapping("")
-    @ResponseBody
     ResponseEntity<List<Instructor>> getInstructors(){
         return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchAllInstructors());
     }
@@ -41,7 +38,6 @@ public class InstructorController {
      * @return the instructor in JSON format
      */
     @GetMapping("/{name}")
-    @ResponseBody
     ResponseEntity<?> getInstructor(@PathVariable("name") String name) throws JsonProcessingException {
         try {
             Object ret = dbs.fetchOneInstructor(name);
@@ -67,7 +63,6 @@ public class InstructorController {
      * @return login token
      */
     @GetMapping("/login")
-    @ResponseBody
     ResponseEntity<String> logIn(@RequestParam(value = "name", required = true) String username,
                                  @RequestParam(value = "pw",   required = true) String password){
 
