@@ -199,7 +199,7 @@ function Form(initState : SessionData) {
             <button
               className='button-solid'
               type='submit'
-              onClick={() => {fetch('http://localhost:8080/events/new',
+              onClick={() => {fetch('http://vattenskoter.fredin.org:8080/events/new',
               {method: 'POST',
               headers: {'Content-Type': "application/json",},
               body: JSON.stringify(state)})
