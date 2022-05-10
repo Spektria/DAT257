@@ -15,7 +15,7 @@ CREATE TABLE Instructor(
 	name TEXT NOT NULL); 
 
 CREATE TABLE Student(  
-	email TEXT PRIMARY KEY NOT NULL,
+	loginEmail TEXT PRIMARY KEY NOT NULL,
 	name TEXT NOT NULL);
 	 
 
@@ -24,9 +24,11 @@ CREATE TABLE EducationalMoment(
 	description TEXT NOT NULL); 
 	
 CREATE TABLE StudentEducationalMoments(
-	educationalMoment TEXT REFERENCES EducationalMoment(name) PRIMARY KEY NOT NULL,
+	educationalMoment TEXT REFERENCES EducationalMoment(name) NOT NULL,
 	studentEmail TEXT REFERENCES Student(email),
-	completed BOOLEAN NOT NULL); 
+	completed BOOLEAN NOT NULL,
+	PRIMARY KEY (educationalMoment, studentEmail)
+	); 
 
 CREATE TABLE Attend( 
 	studentEmail TEXT REFERENCES Student(email) NOT NULL,
