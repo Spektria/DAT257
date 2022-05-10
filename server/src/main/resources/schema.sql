@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS StudentEducationalMoments(
 CREATE TABLE IF NOT EXISTS Attend( 
 	studentEmail TEXT REFERENCES Student(loginEmail) NOT NULL,
 	instructor TEXT REFERENCES Instructor(name) NOT NULL,
+
 	sessionIdnr INT NOT NULL,
 	sessionLocation TEXT NOT NULL,
 	FOREIGN KEY(sessionIdnr, sessionLocation) REFERENCES Session(idnr,location)); 
