@@ -227,9 +227,9 @@ class DatabaseService {
      */
     public List<Event> fetchEventsInIntervall(Date fromDate, Date toDate) throws EmptyResultDataAccessException  {
 
-        final String sqlQuery = "SELECT idnr, title, fromdate, todate, location FROM Session WHERE (fromdate >= '" + new Timestamp(fromDate.getTime())+ "' AND todate <= '" + new Timestamp(toDate.getTime()) + "');";
+        // Note, we do +- 10 seconds since postgres has issues handling >= and <=. (Treats them as > and <)
+        final String sqlQuery = "SELECT idnr, title, fromdate, todate, location FROM Session WHERE (fromdate >= '" + new Timestamp(fromDate.getTime() - 1000 * 10)+ "' AND todate <= '" + new Timestamp(toDate.getTime() + 1000 * 10) + "');";
 
-        System.out.println(sqlQuery);
         // Note this only fetches events without students & instructors
         List<Event> allEvents = jdbcTemplate.query(sqlQuery, RowMapperFactory.createRowMapper(Event.class));
 
