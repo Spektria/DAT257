@@ -32,7 +32,7 @@ class DatabaseService {
     public List<EduMoment> getMoments(String studentEmail){
 
         final String qMoments = "SELECT educationalMoment, description, completed FROM EducationalMoment," +
-                " StudentEducationalMoments WHERE studentEmail = '" + studentEmail + "';";
+                " StudentEducationalMoments WHERE studentEmail = '" + studentEmail + "' AND name = educationalMoment;";
         return  jdbcTemplate.query(qMoments, RowMapperFactory.createRowMapper(EduMoment.class));
     }
 
