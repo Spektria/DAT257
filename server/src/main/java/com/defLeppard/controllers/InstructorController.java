@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import org.json.JSONObject;
 import java.util.List;
 
+/**
+ * REST controller for instructor information.
+ *
+ * @author Hugo Ekstrand
+ */
 @CrossOrigin
 @RestController
 @RequestMapping("/instructors")
@@ -69,7 +74,7 @@ public class InstructorController {
 
         // TODO login token
 
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(null);
     }
 
 }
