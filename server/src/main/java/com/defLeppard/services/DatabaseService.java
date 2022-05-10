@@ -1,5 +1,8 @@
 package com.defLeppard.services;
 import com.defLeppard.enteties.EduMoment;
+import com.defLeppard.enteties.Event;
+import com.defLeppard.enteties.Instructor;
+import com.defLeppard.enteties.Student;
 import com.defLeppard.services.mappers.RowMapperFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -42,19 +45,6 @@ class DatabaseService {
 
     /**
      *
-     * Inserts students into the database
-     * @param json the json as a Java string that contains the students that should be inserted into the database
-     * @return the number of rows affected in the database
-     *
-     */
-    public int addStudentsToDatabase(String json) throws IOException {
-        List<Student> studentList = Student.createStudents(json);
-        return addStudents(studentList);
-    }
-
-
-    /**
-     *
      * Inserts a student into the internal database
      * @param student the student who is to be inserted into the database.
      * @return the number of rows affected in the database
@@ -62,7 +52,7 @@ class DatabaseService {
      */
     private int addStudent(Student student) {
 
-        String sqlStatement = "INSERT INTO Student VALUES ('" +student.getStudentEmail() + "', '" +student.getStudentName() + "')";
+        String sqlStatement = "INSERT INTO Student VALUES ('" +student.email() + "', '" +student.name() + "')";
 
         int rowsAffected = jdbcTemplate.update(sqlStatement);
 
@@ -90,19 +80,6 @@ class DatabaseService {
 
     /**
      *
-     * Inserts events into the database
-     * @param json the json as a Java string that contains the events that should be inserted into the database
-     * @return the number of rows affected in the database
-     *
-     */
-    public int addEventsToDatabase(String json) throws IOException {
-        List<Event> eventList = Event.createEvents(json);
-        return addEvents(eventList);
-    }
-
-
-    /**
-     *
      * Inserts an event into the internal database
      * @param event the event which is to be inserted into the database.
      * @return the number of rows affected in the database
@@ -110,8 +87,8 @@ class DatabaseService {
      */
     private int addEvent(Event event) {
 
-        String sqlStatement = "INSERT INTO Session VALUES ('" +event.getEventIdnr() + "', '" +event.getEventTitle() + "', '" +event.getEventFromDate() +
-                "', '" +event.getEventToDate() + "', '" +event.getEventLocation() + "')";
+        String sqlStatement = "INSERT INTO Session VALUES ('" +event.id() + "', '" +event.title() + "', '" +event.from() +
+                "', '" +event.to() + "', '" +event.location() + "')";
 
         int rowsAffected = jdbcTemplate.update(sqlStatement);
 
@@ -136,20 +113,6 @@ class DatabaseService {
         return totalRowsAffected;
     }
 
-
-    /**
-     *
-     * Inserts instructors into the database
-     * @param json the json as a Java string that contains the instructors that should be inserted into the database
-     * @return the number of rows affected in the database
-     *
-     */
-    public int addInstructorsToDatabase(String json) throws IOException {
-        List<Instructor> instructorList = Instructor.createInstructors(json);
-        return addInstructors(instructorList);
-    }
-
-
     /**
      *
      * Inserts an instructor into the internal database
@@ -159,7 +122,7 @@ class DatabaseService {
      */
     private int addInstructor(Instructor instructor) {
 
-        String sqlStatement = "INSERT INTO Instructor VALUES ('" +instructor.getName() + "')";
+        String sqlStatement = "INSERT INTO Instructor VALUES ('" +instructor.name() + "')";
 
         int rowsAffected = jdbcTemplate.update(sqlStatement);
 
@@ -206,10 +169,10 @@ class DatabaseService {
      * @return the student with the given email, as type Student
      *
      */
-    public Object fetchOneStudent(String studentEmail) throws EmptyResultDataAccessException {
+    public Student fetchOneStudent(String studentEmail) throws EmptyResultDataAccessException {
         String sqlQuery = "SELECT * FROM Student WHERE email = ?";
-        Student s = (Student) jdbcTemplate.queryForObject(sqlQuery, new BeanPropertyRowMapper(Student.class), studentEmail);
-        System.out.println(s.getStudentEmail());
+        Student s = jdbcTemplate.queryForObject(sqlQuery, RowMapperFactory.createRowMapper(Student.class), studentEmail);
+
         return s;
     }
 
@@ -221,11 +184,38 @@ class DatabaseService {
      *
      */
     public List<Event> fetchAllEvents() {
-        String sqlQuery = "SELECT * FROM Session";
+        String sqlQuery = "SELECT idnr, title, fromdate, todate, location FROM Session";
 
-        List<Event> allEvents = jdbcTemplate.query(sqlQuery,new BeanPropertyRowMapper<>(Event.class));
+        List<Event> allEvents = jdbcTemplate.query(sqlQuery, RowMapperFactory.createRowMapper(Event.class));
+        return allEvents.stream().map(session -> {
+            var students = studentsAttending(session.id())
+                    .stream()
+                    .map(Student::name)
+                    .toArray(String[]::new);
 
-        return allEvents;
+            var instructors = instructorsAttending(session.id())
+                    .stream()
+                    .map(Instructor::name)
+                    .toArray(String[]::new);
+
+            return new Event(session.id()
+                    , session.title()
+                    , session.to()
+                    , session.from()
+                    , instructors
+                    , students
+                    , session.location());
+        }).collect(Collectors.toList());
+    }
+
+    public List<Student> studentsAttending(int id){
+        final String q = "SELECT name, loginemail FROM Attend, Student WHERE sessionidnr = " + id + " AND loginEmail = studentEmail GROUP BY loginemail";
+        return jdbcTemplate.query(q, RowMapperFactory.createRowMapper(Student.class));
+    }
+
+    public List<Instructor> instructorsAttending(int id){
+        final String q = "SELECT login, email, name FROM Attend, Instructor WHERE sessionidnr = " + id + " AND login = instructor GROUP BY login;";
+        return jdbcTemplate.query(q, RowMapperFactory.createRowMapper(Instructor.class));
     }
 
 
@@ -241,7 +231,7 @@ class DatabaseService {
 
         String sqlQuery = "SELECT * FROM Session WHERE (fromdate < ? AND todate > ?";
 
-        List<Event> events = jdbcTemplate.query(sqlQuery, new BeanPropertyRowMapper(Event.class), new Timestamp(fromDate.getTime()), new Timestamp(toDate.getTime()));
+        List<Event> events = jdbcTemplate.query(sqlQuery, RowMapperFactory.createRowMapper(Event.class), new Timestamp(fromDate.getTime()), new Timestamp(toDate.getTime()));
 
         return events;
     }
@@ -256,7 +246,7 @@ class DatabaseService {
     public List<Instructor> fetchAllInstructors() {
         String sqlQuery = "SELECT * FROM Instructor";
 
-        List<Instructor> allInstructors = jdbcTemplate.query(sqlQuery,new BeanPropertyRowMapper<>(Instructor.class));
+        List<Instructor> allInstructors = jdbcTemplate.query(sqlQuery, RowMapperFactory.createRowMapper(Instructor.class));
 
         return allInstructors;
     }
@@ -269,10 +259,10 @@ class DatabaseService {
      * @return the student with the given email, as type Student
      *
      */
-    public Object fetchOneInstructor(String instructorName) throws EmptyResultDataAccessException {
+    public Instructor fetchOneInstructor(String instructorName) throws EmptyResultDataAccessException {
         String sqlQuery = "SELECT * FROM Instructor WHERE name = ?";
 
-        Object instructor = jdbcTemplate.queryForObject(sqlQuery, new BeanPropertyRowMapper(Instructor.class), instructorName);
+        Instructor instructor = jdbcTemplate.queryForObject(sqlQuery, RowMapperFactory.createRowMapper(Instructor.class), instructorName);
 
         return instructor;
     }
