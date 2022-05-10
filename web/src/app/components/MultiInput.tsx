@@ -36,7 +36,6 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue })
         {map(({ name, id }) =>
           <ListProfile
             key={id}
-            onChange={e => updateList(e.target.value)}
             name={name}
             id={id}
           />
