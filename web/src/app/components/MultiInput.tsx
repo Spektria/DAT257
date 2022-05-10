@@ -42,7 +42,7 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue })
         <MdAddCircle
           className='cursor-pointer fill-light-primary ml-1 mr-1 inline pb-{1}'
           size='26px'
-          onClick={_ => updateList(person)}
+        onClick={_ => {updateList(person);}}
         />
         <TextSelector
           onChange={textSelectorChange}
@@ -62,6 +62,7 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue })
   function updateList(input : StudentData | undefined){
     if(input !== undefined)
      dispatch(input) 
+     if(onChange) onChange(list)
   }
 
   /**
@@ -73,11 +74,12 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue })
     const person = find(x => x.name === input, options)! 
     setPerson(person) 
     dispatch(person) 
+    if(onChange) onChange(list)
   }
 
   /** 
-  * Reducer for appending or changing a input. Also triggers the 
-  * onChange callback if there is a new state.
+  * Reducer for appending or changing a input.
+  *
   * @param prevState - Previous list of items
   * @param newInput - New input
   * @returns Updated list of inputs
@@ -85,8 +87,6 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue })
   function reducer(prevState: StudentData[], newInput: StudentData): StudentData[] {
     const sameEmail = (x: StudentData) => x.email === newInput.email
     const nextState = none(sameEmail, prevState) ? [...prevState, newInput] : map(input => sameEmail(input) ? newInput : input, prevState)
-    if (onChange && prevState !== nextState)
-      onChange(nextState)
     return nextState
   }
 }

@@ -177,7 +177,8 @@ function Form(initState : SessionData) {
                 placeholder='Lägg till en instruktör'
                 onChange={e => {
                   const i = e.map(x => x.name)
-                  dispatch({instructors: i, id: Math.random()})}}
+                  dispatch({instructors: i, id: Math.random()})
+                }}
               />
             </div>
             <div className='mt-1 mb-1'>
@@ -187,7 +188,8 @@ function Form(initState : SessionData) {
                 placeholder='Lägg till en elev'
                 onChange={e => {
                   const i = e.map(x => x.name)
-                  dispatch({participants: i, id: Math.random()})}}
+                  dispatch({participants: i, id: Math.random()})
+                }}
               />
             </div>
           </div>
