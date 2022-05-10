@@ -4,6 +4,7 @@ import com.defLeppard.services.DatabaseService;
 import com.defLeppard.services.Student;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,7 @@ import java.util.Optional;
 @RequestMapping("/students")
 class StudentController {
 
+    @Autowired
     private DatabaseService dbs = new DatabaseService();
 
     public StudentController() throws ParseException {

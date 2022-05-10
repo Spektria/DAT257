@@ -2,6 +2,7 @@ package com.defLeppard.controllers;
 
 import com.defLeppard.services.DatabaseService;
 import com.defLeppard.services.Event;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,8 @@ import java.util.stream.Collectors;
 public class EventsController {
 
     private final DateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-  
+
+    @Autowired
     private DatabaseService dbs = new DatabaseService();
 
     public EventsController() throws ParseException {
