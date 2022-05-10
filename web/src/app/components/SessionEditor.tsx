@@ -78,18 +78,21 @@ function Form(initState : SessionData) {
       <div className='absolute inset-0 mx-auto z-20 w-full md:w-fit mt-10'>
         <div className='card-modal-add'>
           <div className='flex flex-col'>
-            <div className='flex-row justify-between mt-1 mb-1 '>
-              <input className='input text-lg' name='title' type="text" placeholder="Titel" onChange={e => dispatch({title: e.target.value, id: Math.random()})}/>
+            <div className="border-b-2 border-light-secondary border-opacity-20 pb-5">
+              <h1 className="title-page">Lägg till uppkörningstillfälle</h1>
+            </div>
+            <div className='flex-row justify-between mt-5 mb-1 '>
+              <input className='input' name='title' type="text" placeholder="Titel" onChange={e => dispatch({title: e.target.value, id: Math.random()})}/>
             </div>
 
-            <div className='flex-row justify-between mt-1 mb-3 border-b-2 pb-4'>
-              <input className='input text-lg' name='place' type="text" placeholder="Plats" onChange={e => dispatch({location: e.target.value, id: Math.random()})}/>
+            <div className='flex-row justify-between mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4'>
+              <input className='input' name='place' type="text" placeholder="Plats" onChange={e => dispatch({location: e.target.value, id: Math.random()})}/>
             </div>
 
             <p className='title-content'>Datum</p>
             <div className='flex mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4 items-center justify-between' >
               <input
-                className='border border-solid pl-1 pr-1'
+                className='input'
                 name='from'
                 type="date"
                 value={fromDate}
@@ -108,7 +111,7 @@ function Form(initState : SessionData) {
               />
               <FaLongArrowAltRight className='inline fill-light-secondary ml-2 mr-2' />
               <input
-                className='border border-solid pl-1 pr-1'
+                className='input'
                 name='to'
                 type="date"
                 min={fromDate}
@@ -131,7 +134,7 @@ function Form(initState : SessionData) {
             <p className='title-content'>Tid</p>
             <div className='flex mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4 items-center justify-between' >
               <input
-                className='border border-solid pl-1 pr-1'
+                className='input'
                 name='from'
                 type="time"
                 defaultValue={timeStr(initState.from)}
@@ -146,7 +149,7 @@ function Form(initState : SessionData) {
               />
               <FaLongArrowAltRight className='inline fill-light-secondary ml-2 mr-2' />
               <input
-                className='border border-solid pl-1 pr-1'
+                className='input'
                 name='to'
                 type='time'
                 defaultValue={(() => {
@@ -194,11 +197,7 @@ function Form(initState : SessionData) {
 
           <div className='flex flex-col space-y-1 mt-10'>
             <button
-              className='cursor-pointer text-base font-semibold bg-red-400 
-                       text-white pt-1 pb-1 rounded border border-red-500 
-                       transition-all ease-out hover:shadow-inner 
-                       active:shadow-inner active:bg-red-600
-                       active:border-red-700'
+              className='button-solid'
               type='submit'
               onClick={() => {fetch('http://localhost:8080/events/new',
               {method: 'POST',
