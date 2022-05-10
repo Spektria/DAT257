@@ -40,11 +40,7 @@ public class InstructorController {
     @GetMapping("/{name}")
     ResponseEntity<?> getInstructor(@PathVariable("name") String name) throws JsonProcessingException {
         try {
-            Object ret = dbs.fetchOneInstructor(name);
-            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-            var instructor = new JSONObject(ow.writeValueAsString(ret));
-
-            return ResponseEntity.status(HttpStatus.OK).body(instructor);
+            return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchOneInstructor(name.replace('_', ' ')));
         } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not found");
 
