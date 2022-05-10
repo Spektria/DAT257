@@ -1,7 +1,7 @@
 package com.defLeppard.controllers;
 
+import com.defLeppard.enteties.Instructor;
 import com.defLeppard.services.DatabaseService;
-import com.defLeppard.services.Instructor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
