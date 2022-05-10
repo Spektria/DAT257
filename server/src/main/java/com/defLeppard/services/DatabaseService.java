@@ -50,26 +50,14 @@ class DatabaseService {
      * @return the number of rows affected in the database
      *
      */
-    private int addStudent(Student student) {
+    public int addStudent(Student student) {
 
-        String sqlStatement = "INSERT INTO Student VALUES ('" +student.email() + "', '" +student.name() + "')";
-        String sqlStatement = "INSERT INTO Student VALUES ('" +student.getloginEmail() + "', '" +student.getName() + "') ON CONFLICT (loginEmail) DO UPDATE SET name = '" + student.getName() + "'";
-
-        int rowsAffected = jdbcTemplate.update(sqlStatement);
-
-        return rowsAffected;
-    }
-
-    private int addEvent(Event event) {
-
-        String sqlStatement = "INSERT INTO Session VALUES ('" +event.getEventIdnr() + "', '" +event.getEventTitle() + "', '" +event.getEventFromDate() +
-                "', '" +event.getEventToDate() + "', '" +event.getEventLocation() + "')";
+        final String sqlStatement = "INSERT INTO Student VALUES ('" +student.email() + "', '" +student.name() + "') ON CONFLICT (loginEmail) DO UPDATE SET name = '" + student.name() + "'";
 
         int rowsAffected = jdbcTemplate.update(sqlStatement);
 
         return rowsAffected;
     }
-
 
     /**
      *
@@ -78,7 +66,7 @@ class DatabaseService {
      * @return the number of rows affected in the database
      *
      */
-    private int addStudents(List<Student> students) {
+    public int addStudents(List<Student> students) {
         int totalRowsAffected = 0;
 
         for (Student student : students) {

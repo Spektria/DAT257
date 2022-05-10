@@ -1,7 +1,10 @@
 package com.defLeppard;
 
+import com.defLeppard.enteties.Student;
 import com.defLeppard.services.DatabaseService;
 import com.defLeppard.services.WixService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,7 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.util.HashMap;
+import java.util.*;
 
 
 /**
@@ -55,7 +58,11 @@ public class Application {
 	 */
 	@Scheduled(fixedRate = 1000 * 60 * 60 * 3) // ms, i.e. 10 800 seconds
 	private void fetchStudents() throws IOException {
-		databaseService.addStudentsToDatabase(wixService.call(String.class, "students",new String[]{}).getBody());
+
+		// TODO: This mapping should be done in WixService
+		List<Map<String, String>> json = wixService.call(ArrayList.class, "students").getBody();
+		var students = json.stream().map(map -> new Student(map.get("name"), map.get("loginEmail"))).toList();
+		databaseService.addStudents(students);
 	}
 
 }
