@@ -184,9 +184,12 @@ class DatabaseService {
      *
      */
     public List<Event> fetchAllEvents() {
-        String sqlQuery = "SELECT idnr, title, fromdate, todate, location FROM Session";
+        final String sqlQuery = "SELECT idnr, title, fromdate, todate, location FROM Session";
 
+        // Note this only fetches events without students & instructors
         List<Event> allEvents = jdbcTemplate.query(sqlQuery, RowMapperFactory.createRowMapper(Event.class));
+
+        // Because of this we have to fetch students & instructors individually
         return allEvents.stream().map(session -> {
             var students = studentsAttending(session.id())
                     .stream()
