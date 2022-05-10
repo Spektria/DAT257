@@ -30,22 +30,22 @@ public class EventsController {
     private List<Map<String, ?>> events =
             List.of(
                     Map.of(
-                            "id", "1",
+                            "id", 1,
                             "title", "periodTest",
                             "location", "garderoben",
                             "from", isoFormat.parse("2022-01-01T00:00:00.000-00:00"),
                             "to", isoFormat.parse("2022-01-01T10:00:00.000-00:00"),
-                            "students", new String[]{"Bob", "Neil Armstrong", "Mariana trench"},
+                            "participants", new String[]{"Bob", "Neil Armstrong", "Mariana trench"},
                             "instructors", new String[]{"Lizardman"}
                             ),
 
                     Map.of(
-                            "id", "2",
+                            "id", 2,
                             "title", "magnets. How do they work?",
                             "location", "mars",
                             "from", isoFormat.parse("2022-03-01T11:00:00.000-00:00"),
                             "to", isoFormat.parse("2022-03-01T00:00:00.000-00:00"),
-                            "students", new String[]{"Richard Feynman", "Marie Curie", "Haskell Curry"},
+                            "participants", new String[]{"Richard Feynman", "Marie Curie", "Haskell Curry"},
                             "instructors", new String[]{"Oscean man", "Take me by the hand"}
                             )
                     );
