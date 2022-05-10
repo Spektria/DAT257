@@ -16,7 +16,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-icons": "^4.3.1",
-    "react-awesome-calendar": "fredins/react-awesome-calendar.git#ac4822146f8bcff8dee89f330b69ac7286e92631",
+    "react-awesome-calendar": "fredins/react-awesome-calendar.git#a19e417712d9a19c091add66a9341c14c9ee51af",
     "react-query": "^3.38.0",
     "react-router": "^6.3.0",
     "react-router-dom": "^6.3.0",

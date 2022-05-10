@@ -3,6 +3,7 @@
  *  regarding routing and querying.
  * 
  */
+import { useReducer } from 'react'
 import Session from './components/Session';
 import SessionEditor from './components/SessionEditor';
 import NotFound from './components/NotFound';
@@ -10,9 +11,9 @@ import { StudentEducationalMomentsData } from '../types/types';
 import StudentProfile from './components/StudentProfile';
 import studentProfileData from './sData';
 import Calendar from './components/Calendar';
-import { LocationState } from '../types/types';
+import { LocationState, SessionData } from '../types/types';
+import { CalendarState } from 'react-awesome-calendar'
 import { find } from 'ramda'
-import sessions from './Data'
 import {
   Routes,
   Route,
@@ -21,8 +22,9 @@ import {
   Params,
   Navigate,
 } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { useQuery, useQueryClient } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
+import { getEvents } from './apis/EventApi'
 
 /**
  * Root component of the app
@@ -37,12 +39,50 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 function App() {
   const location = useLocation()
   const state = location.state as Partial<LocationState>
+  const queryClient = useQueryClient()
+
+  /**
+   * Reducer for fetching new events on year onChange
+   * 
+   * @remarks 
+   *
+   * It keeps track of selected year and invalidates
+   * the event query on year change
+   * @see {@link https://react-query.tanstack.com/guides/query-invalidation}
+   * @see {@link https://reactjs.org/docs/hooks-reference.html#usereducer}
+   */
+  const [year, dispatch] = useReducer(
+    (prevYear: number, newYear: number) => {
+      if (prevYear !== newYear)
+        queryClient.invalidateQueries('events')
+      return newYear
+    }
+    , new Date().getFullYear())
+
+
+  /**
+   * Queries events and display and returns early if loading or error
+   *
+   * @remarks staleTime is used extended (from 0) to avoid refetching.
+   *  
+   * @see {@link https://react-query.tanstack.com/reference/useQuery}
+   * @see {@link https://react-query.tanstack.com/guides/initial-query-data#staletime-and-initialdataupdatedat}
+   */
+  const { isLoading, error, data } =
+    useQuery<SessionData[], Error>('events', () => getEvents(year), { staleTime: 600000 })
+  if (isLoading) return <p className='text-center p-10'>Loading...</p>
+  if (error) return (
+    <p className='text-center p-10'>
+      An error has occurred: {error.message}
+    </p>)
+  const sessions = data!
+
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <>
       <Routes>
         { /* Routes to normal fullscreen views */}
-        <Route path="/" element={<Calendar />} />
+        <Route path="/" element={<Cal />} />
         <Route path="*" element={<NotFound />} />
         { /* Routes to modal views */}
         {RouteCalendarModal("/newsession")}
@@ -65,8 +105,17 @@ function App() {
         </Routes>
       )}
       <ReactQueryDevtools />
-    </QueryClientProvider>
+    </>
   );
+
+
+  /**
+   *  Wrapper for Calendar
+   */
+  function Cal() {
+    return <Calendar sessions={sessions} onChange={(state: CalendarState) => dispatch(state.year)} />
+  }
+
 
   /**
    * Route for modal components that wants the calendar 
@@ -87,25 +136,45 @@ function App() {
   function RouteCalendarModal(path: string) {
     return (<Route path={path}
       element={state?.background ?
-        <Calendar /> :
+        <Cal /> :
         <Navigate
           to={location.pathname}
           state={{ ...state, background: location }} />}
     />)
   }
+
+  /** 
+   * Wrapper for SessionEditor
+   *
+   * @remarks
+   * 
+   * This is intended for when a users wants to edit an existing session, 
+   * which is why it sets the right value of Either<CalendarDate, SessionData>.
+   */
+  function EditSession() {
+    return WithParam<Number>(checkIdParam, id => {
+      const session = find(e => e.id === id, sessions)
+      return session === undefined ? undefined : <SessionEditor {...{ right: session }} />
+    })
+  }
+
+  /** 
+   * Wrapper for Session
+   *
+   * @remarks 
+   *  
+   * Matches the id in the url params with the corresponding session.
+   */
+  function ViewSession() {
+    return WithParam<Number>(checkIdParam, id => {
+      const session = find(e => e.id === id, sessions)
+      return session === undefined ? undefined : <Session {...session} />
+    })
+  }
+
+
 }
 
-/** 
- * Instance of QueryClient
- *  
- * @remarks 
- *  
- * This is the only instance, components that which
- * to use a QueryClient access it through useQueryClient()
- * 
- * @see {@link https://react-query.tanstack.com/reference/useQueryClient}
- */
-const queryClient = new QueryClient()
 
 /** 
  * Wrapper for SessionEditor
@@ -120,37 +189,6 @@ const queryClient = new QueryClient()
 function NewSession() {
   return <SessionEditor {...{ left: (useLocation().state as LocationState).date }} />
 }
-
-
-/** 
- * Wrapper for SessionEditor
- *
- * @remarks
- * 
- * This is intended for when a users wants to edit an existing session, 
- * which is why it sets the right value of Either<CalendarDate, SessionData>.
- */
-function EditSession() {
-  return WithParam<Number>(checkIdParam, id => {
-    const session = find(e => e.id === id, sessions)
-    return session === undefined ? undefined : <SessionEditor {...{ right: session }} />
-  })
-}
-
-/** 
- * Wrapper for Session
- *
- * @remarks 
- *  
- * Matches the id in the url params with the corresponding session.
- */
-function ViewSession() {
-  return WithParam<Number>(checkIdParam, id => {
-    const session = find(e => e.id === id, sessions)
-    return session === undefined ? undefined : <Session {...session} />
-  })
-}
-
 
 /** 
  * Checks if the url params contains an id, which
