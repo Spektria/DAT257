@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class EventsController {
 
     @Autowired
-    private DatabaseService dbs = new DatabaseService();
+    private DatabaseService dbs;
 
 
     /**

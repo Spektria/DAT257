@@ -20,7 +20,7 @@ import java.util.List;
 public class InstructorController {
 
     @Autowired
-    private DatabaseService dbs = new DatabaseService();
+    private DatabaseService dbs;
 
     /**
      * Returns a list of all instructors in JSON format.

@@ -31,7 +31,7 @@ import java.util.Optional;
 class StudentController {
 
     @Autowired
-    private DatabaseService db;
+    private DatabaseService dbs;
 
     /**
      * Returns a list of all students in JSON format.
@@ -84,7 +84,7 @@ class StudentController {
      */
     @GetMapping("/{email}/moments")
     ResponseEntity<?> getMoments(@PathVariable("email") String email, @RequestParam("moment") Optional<String> momentName){
-        var moments = db.getMoments(email);
+        var moments = dbs.getMoments(email);
 
         if(momentName.isPresent()){
             var foundMoment = moments.stream().filter(mom ->
