@@ -232,11 +232,32 @@ class DatabaseService {
      */
     public List<Event> fetchEventsInIntervall(Date fromDate, Date toDate) throws EmptyResultDataAccessException  {
 
-        String sqlQuery = "SELECT * FROM Session WHERE (fromdate < ? AND todate > ?";
+        final String sqlQuery = "SELECT idnr, title, fromdate, todate, location FROM Session WHERE (fromdate >= '" + new Timestamp(fromDate.getTime())+ "' AND todate <= '" + new Timestamp(toDate.getTime()) + "');";
 
-        List<Event> events = jdbcTemplate.query(sqlQuery, RowMapperFactory.createRowMapper(Event.class), new Timestamp(fromDate.getTime()), new Timestamp(toDate.getTime()));
+        System.out.println(sqlQuery);
+        // Note this only fetches events without students & instructors
+        List<Event> allEvents = jdbcTemplate.query(sqlQuery, RowMapperFactory.createRowMapper(Event.class));
 
-        return events;
+        // Because of this we have to fetch students & instructors individually
+        return allEvents.stream().map(session -> {
+            var students = studentsAttending(session.id())
+                    .stream()
+                    .map(Student::name)
+                    .toArray(String[]::new);
+
+            var instructors = instructorsAttending(session.id())
+                    .stream()
+                    .map(Instructor::name)
+                    .toArray(String[]::new);
+
+            return new Event(session.id()
+                    , session.title()
+                    , session.to()
+                    , session.from()
+                    , instructors
+                    , students
+                    , session.location());
+        }).collect(Collectors.toList());
     }
 
 
