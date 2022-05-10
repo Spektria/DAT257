@@ -3,6 +3,7 @@ package com.defLeppard.controllers;
 import com.defLeppard.services.DatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,5 +62,10 @@ public class EventsController {
 
         return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchAllEvents());
     }
+    @PostMapping("/new")
+    ResponseEntity<String> newSession(@RequestBody String state){
+        return ResponseEntity.status(HttpStatus.OK).body(state);
+    }
+
 
 }

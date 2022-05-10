@@ -39,7 +39,7 @@ class DatabaseService {
     public List<EduMoment> getMoments(String studentEmail){
 
         final String qMoments = "SELECT educationalMoment, description, completed FROM EducationalMoment," +
-                " StudentEducationalMoments WHERE studentEmail = '" + studentEmail + "';";
+                " StudentEducationalMoments WHERE studentEmail = '" + studentEmail + "' AND name = educationalMoment;";
         return  jdbcTemplate.query(qMoments, RowMapperFactory.createRowMapper(EduMoment.class));
     }
 
@@ -53,6 +53,17 @@ class DatabaseService {
     private int addStudent(Student student) {
 
         String sqlStatement = "INSERT INTO Student VALUES ('" +student.email() + "', '" +student.name() + "')";
+        String sqlStatement = "INSERT INTO Student VALUES ('" +student.getloginEmail() + "', '" +student.getName() + "') ON CONFLICT (loginEmail) DO UPDATE SET name = '" + student.getName() + "'";
+
+        int rowsAffected = jdbcTemplate.update(sqlStatement);
+
+        return rowsAffected;
+    }
+
+    private int addEvent(Event event) {
+
+        String sqlStatement = "INSERT INTO Session VALUES ('" +event.getEventIdnr() + "', '" +event.getEventTitle() + "', '" +event.getEventFromDate() +
+                "', '" +event.getEventToDate() + "', '" +event.getEventLocation() + "')";
 
         int rowsAffected = jdbcTemplate.update(sqlStatement);
 
