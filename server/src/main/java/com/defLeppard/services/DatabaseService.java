@@ -49,7 +49,7 @@ class DatabaseService {
      */
     private int addStudent(Student student) {
 
-        String sqlStatement = "INSERT INTO Student VALUES ('" +student.getStudentEmail() + "', '" +student.getStudentName() + "')";
+        String sqlStatement = "INSERT INTO Student VALUES ('" +student.getloginEmail() + "', '" +student.getName() + "') ON CONFLICT (loginEmail) DO UPDATE SET name = '" + student.getName() + "'";
 
         int rowsAffected = jdbcTemplate.update(sqlStatement);
 
