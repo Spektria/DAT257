@@ -54,11 +54,21 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue })
   )
 
 
+  /**
+   * Updates list if valid input
+   *
+   * @param input 
+   */
   function updateList(input : StudentData | undefined){
     if(input !== undefined)
      dispatch(input) 
   }
 
+  /**
+   * onChange function for TextSelector
+   *
+   * @param input
+   */ 
   function textSelectorChange(input : String) {
     const person = find(x => x.name === input, options)! 
     setPerson(person) 
