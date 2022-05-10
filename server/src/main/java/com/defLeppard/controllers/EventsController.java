@@ -97,7 +97,7 @@ public class EventsController {
 
     @PostMapping("/new")
     ResponseEntity<String> newSession(@RequestBody String state){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(state);
+        return ResponseEntity.status(HttpStatus.OK).body(state);
     }
 
 
