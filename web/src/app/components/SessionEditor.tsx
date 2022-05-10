@@ -204,11 +204,10 @@ function Form(initState : SessionData) {
               headers: {'Content-Type': "application/json",},
               body: JSON.stringify(state)})
               .then(response => {
-                if (response.status === 200) {response.json()}
+                if (response.status === 200) {navigate(-1)}
                 else{alert("Something went wrong! Your event was not saved.")}
               })
               .catch(error => console.log(error));
-              navigate(-1)}
               }
             > Spara
             </button>
