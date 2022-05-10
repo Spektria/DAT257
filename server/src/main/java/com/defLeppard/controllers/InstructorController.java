@@ -24,9 +24,6 @@ public class InstructorController {
     @Autowired
     private DatabaseService dbs = new DatabaseService();
 
-    public InstructorController() throws ParseException {
-    }
-
     /**
      * Returns a list of all instructors in JSON format.
      * @return the list of instructors

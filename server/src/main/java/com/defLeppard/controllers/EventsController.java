@@ -33,9 +33,6 @@ public class EventsController {
     @Autowired
     private DatabaseService dbs = new DatabaseService();
 
-    public EventsController() throws ParseException {
-    }
-
 
     /**
      * Returns all events within an interval. If no interval is specified all events are returned.

@@ -33,9 +33,6 @@ class StudentController {
     @Autowired
     private DatabaseService dbs = new DatabaseService();
 
-    public StudentController() throws ParseException {
-    }
-
     /**
      * Returns a list of all students in JSON format.
      * @return the list of students
