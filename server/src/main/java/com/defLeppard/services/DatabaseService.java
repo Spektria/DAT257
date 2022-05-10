@@ -210,7 +210,7 @@ public class DatabaseService {
     }
 
     public List<Instructor> instructorsAttending(int id){
-        final String q = "SELECT login, email, name FROM Attend, Instructor WHERE sessionidnr = " + id + " AND login = instructor GROUP BY login;";
+        final String q = "SELECT name FROM Attend, Instructor WHERE sessionidnr = " + id + " AND name = instructor GROUP BY name;";
         return jdbcTemplate.query(q, RowMapperFactory.createRowMapper(Instructor.class));
     }
 
