@@ -205,7 +205,7 @@ function timeStr(date: Date): string {
  * @param date   
  */
 function dateStr(date: Date): string {
-  return date.toISOString().substring(0, 10)
+  return date.getFullYear() + "-" + date.getMonth().toString().padStart(2, "0") + "-" + date.getDay().toString().padStart(2, "0")
 }
 
 export default SessionEditor
