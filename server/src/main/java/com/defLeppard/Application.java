@@ -42,10 +42,7 @@ public class Application {
 	 */
 
 	@Autowired
-	private DatabaseService databaseService;
-	@EventListener(ApplicationReadyEvent.class)
-	public void addStudents () throws IOException {
-	}
+	private DatabaseService db;
 
 	@Autowired
 	private WixService wixService;
@@ -62,7 +59,7 @@ public class Application {
 		// TODO: This mapping should be done in WixService
 		List<Map<String, String>> json = wixService.call(ArrayList.class, "students").getBody();
 		var students = json.stream().map(map -> new Student(map.get("name"), map.get("loginEmail"))).toList();
-		databaseService.addStudents(students);
+		db.addStudents(students);
 	}
 
 }
