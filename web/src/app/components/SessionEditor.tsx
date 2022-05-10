@@ -4,6 +4,7 @@ import { SessionData, Either, StudentData, InstructorData } from '../../types/ty
 import MultiInput from './MultiInput'
 import { FaLongArrowAltRight } from 'react-icons/fa'
 import { getStudents } from '../apis/StudentApi';
+import { ServerURL } from '../apis/URIs';
 import { getInstructors } from '../apis/InstructorApi';
 import { orElse } from '../helpers/Helpers';
 import { useNavigate } from 'react-router-dom'
@@ -195,10 +196,12 @@ function Form(initState : SessionData) {
             <button
               className='button-solid'
               type='submit'
-              onClick={() => {fetch('http://vattenskoter.fredin.org:8080/events/new',
-              {method: 'POST',
-              headers: {'Content-Type': "application/json",},
-              body: JSON.stringify(state)})
+              onClick={() => {fetch(`${ServerURL}/events/new`,
+              { method: 'POST'
+              , headers: 
+                  { 'Content-Type': "application/json" }
+              , body: JSON.stringify(state)
+              })
               .then(response => {
                 if (response.status === 200) {navigate(-1)}
                 else{alert("Something went wrong! Your event was not saved.")}
