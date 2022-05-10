@@ -53,11 +53,10 @@ class StudentController {
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             var student = new JSONObject(ow.writeValueAsString(stud));
 
-            System.out.println(student);
             if (property.isPresent())
                 return ResponseEntity.status(HttpStatus.OK).body(student.get(property.get()));
             else
-                return ResponseEntity.status(HttpStatus.OK).body(student);
+                return ResponseEntity.status(HttpStatus.OK).body(stud);
 
 
         } catch (EmptyResultDataAccessException e) {

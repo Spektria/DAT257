@@ -167,10 +167,8 @@ class DatabaseService {
      *
      */
     public Student fetchOneStudent(String studentEmail) throws EmptyResultDataAccessException {
-        String sqlQuery = "SELECT * FROM Student WHERE email = ?";
-        Student s = jdbcTemplate.queryForObject(sqlQuery, RowMapperFactory.createRowMapper(Student.class), studentEmail);
-
-        return s;
+        final String sqlQuery = "SELECT * FROM Student WHERE loginemail = '" + studentEmail + "';";
+        return jdbcTemplate.queryForObject(sqlQuery, RowMapperFactory.createRowMapper(Student.class));
     }
 
 
