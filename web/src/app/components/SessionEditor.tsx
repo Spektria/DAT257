@@ -65,10 +65,6 @@ function Form(initState : SessionData) {
   if (instructors === undefined)
     setInstructors(orElse(() => data?.[1], []));
 
-  // Generalize extraction of names
-  interface HasName { name: string }
-  const getNames = (list: HasName[] | undefined) => orElse(() => list?.map(s => s.name), [])(null);
-
   return (
     <div className='fixed inset-0 z-10 scroll overflow-y-hidden'>
       <div
@@ -176,7 +172,7 @@ function Form(initState : SessionData) {
                 Instruktörer:
               </label>
               <MultiInput
-                options={getNames(instructors)}
+                options={instructors!}
                 placeholder='Lägg till en instruktör'
                 onChange={e => {
                   const i = e.map(x => x.name)
@@ -186,7 +182,7 @@ function Form(initState : SessionData) {
             <div className='mt-1 mb-1'>
               <label className='title-content' htmlFor="students">Elever: </label>
               <MultiInput
-                options={getNames(students)}
+                options={students!}
                 placeholder='Lägg till en elev'
                 onChange={e => {
                   const i = e.map(x => x.name)
