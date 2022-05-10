@@ -221,11 +221,11 @@ class DatabaseService {
      * @return the events within the given interval
      *
      */
-    public List<Event> fetchEventsInIntervall(Timestamp fromDate, Timestamp toDate) throws EmptyResultDataAccessException  {
+    public List<Event> fetchEventsInIntervall(Date fromDate, Date toDate) throws EmptyResultDataAccessException  {
 
         String sqlQuery = "SELECT * FROM Session WHERE (fromdate < ? AND todate > ?";
 
-        List<Event> events = jdbcTemplate.query(sqlQuery, new BeanPropertyRowMapper(Event.class), fromDate, toDate);
+        List<Event> events = jdbcTemplate.query(sqlQuery, new BeanPropertyRowMapper(Event.class), new Timestamp(fromDate.getTime()), new Timestamp(toDate.getTime()));
 
         return events;
     }
