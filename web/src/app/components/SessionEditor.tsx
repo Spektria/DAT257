@@ -1,7 +1,7 @@
 import { useReducer, FC, useState, useEffect } from 'react';
 import { CalendarDate } from 'react-awesome-calendar'
 import { SessionData, Either, StudentData, InstructorData } from '../../types/types'
-import { MultiInput, Input } from './MultiInput'
+import { MultiInput } from './MultiInput'
 import { FaLongArrowAltRight } from 'react-icons/fa'
 import { getStudents } from '../apis/StudentApi';
 import { ServerURL } from '../apis/URIs';
@@ -10,6 +10,7 @@ import { orElse } from '../helpers/Helpers';
 import { useNavigate } from 'react-router-dom'
 import { identical, map } from 'ramda';
 import { useQuery } from 'react-query'
+import { stat } from 'fs';
 
 /**
  * Component for creating and editing sessions
@@ -216,13 +217,24 @@ function Form(initState : SessionData) {
                 else{alert("Something went wrong! Your event was not saved.")}
               })
               .catch(error => console.log(error));
+			  if (state.id > 0) {
+				navigate("/session/" + state.id);
+			  } else {
+				navigate("/");
+			  }
               }
             }
             > Spara
             </button>
             <button
                 className='button-outline'
-                onClick={() => navigate(-1)}
+                onClick={() => {
+				  if (state.id > 0) {
+				  	navigate("/session/" + state.id);
+				  } else {
+				  	navigate("/");
+				  }
+				}}
             > Avbryt
             </button>
           </div>
