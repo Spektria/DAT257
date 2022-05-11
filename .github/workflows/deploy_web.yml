@@ -66,4 +66,3 @@ jobs:
             sudo rm -r /var/www/vattenskoter.fredin.org/build
             sudo mv /home/lingon/build /var/www/vattenskoter.fredin.org/
             sudo systemctl reload nginx.service
->>>>>>> 0ad51a6 (Add workflow for deploying the website)
