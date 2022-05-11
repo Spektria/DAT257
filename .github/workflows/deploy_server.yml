@@ -18,7 +18,9 @@ on:
 
 jobs:
   deploy:
-    if: github.event.pull_request.merged == true || github.event_name == 'master' || github.event_name = 'main'
+    if: |
+      github.event.pull_request.merged == true || 
+      github.event_name == 'push'
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v3

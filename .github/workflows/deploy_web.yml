@@ -1,22 +1,26 @@
 name: Deploy website
 
 on:
-  workflow_dispatch:
-# push:
-#   branches: 
-#     - 'story#2.16'
-#   paths:
-#     - 'web/**'
-# pull_request:
-#   types:
-#     - closed
-#   branches: 
-#     - 'story#2.16'
-#   paths:
-#     - 'web/**'
+  push:
+    branches: 
+      - 'master'
+      - 'main'
+    paths:
+      - 'web/**'
+  pull_request:
+    types:
+      - closed
+    branches: 
+      - 'master'
+      - 'main'
+    paths:
+      - 'web/**'
 
 jobs:
   build:
+    if: |
+      github.event.pull_request.merged == true || 
+      github.event_name == 'push'
     name: Build and Copy
     env:
       CI: ''
@@ -51,6 +55,9 @@ jobs:
           key: ${{ secrets.SERVER_KEY }}
 
   deploy:
+    if: |
+      github.event.pull_request.merged == true || 
+      github.event_name == 'push'
     name: Restart web server
     runs-on: ubuntu-latest
     needs: build
