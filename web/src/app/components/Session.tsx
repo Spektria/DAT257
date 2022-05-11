@@ -1,14 +1,15 @@
 import { FC } from 'react';
 import { SessionData } from '../../types/types';
-import { zipWith } from 'ramda'
+import { map, zipWith } from 'ramda'
 import { useNavigate } from 'react-router-dom'
+import ListProfile from './ListProfile';
 
 // Converts an array of strings to an HTML list of those strings
 function listPeople(arr: string[]) {
 	return(
     <div className='subtitle-content'>
       <ul>
-        { zipWith((x, k) => <li key={k}><a href="studentprofile">{x}</a></li>, arr, Array.from(Array(arr.length).keys())) }
+        { zipWith((x, k) => <li key={k}>{x}</li>, arr, Array.from(Array(arr.length).keys())) }
       </ul>
     </div>
   );
@@ -50,7 +51,7 @@ const Session : FC<SessionData> = data => {
 							</div>
 							<div className="mt-5 ">
 								<span className="title-content">Deltagare:</span>
-								{listPeople(data.participants)}
+								{data.participants.map((s,index)=> <ListProfile name={s} id={index}/>)}
 							</div>
 						</div>
 					</div>

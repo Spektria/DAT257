@@ -88,6 +88,7 @@ function App() {
         {RouteCalendarModal("/newsession")}
         {RouteCalendarModal("session/:id")}
         {RouteCalendarModal("session/:id/edit")}
+        {RouteCalendarModal("session/:student")}
       </Routes>
 
       {
@@ -100,7 +101,7 @@ function App() {
           <Route path="/newsession" element={<NewSession />} />
           <Route path="/session/:id" element={<ViewSession />} />
           <Route path="/session/:id/edit" element={<EditSession />} />
-          <Route path="/session/studentprofile" element={<StudentProfile student='Alice Albertsson' email='AliceA@outlook.com' educationalMoments={["Starta", "Köra på vågor", "Parkera", "uppkörning"]} completed={[true, false, true, false]} />} />
+          <Route path="/session/:student" element={<StudentProfile student='Alice Albertsson' email='AliceA@outlook.com' educationalMoments={["Starta", "Köra på vågor", "Parkera", "uppkörning"]} completed={[true, false, true, false]} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       )}
@@ -174,8 +175,11 @@ function App() {
 
 
 }
-
-
+/*
+function ViewProfile(){
+  return WithParam<String>(CheckStringParam, )
+}
+*/
 /** 
  * Wrapper for SessionEditor
  *
