@@ -4,6 +4,7 @@ import { SessionData, Either, StudentData, InstructorData } from '../../types/ty
 import { MultiInput, Input } from './MultiInput'
 import { FaLongArrowAltRight } from 'react-icons/fa'
 import { getStudents } from '../apis/StudentApi';
+import { ServerURL } from '../apis/URIs';
 import { getInstructors } from '../apis/InstructorApi';
 import { orElse } from '../helpers/Helpers';
 import { useNavigate } from 'react-router-dom'
@@ -72,10 +73,6 @@ function Form(initState : SessionData) {
   if (instructors === undefined)
     setInstructors(orElse(() => data?.[1], []));
 
-  // Generalize extraction of names
-  interface HasName { name: string }
-  const getNames = (list: HasName[] | undefined) => orElse(() => list?.map(s => s.name), [])(null);
-
   return (
     <div className='fixed inset-0 z-10 scroll overflow-y-hidden'>
       <div
@@ -89,40 +86,52 @@ function Form(initState : SessionData) {
               <h1 className="title-page">Lägg till uppkörningstillfälle</h1>
             </div>
             <div className='flex-row justify-between mt-5 mb-1 '>
-              <input className='input' name='title' type="text" placeholder="Titel" value={title} onChange={e => setTitle(e.target.value)} />
+              <input className='input' name='title' type="text" placeholder="Titel" value={title} onChange={e => setTitle(e.target.value)}/>
             </div>
 
             <div className='flex-row justify-between mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4'>
-              <input className='input' name='place' type="text" placeholder="Plats" value={location} onChange={e => setLocation(e.target.value)} />
-            </div>
-            <div className="border-b-2 border-light-secondary border-opacity-20 pb-5">
-              <h1 className="title-page">Lägg till uppkörningstillfälle</h1>
-            </div>
-            <div className='flex-row justify-between mt-5 mb-1 '>
-              <input className='input' name='title' type="text" placeholder="Titel" />
-            </div>
-
-            <div className='flex-row justify-between mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4'>
-              <input className='input' name='place' type="text" placeholder="Plats" />
+              <input className='input' name='place' type="text" placeholder="Plats" onChange={e => dispatch({location: e.target.value, id: Math.random()})}/>
             </div>
 
             <p className='title-content'>Datum</p>
             <div className='flex mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4 items-center justify-between' >
               <input
-                  className='input'
-                  name='from'
-                  type="date"
-                  value={fromDate}
-                  onChange={e => setFromDate(e.target.value)}
+                className='input'
+                name='from'
+                type="date"
+                value={fromDate}
+                onChange={e => {
+                  setFromDate(e.target.value)
+                  const y = parseInt((e.target.value).substring(0, 4))
+                  const m = parseInt((e.target.value).substring(5, 6))
+                  const d = parseInt((e.target.value).substring(8, 9))
+                  const date = state.from
+                  date.setFullYear(y)
+                  date.setMonth(m-1)
+                  date.setDate(d)
+                  dispatch({from: new Date(date), id: Math.random()})
+                }}
+                
               />
               <FaLongArrowAltRight className='inline fill-light-secondary ml-2 mr-2' />
               <input
-                  className='input'
-                  name='to'
-                  type="date"
-                  min={fromDate}
-                  value={toDate}
-                  onChange={e => setToDate(e.target.value)}
+                className='input'
+                name='to'
+                type="date"
+                min={fromDate}
+                value={toDate}
+                onChange={e => {
+                  setToDate(e.target.value)
+                  const y = parseInt((e.target.value).substring(0, 4))
+                  const m = parseInt((e.target.value).substring(5, 6))
+                  const d = parseInt((e.target.value).substring(8, 9))
+                  const date = state.to
+                  date.setFullYear(y)
+                  date.setMonth(m-1)
+                  date.setDate(d)
+                  dispatch({to: new Date(date), id: Math.random()})
+                }}
+                
               />
             </div>
 
@@ -132,19 +141,35 @@ function Form(initState : SessionData) {
                 className='input'
                 name='from'
                 type="time"
-                defaultValue={timeStr(state.from)}
+                defaultValue={timeStr(initState.from)}
+                onChange={e => {
+                  const h = parseInt((e.target.value).substring(0, 2))
+                  const m = parseInt((e.target.value).substring(3, 5))
+                  const d = state.from
+                  d.setHours(h+2)
+                  d.setMinutes(m)
+                  dispatch({from: new Date(d), id: Math.random()})
+                }}
               />
               <FaLongArrowAltRight className='inline fill-light-secondary ml-2 mr-2' />
               <input
-                  className='input'
-                  name='to'
-                  type='time'
-                  defaultValue={(() => {
-                    const d = state.from
-                    return timeStr((d.getHours() >= 22 || d.getHours() === 0) ?
-                        new Date(d.getFullYear(), d.getMonth(), d.getDay(), 24, 0) :
-                        new Date(d.getTime() + 2 * 3600000))
-                  })()}
+                className='input'
+                name='to'
+                type='time'
+                defaultValue={(() => {
+                  const d = initState.from
+                  return timeStr((d.getHours() >= 22 || d.getHours() === 0) ?
+                    new Date(d.getFullYear(), d.getMonth(), d.getDay(), 24, 0) :
+                    new Date(d.getTime() + 2 * 3600000))
+                })()}
+                onChange={e => {
+                  const h = parseInt((e.target.value).substring(0, 2))
+                  const m = parseInt((e.target.value).substring(3, 5))
+                  const d = state.to
+                  d.setHours(h+2)
+                  d.setMinutes(m)
+                  dispatch({to: new Date(d), id: Math.random()})
+                }}
               />
             </div>
 
@@ -155,26 +180,44 @@ function Form(initState : SessionData) {
                 Instruktörer:
               </label>
               <MultiInput
-                options={getNames(instructors)}
+                options={instructors!}
                 placeholder='Lägg till en instruktör'
-				        defaultValue={instructors ? map(i => { return {name: i.name, id: nextId++}}, instructors) : undefined}
+                onChange={e => {
+                  const i = e.map(x => x.name)
+                  dispatch({instructors: i, id: Math.random()})
+                }}
               />
             </div>
             <div className='mt-1 mb-1'>
               <label className='title-content' htmlFor="students">Elever: </label>
               <MultiInput
-                options={getNames(students)}
+                options={students!}
                 placeholder='Lägg till en elev'
-				        defaultValue={students ? map(i => { return {name: i.name, id: nextId++}}, students) : undefined}
+                onChange={e => {
+                  const i = e.map(x => x.name)
+                  dispatch({participants: i, id: Math.random()})
+                }}
               />
             </div>
           </div>
 
           <div className='flex flex-col space-y-1 mt-10'>
             <button
-                className='button-solid'
-                type='submit'
-                onClick={() => navigate(-1)}
+              className='button-solid'
+              type='submit'
+              onClick={() => {fetch(`${ServerURL}/events/new`,
+              { method: 'POST'
+              , headers: 
+                  { 'Content-Type': "application/json" }
+              , body: JSON.stringify(state)
+              })
+              .then(response => {
+                if (response.status === 200) {navigate(-1)}
+                else{alert("Something went wrong! Your event was not saved.")}
+              })
+              .catch(error => console.log(error));
+              }
+            }
             > Spara
             </button>
             <button

@@ -15,8 +15,8 @@ import java.util.List;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Student {
-private String studentEmail;
-private String studentName;
+private String name;
+private String loginEmail;
 
     public Student()  {
 
@@ -34,8 +34,7 @@ private String studentName;
 
         ObjectMapper mapper = new ObjectMapper();
 
-        List<Student> students = mapper.readValue(new File(json), new TypeReference<List<Student>>(){});
-
+        List<Student> students = mapper.readValue(json, new TypeReference<List<Student>>(){});
         return students;
     }
 
@@ -44,20 +43,20 @@ private String studentName;
      * Help methods to return and get students name and email
      *
      */
-    public String getStudentName() {
-        return studentName;
+    public String getName() {
+        return name;
     }
 
-    public String getStudentEmail() {
-        return studentEmail;
+    public String getloginEmail() {
+        return loginEmail;
     }
 
-    public void setStudentName(String studentName) {
-        this.studentName = studentName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setStudentEmail(String studentEmail) {
-        this.studentEmail = studentEmail;
+    public void setLoginEmail(String loginEmail) {
+        this.loginEmail = loginEmail;
     }
 
 }

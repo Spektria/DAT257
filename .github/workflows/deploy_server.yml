@@ -1,6 +1,12 @@
 name: Deploy server
 
 on:
+  push:
+    branches: 
+      - 'master'
+      - 'main'
+    paths:
+      - 'server/**'
   pull_request:
     types:
       - closed
@@ -12,7 +18,9 @@ on:
 
 jobs:
   deploy:
-    if: github.event.pull_request.merged == true
+    if: |
+      github.event.pull_request.merged == true || 
+      github.event_name == 'push'
     runs-on: self-hosted
     steps:
     - uses: actions/checkout@v3
@@ -27,6 +35,6 @@ jobs:
       run: mvn --batch-mode --update-snapshots package
       working-directory: server
 
-    - name: Start Server
+    - name: Restart Server
       run: sudo systemctl restart vattenskoter-server.service
       working-directory: server/target

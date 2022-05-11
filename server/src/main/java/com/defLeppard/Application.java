@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.HashMap;
 
 
@@ -41,9 +42,20 @@ public class Application {
 	private DatabaseService databaseService;
 	@EventListener(ApplicationReadyEvent.class)
 	public void addStudents () throws IOException {
-		//databaseService.addStudentsToDatabase("src/main/java/com/defLeppard/services/testJSONStudent.json");
 	}
 
 	@Autowired
 	private WixService wixService;
+
+	/**
+	 *
+	 * Fetches the students from Wix and inserts them into our database
+	 * Updates every 3 hours
+	 * 
+	 */
+	@Scheduled(fixedRate = 1000 * 60 * 60 * 3) // ms, i.e. 10 800 seconds
+	private void fetchStudents() throws IOException {
+		databaseService.addStudentsToDatabase(wixService.call(String.class, "students",new String[]{}).getBody());
+	}
+
 }
