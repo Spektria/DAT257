@@ -157,7 +157,7 @@ function Form(initState : SessionData) {
               <MultiInput
                 options={getNames(instructors)}
                 placeholder='Lägg till en instruktör'
-				        defaultValue={map(i => { return {name: i.name, id: nextId++}}, instructors!)}
+				        defaultValue={instructors ? map(i => { return {name: i.name, id: nextId++}}, instructors) : undefined}
               />
             </div>
             <div className='mt-1 mb-1'>
@@ -165,7 +165,7 @@ function Form(initState : SessionData) {
               <MultiInput
                 options={getNames(students)}
                 placeholder='Lägg till en elev'
-				        defaultValue={map(i => { return {name: i.name, id: nextId++}}, students!)}
+				        defaultValue={students ? map(i => { return {name: i.name, id: nextId++}}, students) : undefined}
               />
             </div>
           </div>
