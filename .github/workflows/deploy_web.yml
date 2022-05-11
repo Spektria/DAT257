@@ -1,4 +1,4 @@
-name: SCP web
+name: Deploy website
 
 on:
   workflow_dispatch:
