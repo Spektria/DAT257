@@ -1,21 +1,15 @@
 package com.defLeppard.controllers;
 
 import com.defLeppard.services.DatabaseService;
-import com.defLeppard.services.Event;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * REST controller for handling event information.
@@ -27,12 +21,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/events")
 public class EventsController {
 
-    private final DateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
-  
-    private DatabaseService dbs = new DatabaseService();
-
-    public EventsController() throws ParseException {
-    }
+    @Autowired
+    private DatabaseService dbs;
 
 
     /**
@@ -59,14 +49,9 @@ public class EventsController {
             if (!from.get().before(to.get()))
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("End date is before start date");
 
-            Date fromDate = from.get();
-            Date toDate = to.get();
-
-            Timestamp fromD = new Timestamp(fromDate.getTime());
-            Timestamp toD = new Timestamp(toDate.getTime());
             try {
 
-                var retEvents = dbs.fetchEventsInIntervall(fromD, toD);
+                var retEvents = dbs.fetchEventsInIntervall(from.get(), to.get());
                 return ResponseEntity.status(HttpStatus.OK).body(retEvents);
 
             } catch (EmptyResultDataAccessException e) {
@@ -77,5 +62,10 @@ public class EventsController {
 
         return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchAllEvents());
     }
+    @PostMapping("/new")
+    ResponseEntity<String> newSession(@RequestBody String state){
+        return ResponseEntity.status(HttpStatus.OK).body(state);
+    }
+
 
 }

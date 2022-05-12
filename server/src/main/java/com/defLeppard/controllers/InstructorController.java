@@ -1,36 +1,37 @@
 package com.defLeppard.controllers;
 
+import com.defLeppard.enteties.Instructor;
 import com.defLeppard.services.DatabaseService;
-import com.defLeppard.services.Instructor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.json.JSONObject;
-
-import java.text.ParseException;
 import java.util.List;
 
+/**
+ * REST controller for instructor information.
+ *
+ * @author Hugo Ekstrand
+ */
 @CrossOrigin
 @RestController
 @RequestMapping("/instructors")
 public class InstructorController {
 
-    private DatabaseService dbs = new DatabaseService();
-
-    public InstructorController() throws ParseException {
-    }
+    @Autowired
+    private DatabaseService dbs;
 
     /**
      * Returns a list of all instructors in JSON format.
      * @return the list of instructors
      */
     @GetMapping("")
-    @ResponseBody
     ResponseEntity<List<Instructor>> getInstructors(){
         return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchAllInstructors());
     }
@@ -42,14 +43,9 @@ public class InstructorController {
      * @return the instructor in JSON format
      */
     @GetMapping("/{name}")
-    @ResponseBody
     ResponseEntity<?> getInstructor(@PathVariable("name") String name) throws JsonProcessingException {
         try {
-            Object ret = dbs.fetchOneInstructor(name);
-            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-            var instructor = new JSONObject(ow.writeValueAsString(ret));
-
-            return ResponseEntity.status(HttpStatus.OK).body(instructor);
+            return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchOneInstructor(name.replace('_', ' ')));
         } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not found");
 
@@ -68,7 +64,6 @@ public class InstructorController {
      * @return login token
      */
     @GetMapping("/login")
-    @ResponseBody
     ResponseEntity<String> logIn(@RequestParam(value = "name", required = true) String username,
                                  @RequestParam(value = "pw",   required = true) String password){
 
@@ -79,7 +74,7 @@ public class InstructorController {
 
         // TODO login token
 
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(null);
     }
 
 }
