@@ -96,4 +96,10 @@ class StudentController {
         }
         return ResponseEntity.status(moments.isEmpty() ? HttpStatus.BAD_REQUEST : HttpStatus.OK).body(moments);
     }
+
+    @PostMapping("/{email}/updatemoment")
+    ResponseEntity<?> postMoments(@PathVariable("email") String email, @RequestBody EduMoment educationalMoment){
+        return  ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }
