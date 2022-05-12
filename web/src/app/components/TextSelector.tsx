@@ -6,113 +6,124 @@
  */
 
 import { toLower } from "ramda"
-import { FC, useState } from "react"
+import { useState, forwardRef } from "react"
 
-/**
- * @field placeholder - Placeholder for text input
- * @field selectables - Approved inputs
- * @field onChange    - Callback for when input changes
- */
- type TSelectorData = {
-    placeholder?: string
-    selectables: string[]
-    onChange: (str: string) => void
+type Props = {
+  placeholder?: string
+  selectables: string[]
+  onSubmit: (str: string) => void
 }
 
 /**
  * TextSelector component allows text input selection of approved selectables with dropdown a dropdown menue of
  * searchable selectables. 
- * Contains a callback for when the input has been changed to a new, approved input. 
- * @param param0 - The TextSelector data argument
- * @returns - The component
+ *
+ * @param props
+ * @param props.placeholder - Placeholder for text input
+ * @param props.selectables - Approved inputs
+ * @param props.onSubmit    - Callback for when input changes
+ *
+ * @returns The component
  */
-const TextSelector: FC<TSelectorData> = ({placeholder, selectables, onChange}) => {
-    // User text input value
-    const [inputValue, inputSetter] = useState("");
-    // All current predictions
-    const [predictionsValue, predictionsSetter]  = useState(['']);
-    // Index for the prediction. Note: -1 is for no prediction selected.
-    const [predictionIndex, setPredictionIndex] = useState(-1);
-    // If unapproved input warning shoud be showed
-    const [badInputNotify, setBadInputNotify] = useState(false);
+const TextSelector = forwardRef<HTMLInputElement, Props>(({ placeholder, selectables, onSubmit}, ref) => {
 
-    // Handles navigating the dropdown menu.
-    function onKeyDown(ev: React.KeyboardEvent<HTMLInputElement>){
-        if(ev.key === "ArrowDown"){
-            setPredictionIndex(Math.min(predictionIndex + 1, predictionsValue.length - 1));
-        }
+  // User text input value
+  const [input, setInput] = useState('');
+  // All current predictions
+  const [pred, setPred] = useState(['']);
+  // Index for the prediction. Note: -1 is for no prediction selected.
+  const [predIndex, setPredIndex] = useState(-1);
+  // If unapproved input warning shoud be showed
+  const [badInputNotify, setBadInputNotify] = useState(false);
 
-        if(ev.key === "ArrowUp"){
-            setPredictionIndex(Math.max(predictionIndex - 1, -1));
+
+
+  return (
+    <div className='group relative dropdown  px-4 cursor-pointer font-bold tracking-wide'>
+
+      <input type="text"
+        className={`peer input text-lg ${badInputNotify ? 'border-red-400 focus:border-red-400 focus:outline-red-400' : ''}`}
+        placeholder={placeholder}
+        value={input}
+        onChange={ev => handleChange(ev.target.value)}
+        onKeyDown={handleKeyDown}
+        onSubmit={_ => handleSubmit()}
+        ref={ref}
+      />
+
+      <div className="peer-focus:block group-hover:block dropdown-menu absolute hidden h-auto border-l-2 border-r-2 rounded z-20 bg-white" role="menu">
+        {
+          pred.filter(s => s !== "").map((itm, i) => (
+            <li className={`text-gray-700 block px-4 py-2 text-sm hover:bg-gray-400 border-b-2 rounded z-20 ${i === predIndex ? ' bg-red-200 border-red-400' : ''}`} role="menuitem"
+              key={i + '_' + itm}
+              onClick={_ => handleChange(itm)} >
+              {itm}
+            </li>
+          ))
         }
-        
-        if(ev.key === "Enter"){
-            if(predictionIndex !== -1)
-                onInputChange(predictionsValue[predictionIndex]);
-            else
-                setBadInputNotify(!pushOnChange(inputValue));
-            
-        }
+      </div>
+    </div>
+  );
+
+
+  // Handles navigating the dropdown menu.
+  function handleKeyDown(ev: React.KeyboardEvent<HTMLInputElement>) {
+    if (ev.key === "ArrowDown") {
+      setPredIndex(Math.min(predIndex + 1, pred.length - 1));
     }
 
-    /**
-     * Main logic loop handling changes to the primary text input. 
-     * @param str - The new text input value.
-     */
-    function onInputChange(str: string){
-        inputSetter(str);
-
-        // Create new predictions
-        predictionsSetter(str !== '' ? predictions(str, selectables) : []);
-
-        // Reset dropdown menu index selection
-        setPredictionIndex(-1);
-
-        // Reset bad input too
-        setBadInputNotify(false);
-        
-        pushOnChange(str);
+    if (ev.key === "ArrowUp") {
+      setPredIndex(Math.max(predIndex - 1, -1));
     }
 
-    /**
-     * Push a given string to callback if it is an approved string.
-     * @param str - The string to be pushed to callback
-     * @returns - If it was pushed to callback
-     */
-    function pushOnChange(str: string): boolean{
-        // Only if it is a valid string do we notify listener. 
-        if(selectables.includes(str)){
-            onChange(str);
-            return true;
-        }
-        return false;
+    if (ev.key === "Enter") {
+      if (predIndex === -1)
+        handleSubmit()
+      else
+        handleChange(pred[predIndex]);
+
+    }
+  }
+
+  /**
+   * Handles change
+   *
+   * @param str - The new text input value.
+   */
+  function handleChange(str: string) {
+    setInput(str);
+
+    // Create new predictions
+    setPred(str !== '' ? predictions(str, selectables) : []);
+
+    // Reset dropdown menu index selection
+    setPredIndex(-1);
+  }
+
+  /**
+   * Handles submit
+   */
+  function handleSubmit() {
+    if (isValid(input)) {
+      setInput('')
+      setBadInputNotify(false)
+      onSubmit(input)
+    } else {
+      setBadInputNotify(true)
     }
 
-    return (
-        <div className='group relative dropdown  px-4 cursor-pointer font-bold tracking-wide'>
+  }
 
-            <input type="text" 
-            className={`peer input text-lg ${badInputNotify ? 'border-red-400 focus:border-red-400 focus:outline-red-400' : ''}`}
-            placeholder={placeholder} 
-            value={inputValue}
-            onChange={ev => onInputChange(ev.target.value)} 
-            onKeyDown={onKeyDown}
-            />
+  /**
+   * Check if input is valid
+   *
+   * @returns true if valid
+   */
+  function isValid(str: string) {
+    return selectables.includes(str)
+  }
 
-            <div className="peer-focus:block group-hover:block dropdown-menu absolute hidden h-auto border-l-2 border-r-2 rounded z-20 bg-white" role="menu">
-                {
-                    predictionsValue.filter(s => s !== "").map((itm, i) => (
-                        <li className={`text-gray-700 block px-4 py-2 text-sm hover:bg-gray-400 border-b-2 rounded z-20 ${i === predictionIndex ? ' bg-red-200 border-red-400' : ''}`} role="menuitem" 
-                            key={i + '_' + itm}
-                            onClick={_ => onInputChange(itm)} >
-                            {itm}
-                        </li>
-                    ))
-                }
-            </div>
-        </div>
-    );
-}
+})
 /**
  * Returns a list of predictions given a partial string input and a collection of allowed predictions.
  * @param partial - The partial string which will be predicted of.
@@ -120,37 +131,37 @@ const TextSelector: FC<TSelectorData> = ({placeholder, selectables, onChange}) =
  * @returns the subset of allowed predictions which are predictions to the given partial string.
  */
 function predictions(partial: string, collection: string[]): string[] {
-	const lowerPartial = toLower(partial);	// Lowercase version of search input to compare against
-	const partialLen = lowerPartial.length;	// Length of search input
-	let result: string[] = [];	// List of matching search results
+  const lowerPartial = toLower(partial);	// Lowercase version of search input to compare against
+  const partialLen = lowerPartial.length;	// Length of search input
+  let result: string[] = [];	// List of matching search results
 
-	// Go through each string in the collection of available results and then
-	// compare each substring of the same length as the search string to the
-	// search string until a match is found. If a matching substring is found,
-	// add it to the result list.
-	for (var str of collection) {
-		const len = str.length;
-		const lowerStr = toLower(str);
+  // Go through each string in the collection of available results and then
+  // compare each substring of the same length as the search string to the
+  // search string until a match is found. If a matching substring is found,
+  // add it to the result list.
+  for (var str of collection) {
+    const len = str.length;
+    const lowerStr = toLower(str);
 
-        if(lowerStr === lowerPartial)
-            continue;
+    if (lowerStr === lowerPartial)
+      continue;
 
-		for (let i = 0; i < len; i++) {
-			if (i + partialLen > len) {
-				// We've gone too far
-				break;
-			}
+    for (let i = 0; i < len; i++) {
+      if (i + partialLen > len) {
+        // We've gone too far
+        break;
+      }
 
-			const subStr = lowerStr.substring(i, i + partialLen);
+      const subStr = lowerStr.substring(i, i + partialLen);
 
-			if (subStr === lowerPartial) {
-				// Found a match! Add it to the list.
-				result.push(str);
-				break;
-			}
-		}
-	}
+      if (subStr === lowerPartial) {
+        // Found a match! Add it to the list.
+        result.push(str);
+        break;
+      }
+    }
+  }
 
-	return result;
+  return result;
 }
 export default TextSelector

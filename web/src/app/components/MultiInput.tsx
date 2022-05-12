@@ -1,4 +1,4 @@
-import { FC, useReducer, useState } from 'react'
+import { FC, useReducer, useRef } from 'react'
 import { map, none, find } from 'ramda'
 import ListProfile from './ListProfile'
 import { MdAddCircle } from 'react-icons/md'
@@ -21,18 +21,30 @@ type Props = {
 /** Mutli input component with searchable options. */
 const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue }) => {
   const [list, dispatch] = useReducer(reducer, defaultValue ? defaultValue : [])
-  const [person, setPerson] = useState<StudentData>()
 
   // Generalize extraction of names
   interface HasName { name: string }
   const getNames = (list: HasName[] | undefined) => orElse(() => list?.map(s => s.name), [])(null);
+
+  /**
+   * Reference for TextSelector
+   * 
+   * @remarks Used for connect icon onClick action.
+   */
+  const ref = useRef<HTMLInputElement>(null)
+
+  function submit(){
+    ref.current?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }))
+    ref.current?.focus()
+  }
+  
 
   return (
     <div className='flex flex-col mt-2'>
       <ul>
         {map(({ name, email }) =>
           <ListProfile
-            key={name}
+            key={name} /* Prevents items with same name */
             name={name}
             email={email}
           />
@@ -42,37 +54,26 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue })
         <MdAddCircle
           className='cursor-pointer fill-light-primary ml-1 mr-1 inline pb-{1}'
           size='26px'
-        onClick={_ => {updateList(person);}}
+          onClick={submit}
         />
         <TextSelector
-          onChange={textSelectorChange}
           placeholder={placeholder}
           selectables={getNames(options)}
+          onSubmit={handleSubmit}
+          ref={ref} 
         />
       </div>
     </div>
   )
-
-
-  /**
-   * Updates list if valid input
-   *
-   * @param input 
-   */
-  function updateList(input : StudentData | undefined){
-    if(input !== undefined)
-     dispatch(input) 
-     if(onChange) onChange(list)
-  }
+  
 
   /**
-   * onChange function for TextSelector
+   * Handles TextSelector's submit action 
    *
    * @param input
    */ 
-  function textSelectorChange(input : String) {
+  function handleSubmit(input : String) {
     const person = find(x => x.name === input, options)! 
-    setPerson(person) 
     dispatch(person) 
     if(onChange) onChange(list)
   }
