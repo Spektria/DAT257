@@ -60,13 +60,13 @@ const Session: FC<SessionData> = data => {
               <button
                 type="button"
                 className="button-solid"
-                onClick={() => navigate("/session/" + data.id + "/edit")}
+                onClick={() => navigate(-1)}
               >Redigera
               </button>
               <button
                 type="button"
                 className="button-outline"
-                onClick={() => navigate("/")}
+                onClick={() => navigate(-1)}
               >Avbryt
               </button>
             </div>

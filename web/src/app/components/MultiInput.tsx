@@ -99,3 +99,5 @@ function MultiInput({ options, placeholder, onChange, defaultValue } : Props) {
     return nextState
   }
 }
+
+export default MultiInput
