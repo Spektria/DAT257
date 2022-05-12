@@ -41,7 +41,8 @@ function MultiInput({ options, placeholder, onChange, defaultValue } : Props) {
    */
   function submit(){
     ref.current?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }))
-    ref.current?.focus()
+    /* focus input on submit. Convenient on pc but a little annoying on mobile */
+    ref.current?.focus() 
   }
   
 
