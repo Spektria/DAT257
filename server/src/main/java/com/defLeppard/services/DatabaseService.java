@@ -108,4 +108,18 @@ class DatabaseService {
         return totalRowsAffected;
     }
 
+    /**
+     *
+     * Given a student email and educational moment, update the completed status
+     * @param studentEmail the email of the student.
+     * @param moment the educational moment which status should be updated
+     * @return the number of rows affected in the database
+     *
+     */
+    public int changeCompletedStatus(Student studentEmail, EduMoment moment) {
+        //String sqlStatement = "INSERT XXX INTO StudentEducationalMoments WHERE educationalMoment = '" + moment + "' AND studentEmail = '" + studentemail + "'";
+        String sqlStatement = "UPDATE StudentEducationalMoments SET completed = NOT completed WHERE educationalMoment = '" + moment + "' AND studentEmail = '" + studentEmail + "'";
+        return jdbcTemplate.update(sqlStatement);
+    }
+
 }
