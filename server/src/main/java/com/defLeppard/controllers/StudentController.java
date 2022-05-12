@@ -99,7 +99,7 @@ class StudentController {
 
     @PostMapping("/{email}/updatemoment")
     ResponseEntity<?> postMoments(@PathVariable("email") String email, @RequestBody EduMoment educationalMoment){
-        return  ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 }
