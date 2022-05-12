@@ -25,6 +25,7 @@ import {
 import { useQuery, useQueryClient } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { getEvents } from './apis/EventApi'
+import { getStudents } from './apis/StudentApi';
 
 /**
  * Root component of the app
@@ -84,11 +85,12 @@ function App() {
         { /* Routes to normal fullscreen views */}
         <Route path="/" element={<Cal />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/profile" element={<StudentProfile student='Alice Albertsson' email='AliceA@outlook.com' educationalMoments={["Starta", "Köra på vågor", "Parkera", "uppkörning"]} completed={[true, false, true, false]} />} />
         { /* Routes to modal views */}
         {RouteCalendarModal("/newsession")}
         {RouteCalendarModal("session/:id")}
         {RouteCalendarModal("session/:id/edit")}
-        {RouteCalendarModal("session/:student")}
+        {RouteCalendarModal("session/Richard%20Feynman")}
       </Routes>
 
       {
@@ -101,7 +103,7 @@ function App() {
           <Route path="/newsession" element={<NewSession />} />
           <Route path="/session/:id" element={<ViewSession />} />
           <Route path="/session/:id/edit" element={<EditSession />} />
-          <Route path="/session/:student" element={<StudentProfile student='Alice Albertsson' email='AliceA@outlook.com' educationalMoments={["Starta", "Köra på vågor", "Parkera", "uppkörning"]} completed={[true, false, true, false]} />} />
+          <Route path="/session/Richard%20Feynman" element={<StudentProfile student='Alice Albertsson' email='AliceA@outlook.com' educationalMoments={["Starta", "Köra på vågor", "Parkera", "uppkörning"]} completed={[true, false, true, false]} />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       )}
@@ -177,7 +179,10 @@ function App() {
 }
 /*
 function ViewProfile(){
-  return WithParam<String>(CheckStringParam, )
+  return WithParam<String>(params: Readonly<Params<string>> => params.student, student => {
+    const profile = find(e => e.student == student, session.participants )
+    return profile === undefined ? undefined : <StudentProfile {...profile}
+})
 }
 */
 /** 
@@ -203,6 +208,11 @@ function NewSession() {
 function checkIdParam(params: Readonly<Params<string>>): Number | undefined {
   const id = params.id
   return (id === undefined || isNaN(+id)) ? undefined : parseInt(id)
+}
+
+function checkStringParam(params: Readonly<Params<string>>): String | undefined{
+  const student = params.student
+  return (student)
 }
 
 /**

@@ -21,7 +21,7 @@ const ListProfile: FC<Props> = ({ name, id }) => {
       <label className='listitem-text'>{name}</label>
       <div className='flex justify-between space-x-1'>
         <BsX className='cursor-pointer' size='20px' />
-        <IoMdPerson className='cursor-pointer' onClick={() => navigate(`session/${name}`)} size='20px' />
+        <IoMdPerson className='cursor-pointer' onClick={() => navigate(`${name}`)} size='20px' />
       </div>
     </li>
   )
