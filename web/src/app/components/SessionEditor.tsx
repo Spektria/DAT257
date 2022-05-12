@@ -54,6 +54,7 @@ function Form(initState : SessionData) {
   const [fromDate, setFromDate] = useState(dateStr(state.from))
   const [toDate, setToDate] = useState(fromDate)
 
+  //
   const [students, setStudents] = useState<StudentData[]>();
   const [instructors, setInstructors] = useState<InstructorData[]>();
   const { isLoading, error, data } = useQuery<[StudentData[], InstructorData[]], Error>(
@@ -91,7 +92,7 @@ function Form(initState : SessionData) {
             </div>
 
             <div className='flex-row justify-between mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4'>
-              <input className='input' name='place' type="text" placeholder="Plats" onChange={e => dispatch({location: e.target.value, id: Math.random()})}/>
+              <input className='input' name='place' type="text" placeholder="Plats" value={location} onChange={e => dispatch({location: e.target.value, id: Math.random()})}/>
             </div>
 
             <p className='title-content'>Datum</p>
@@ -182,6 +183,7 @@ function Form(initState : SessionData) {
               </label>
               <MultiInput
                 options={instructors!}
+				defaultValue={map(s => {return {name: s, email: ""}}, state.instructors)}
                 placeholder='Lägg till en instruktör'
                 onChange={e => {
                   const i = e.map(x => x.name)
@@ -193,6 +195,7 @@ function Form(initState : SessionData) {
               <label className='title-content' htmlFor="students">Elever: </label>
               <MultiInput
                 options={students!}
+				defaultValue={map(s => {return {name: s, email: ""}}, state.participants)}
                 placeholder='Lägg till en elev'
                 onChange={e => {
                   const i = e.map(x => x.name)
