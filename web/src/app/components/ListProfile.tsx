@@ -5,15 +5,15 @@ import { BsCheck2, BsX } from 'react-icons/bs'
 /**
 * @field onChange - Change handler on edit
 * @field name - Initial value of input
-* @field id - Id of person
+* @field email - Email of person
 */
 type Props =
   { name: string
-  , id: number
+  , email: string
   }
 
 /** Component for displaying a profile list item. Used by MultiInput */
-const ListProfile: FC<Props> = ({ name, id }) => {
+const ListProfile: FC<Props> = ({ name, email }) => {
   return (
     <li className='flex justify-between mb-1 listitem'>
       <label className='listitem-text'>{name}</label>

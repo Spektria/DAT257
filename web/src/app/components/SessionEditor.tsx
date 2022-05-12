@@ -4,9 +4,11 @@ import { SessionData, Either, StudentData, InstructorData } from '../../types/ty
 import MultiInput from './MultiInput'
 import { FaLongArrowAltRight } from 'react-icons/fa'
 import { getStudents } from '../apis/StudentApi';
+import { ServerURL } from '../apis/URIs';
 import { getInstructors } from '../apis/InstructorApi';
 import { orElse } from '../helpers/Helpers';
 import { useNavigate } from 'react-router-dom'
+import { map } from 'ramda';
 import { useQuery } from 'react-query'
 
 /**
@@ -36,6 +38,7 @@ function SessionEditor({ left, right }: Either<CalendarDate, SessionData>) {
   )
 }
 
+
 /**
  * Component for input of session information
  * 
@@ -46,15 +49,20 @@ function Form(initState : SessionData) {
   const [state, dispatch] = useReducer(
     (prevState: SessionData, newFields: Partial<SessionData>) => ({ ...prevState, ...newFields })
     , initState)
-  const [fromDate, setFromDate] = useState(dateStr(initState.from))
+  const [fromDate, setFromDate] = useState(dateStr(state.from))
   const [toDate, setToDate] = useState(fromDate)
 
+  //
   const [students, setStudents] = useState<StudentData[]>();
   const [instructors, setInstructors] = useState<InstructorData[]>();
   const { isLoading, error, data } = useQuery<[StudentData[], InstructorData[]], Error>(
     'student-instructor-names'
     , async () => [await getStudents(), await getInstructors()]
     , { staleTime: 600000 })
+
+  // Fetch title and location
+  const [title, setTitle] = useState(state.title);
+  const [location, setLocation] = useState(state.location);
 
   if (isLoading) return <p className='fixed text-center p-10 top-20 z-20'>Loading...</p>;
   if (error) return <p className='fixed text-center p-10 top-20 z-20'>An error has occurred: {error.message}</p>;
@@ -64,10 +72,6 @@ function Form(initState : SessionData) {
 
   if (instructors === undefined)
     setInstructors(orElse(() => data?.[1], []));
-
-  // Generalize extraction of names
-  interface HasName { name: string }
-  const getNames = (list: HasName[] | undefined) => orElse(() => list?.map(s => s.name), [])(null);
 
   return (
     <div className='fixed inset-0 z-10 scroll overflow-y-hidden'>
@@ -82,11 +86,11 @@ function Form(initState : SessionData) {
               <h1 className="title-page">Lägg till uppkörningstillfälle</h1>
             </div>
             <div className='flex-row justify-between mt-5 mb-1 '>
-              <input className='input' name='title' type="text" placeholder="Titel" onChange={e => dispatch({title: e.target.value, id: Math.random()})}/>
+              <input className='input' name='title' type="text" placeholder="Titel" value={title} onChange={e => setTitle(e.target.value)}/>
             </div>
 
             <div className='flex-row justify-between mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4'>
-              <input className='input' name='place' type="text" placeholder="Plats" onChange={e => dispatch({location: e.target.value, id: Math.random()})}/>
+              <input className='input' name='place' type="text" placeholder="Plats" value={location} onChange={e => dispatch({location: e.target.value, id: Math.random()})}/>
             </div>
 
             <p className='title-content'>Datum</p>
@@ -176,21 +180,25 @@ function Form(initState : SessionData) {
                 Instruktörer:
               </label>
               <MultiInput
-                options={getNames(instructors)}
+                options={instructors!}
+				defaultValue={map(s => {return {name: s, email: ""}}, state.instructors)}
                 placeholder='Lägg till en instruktör'
                 onChange={e => {
                   const i = e.map(x => x.name)
-                  dispatch({instructors: i, id: Math.random()})}}
+                  dispatch({instructors: i, id: Math.random()})
+                }}
               />
             </div>
             <div className='mt-1 mb-1'>
               <label className='title-content' htmlFor="students">Elever: </label>
               <MultiInput
-                options={getNames(students)}
+                options={students!}
+				defaultValue={map(s => {return {name: s, email: ""}}, state.participants)}
                 placeholder='Lägg till en elev'
                 onChange={e => {
                   const i = e.map(x => x.name)
-                  dispatch({participants: i, id: Math.random()})}}
+                  dispatch({participants: i, id: Math.random()})
+                }}
               />
             </div>
           </div>
@@ -199,22 +207,35 @@ function Form(initState : SessionData) {
             <button
               className='button-solid'
               type='submit'
-              onClick={() => {fetch('http://localhost:8080/events/new',
-              {method: 'POST',
-              headers: {'Content-Type': "application/json",},
-              body: JSON.stringify(state)})
+              onClick={() => {fetch(`${ServerURL}/events/new`,
+              { method: 'POST'
+              , headers: 
+                  { 'Content-Type': "application/json" }
+              , body: JSON.stringify(state)
+              })
               .then(response => {
                 if (response.status === 200) {navigate(-1)}
                 else{alert("Something went wrong! Your event was not saved.")}
               })
               .catch(error => console.log(error));
+			  if (state.id > 0) {
+				navigate("/session/" + state.id);
+			  } else {
+				navigate("/");
+			  }
               }
             }
             > Spara
             </button>
             <button
                 className='button-outline'
-                onClick={() => navigate(-1)}
+                onClick={() => {
+				  if (state.id > 0) {
+				  	navigate("/session/" + state.id);
+				  } else {
+				  	navigate("/");
+				  }
+				}}
             > Avbryt
             </button>
           </div>
@@ -240,7 +261,7 @@ function timeStr(date: Date): string {
  * @param date   
  */
 function dateStr(date: Date): string {
-  return date.toISOString().substring(0, 10)
+  return date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, "0") + "-" + date.getDate().toString().padStart(2, "0")
 }
 
 export default SessionEditor
