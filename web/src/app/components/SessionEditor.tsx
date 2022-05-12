@@ -1,16 +1,15 @@
 import { useReducer, FC, useState, useEffect } from 'react';
 import { CalendarDate } from 'react-awesome-calendar'
 import { SessionData, Either, StudentData, InstructorData } from '../../types/types'
-import { MultiInput } from './MultiInput'
+import MultiInput from './MultiInput'
 import { FaLongArrowAltRight } from 'react-icons/fa'
 import { getStudents } from '../apis/StudentApi';
 import { ServerURL } from '../apis/URIs';
 import { getInstructors } from '../apis/InstructorApi';
 import { orElse } from '../helpers/Helpers';
 import { useNavigate } from 'react-router-dom'
-import { identical, map } from 'ramda';
+import { map } from 'ramda';
 import { useQuery } from 'react-query'
-import { stat } from 'fs';
 
 /**
  * Component for creating and editing sessions
@@ -39,7 +38,6 @@ function SessionEditor({ left, right }: Either<CalendarDate, SessionData>) {
   )
 }
 
-var nextId : number = 0
 
 /**
  * Component for input of session information
