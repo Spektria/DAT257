@@ -149,11 +149,7 @@ function App() {
   function EditSession() {
     return WithParam<Number>(checkIdParam, id => {
       const session = find(e => e.id === id, sessions)
-      if(session === undefined)
-        return undefined
-      // make from and to type Date
-      const session_ : SessionData = {...session, from: new Date(session.from), to : new Date(session.to)}
-      return session === undefined ? undefined : <SessionEditor {...{ right: session_ } } />
+      return session === undefined ? undefined : <SessionEditor {...{ right: session }} />
     })
   }
 
