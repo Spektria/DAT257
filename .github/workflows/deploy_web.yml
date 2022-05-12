@@ -1,6 +1,7 @@
 name: Deploy website
 
 on:
+  workflow_dispatch:
   push:
     branches: 
       - 'master'
@@ -48,7 +49,7 @@ jobs:
         uses: nogsantos/scp-deploy@master
         with:
           src: ./web/build
-          remote: /home/lingon/
+          remote: /home/lingon/.local/share/vattenskoter/build
           host: "188.149.175.143"
           port: 2277
           user: 'lingon'
@@ -70,6 +71,5 @@ jobs:
           username: 'lingon'
           key: ${{ secrets.SERVER_KEY }}
           script: |
-            sudo rm -r /var/www/vattenskoter.fredin.org/build
-            sudo mv /home/lingon/build /var/www/vattenskoter.fredin.org/
+            sudo mv /home/lingon/.local/share/vattenskoter/build/* /var/www/vattenskoter.fredin.org/build/
             sudo systemctl reload nginx.service
