@@ -6,7 +6,7 @@
  */
 
 import { toLower } from "ramda"
-import { useState, forwardRef } from "react"
+import { useState, forwardRef, ForwardedRef } from "react"
 
 type Props = {
   placeholder?: string
@@ -22,11 +22,14 @@ type Props = {
  * @param props.placeholder - Placeholder for text input
  * @param props.selectables - Approved inputs
  * @param props.onSubmit    - Callback for when input changes
+ * @param ref               - Reference to input element
+ * 
+ * @remarks TextSelector is wrapped in forwardRef at the end of the file.
  *
- * @returns The component
+ * @see {@link https://reactjs.org/docs/forwarding-refs.html}
+ * @see {@link https://reactjs.org/docs/hooks-reference.html#useref}
  */
-const TextSelector = forwardRef<HTMLInputElement, Props>(({ placeholder, selectables, onSubmit}, ref) => {
-
+function TextSelector({ placeholder, selectables, onSubmit}: Props, ref: ForwardedRef<HTMLInputElement>) {
   // User text input value
   const [input, setInput] = useState('');
   // All current predictions
@@ -66,7 +69,11 @@ const TextSelector = forwardRef<HTMLInputElement, Props>(({ placeholder, selecta
   );
 
 
-  // Handles navigating the dropdown menu.
+  /** 
+   * Handles navigating the dropdown menu.
+   *
+   * @param ev - Keyboard event
+   */
   function handleKeyDown(ev: React.KeyboardEvent<HTMLInputElement>) {
     if (ev.key === "ArrowDown") {
       setPredIndex(Math.min(predIndex + 1, pred.length - 1));
@@ -123,7 +130,8 @@ const TextSelector = forwardRef<HTMLInputElement, Props>(({ placeholder, selecta
     return selectables.includes(str)
   }
 
-})
+}
+
 /**
  * Returns a list of predictions given a partial string input and a collection of allowed predictions.
  * @param partial - The partial string which will be predicted of.
@@ -164,4 +172,5 @@ function predictions(partial: string, collection: string[]): string[] {
 
   return result;
 }
-export default TextSelector
+
+export default forwardRef<HTMLInputElement, Props>(TextSelector)

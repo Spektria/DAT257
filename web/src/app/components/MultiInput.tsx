@@ -1,4 +1,4 @@
-import { FC, useReducer, useRef } from 'react'
+import { useReducer, useRef } from 'react'
 import { map, none, find } from 'ramda'
 import ListProfile from './ListProfile'
 import { MdAddCircle } from 'react-icons/md'
@@ -6,11 +6,6 @@ import TextSelector from './TextSelector'
 import { StudentData } from '../../types/types'
 import { orElse } from '../helpers/Helpers'
 
-/**
-* @field options - Options for input
-* @field placeholder - Placeholder for input
-* @field onChange - Callback for when the list updates
-*/
 type Props = {
   options: StudentData[]
   placeholder?: string
@@ -18,8 +13,15 @@ type Props = {
   defaultValue?: StudentData[]
 }
 
-/** Mutli input component with searchable options. */
-const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue }) => {
+/**  
+ * Mutli input component with searchable options.
+ *
+ * @param props
+ * @param props.options     - Options for input
+ * @param props.placeholder - Placeholder for input
+ * @param props.onChange    - Callback for when the list updates
+ */
+function MultiInput({ options, placeholder, onChange, defaultValue } : Props) {
   const [list, dispatch] = useReducer(reducer, defaultValue ? defaultValue : [])
 
   // Generalize extraction of names
@@ -33,6 +35,10 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue })
    */
   const ref = useRef<HTMLInputElement>(null)
 
+  
+  /**
+   * Triggers the submit event on TextSelector
+   */
   function submit(){
     ref.current?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }))
     ref.current?.focus()
@@ -79,12 +85,13 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue })
   }
 
   /** 
-  * Reducer for appending or changing a input.
-  *
-  * @param prevState - Previous list of items
-  * @param newInput - New input
-  * @returns Updated list of inputs
-  */
+   * Reducer for appending or changing a input.
+   *
+   * @param prevState - Previous list of items
+   * @param newInput - New input
+   *
+   * @returns Updated list of inputs
+   */
   function reducer(prevState: StudentData[], newInput: StudentData): StudentData[] {
     const sameEmail = (x: StudentData) => x.email === newInput.email
     const nextState = none(sameEmail, prevState) ? [...prevState, newInput] : map(input => sameEmail(input) ? newInput : input, prevState)
