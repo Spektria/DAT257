@@ -19,7 +19,7 @@ const Session: FC<SessionData> = data => {
   const navigate = useNavigate()
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-      <div className="flex items-end justify-center font-sans h-screen sm:min-h-screen pt-10 sm:px-4 sm:pb-20 text-center sm:block sm:p-0">
+      <div className="flex items-end justify-center font-sans h-screen md:min-h-screen pt-10 md:px-4 md:pb-20 text-center md:block md:p-0">
 
         <div
           className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
@@ -27,13 +27,13 @@ const Session: FC<SessionData> = data => {
           onClick={() => navigate(-1)}
         />
 
-        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <span className="hidden md:inline-block md:align-middle md:h-screen" aria-hidden="true">&#8203;</span>
 
         <div className='absolute inset-0 mx-auto z-20 w-full md:w-fit mt-10'>
-          <div className="card-modal-add">
-            <div className="relative px-8 pt-8 sm:p-6 sm:pb-10">
+          <div className="card-modal-add md:min-w-[32rem]">
+            <div className="relative px-8 pt-8 md:p-6 md:pb-10">
               <div className="flex items-start">
-                <div className="mt-3 sm:mt-0 sm:ml-4 text-left w-full">
+                <div className="mt-3 md:mt-0 md:ml-4 text-left w-full">
                   <div className="border-b-2 border-light-secondary border-opacity-20 pb-5">
                     <h1 className="title-page">Uppkörningstillfälle</h1>
                   </div>
@@ -56,7 +56,7 @@ const Session: FC<SessionData> = data => {
                 </div>
               </div>
             </div>
-            <div className="w-full px-4 py-6 sm:px-6 sm:flex sm:flex-row-reverse">
+            <div className="w-full px-4 py-6 md:px-6 md:flex md:flex-row-reverse">
               <button
                 type="button"
                 className="button-solid"

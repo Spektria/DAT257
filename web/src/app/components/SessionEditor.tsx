@@ -8,6 +8,7 @@ import { ServerURL } from '../apis/URIs';
 import { getInstructors } from '../apis/InstructorApi';
 import { orElse } from '../helpers/Helpers';
 import { useNavigate } from 'react-router-dom'
+import { map } from 'ramda';
 import { useQuery } from 'react-query'
 
 /**
