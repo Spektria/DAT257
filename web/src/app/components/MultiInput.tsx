@@ -53,7 +53,6 @@ function MultiInput({ options, placeholder, onChange, defaultValue } : Props) {
           <ListProfile
             key={name} /* Prevents items with same name */
             name={name}
-            email={email}
           />
           , list)}
       </ul>

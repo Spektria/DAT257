@@ -10,11 +10,11 @@ import { useNavigate } from 'react-router'
 */
 type Props =
   { name: string
-  , email: string
   }
 
 /** Component for displaying a profile list item. Used by MultiInput */
-const ListProfile: FC<Props> = ({ name, email }) => {
+const ListProfile: FC<Props> = ({ name }) => {
+  const navigate = useNavigate();
   return (
     <li className='flex justify-between mb-1 listitem'>
       <label className='listitem-text'>{name}</label>

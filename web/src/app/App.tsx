@@ -85,12 +85,11 @@ function App() {
         { /* Routes to normal fullscreen views */}
         <Route path="/" element={<Cal />} />
         <Route path="*" element={<NotFound />} />
-        <Route path="/profile" element={<StudentProfile student='Alice Albertsson' email='AliceA@outlook.com' educationalMoments={["Starta", "Köra på vågor", "Parkera", "uppkörning"]} completed={[true, false, true, false]} />} />
         { /* Routes to modal views */}
         {RouteCalendarModal("/newsession")}
         {RouteCalendarModal("session/:id")}
         {RouteCalendarModal("session/:id/edit")}
-        {RouteCalendarModal("session/Richard%20Feynman")}
+        {RouteCalendarModal("session/:id/:student")}
       </Routes>
 
       {
@@ -103,7 +102,7 @@ function App() {
           <Route path="/newsession" element={<NewSession />} />
           <Route path="/session/:id" element={<ViewSession />} />
           <Route path="/session/:id/edit" element={<EditSession />} />
-          <Route path="/session/Richard%20Feynman" element={<StudentProfile student='Alice Albertsson' email='AliceA@outlook.com' educationalMoments={["Starta", "Köra på vågor", "Parkera", "uppkörning"]} completed={[true, false, true, false]} />} />
+          <Route path="/session/:id/:student" element={<ViewProfile />}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
       )}
@@ -177,14 +176,14 @@ function App() {
 
 
 }
-/*
+
 function ViewProfile(){
-  return WithParam<String>(params: Readonly<Params<string>> => params.student, student => {
-    const profile = find(e => e.student == student, session.participants )
-    return profile === undefined ? undefined : <StudentProfile {...profile}
-})
+  return WithParam<String>(checkStringParam, student => {
+    const profile = find(e => e.student === student, studentProfileData)
+    return profile === undefined ? undefined : <StudentProfile {...profile} />
+  })
 }
-*/
+
 /** 
  * Wrapper for SessionEditor
  *
