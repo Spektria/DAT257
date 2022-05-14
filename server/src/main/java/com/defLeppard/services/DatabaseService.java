@@ -116,9 +116,9 @@ class DatabaseService {
      * @return the number of rows affected in the database
      *
      */
-    public int changeCompletedStatus(Student studentEmail, EduMoment moment) {
+    public int changeCompletedStatus(String studentEmail, EduMoment moment) {
         //String sqlStatement = "INSERT XXX INTO StudentEducationalMoments WHERE educationalMoment = '" + moment + "' AND studentEmail = '" + studentemail + "'";
-        String sqlStatement = "UPDATE StudentEducationalMoments SET completed = NOT completed WHERE educationalMoment = '" + moment + "' AND studentEmail = '" + studentEmail + "'";
+        String sqlStatement = "UPDATE StudentEducationalMoments SET completed = NOT completed WHERE educationalMoment = '" + moment.name + "' AND studentEmail = '" + studentEmail + "'";
         return jdbcTemplate.update(sqlStatement);
     }
 
