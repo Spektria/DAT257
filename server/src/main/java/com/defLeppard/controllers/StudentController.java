@@ -21,7 +21,7 @@ import java.util.Optional;
 /**
  * REST controller for handling student information.
  *
- * @author Hugo Ekstrand, Jonas Röst
+ * @author Hugo Ekstrand, Jonas Röst, William Schmitz
  */
 @CrossOrigin
 @RestController
@@ -92,4 +92,14 @@ class StudentController {
         }
         return ResponseEntity.status(moments.isEmpty() ? HttpStatus.BAD_REQUEST : HttpStatus.OK).body(moments);
     }
+
+    @PostMapping("/{email}/updatemoment")
+    ResponseEntity<?> postMoments(@PathVariable("email") String email, @RequestBody EduMoment educationalMoment){
+
+        int rowsChanged = dbs.changeCompletedStatus(email, educationalMoment);
+        if (rowsChanged == 0)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }
