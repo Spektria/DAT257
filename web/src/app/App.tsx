@@ -174,7 +174,7 @@ function App() {
    *
    * @param id
    *
-   * @retrns 
+   * @returns SessionData if match, otherwise undefined 
    *
    * @remarks
    * The parsing should maybe be run on all the 
