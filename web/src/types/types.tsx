@@ -15,7 +15,7 @@ export type Student =
   , email : string
   }
 
-export interface Instructor { name: string }
+export type Instructor = { name: string }
 
 export type LocationState = 
   { background : Location 
