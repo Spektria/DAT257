@@ -1,5 +1,6 @@
 package com.defLeppard.controllers;
 
+import com.defLeppard.enteties.Event;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,8 @@ public class EventsControllerTest {
         // from 2022-01-01T00:00:00.000-00:00 to 2022-01-01T10:00:00.000-00:00
         // for this test to be valid
 
-        final String from = "2022-01-01T00:00:00.000-00:00";
-        final String to   = "2022-01-01T10:00:00.000-00:00";
+        final String from = "2021-12-01T00:00:00.000-00:00";
+        final String to   = "2022-02-01T10:00:00.000-00:00";
         final String eventTitle = "periodTest";
 
         List<Map<String,?>> evs = template.getForEntity(
@@ -43,9 +44,9 @@ public class EventsControllerTest {
            || evs.size() < 2)
             throw new RuntimeException("Test data does is invalid");
 
+        String req = "http://localhost:" + port + "/events?from=" + from + "&to=" + to;
         List<Map<String,?>> evInPeriod = template.getForEntity(
-                "http://localhost:" + port
-                + "/events?from=" + from + "&to=" + to,
+                req,
                 ArrayList.class).getBody();
 
         // Is correct event?
