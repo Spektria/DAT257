@@ -1,4 +1,4 @@
-package com.defLeppard.enteties;
+package com.defLeppard.entities;
 
 import java.util.Arrays;
 import java.util.Objects;

@@ -1,6 +1,6 @@
 package com.defLeppard.services.mappers;
 
-import com.defLeppard.enteties.Student;
+import com.defLeppard.entities.Student;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

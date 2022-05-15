@@ -1,4 +1,4 @@
-package com.defLeppard.enteties;
+package com.defLeppard.entities;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * @author Hugo Ekstrand
  */
-public record Event(int id, String title, Date from, Date to, String[] instructors, String[] participants, String location) {
+public record Event(int id, String title, Date from, Date to, String[] instructors, Student[] participants, String location) {
 
     public Event{
         Arrays.asList(title, location, from, to, participants, instructors).forEach(Objects::requireNonNull);
