@@ -10,7 +10,7 @@ import NotFound from './components/NotFound';
 import Calendar from './components/Calendar';
 import { LocationState, SessionData } from '../types/types';
 import { CalendarState } from 'react-awesome-calendar'
-import { find } from 'ramda'
+import { find, map } from 'ramda'
 import {
   Routes,
   Route,
@@ -75,6 +75,7 @@ function App() {
   const sessions = data!
 
 
+  console.log(state)
   return (
     <>
       <Routes>
@@ -148,12 +149,11 @@ function App() {
    */
   function EditSession() {
     return WithParam<Number>(checkIdParam, id => {
-      const session = find(e => e.id === id, sessions)
-      if(session === undefined)
+      const session = findSession(id) 
+      if (session === undefined)
         return undefined
-      // make from and to type Date
-      const session_ : SessionData = {...session, from: new Date(session.from), to : new Date(session.to)}
-      return session === undefined ? undefined : <SessionEditor {...{ right: session_ } } />
+      const session_: SessionData = { ...session, from: new Date(session.from), to: new Date(session.to) }
+      return session === undefined ? undefined : <SessionEditor {...{ right: session_ }} />
     })
   }
 
@@ -166,9 +166,35 @@ function App() {
    */
   function ViewSession() {
     return WithParam<Number>(checkIdParam, id => {
-      const session = find(e => e.id === id, sessions)
+      const session = findSession(id) 
       return session === undefined ? undefined : <Session {...session} />
     })
+  }
+
+  /**
+   * Finds session with a specific id
+   *
+   * @param id
+   *
+   * @retrns 
+   *
+   * @remarks
+   * The parsing should maybe be run on all the 
+   * sessions directly after the query, but might
+   * result in reduced performace.
+   */
+  function findSession(id: Number): SessionData | undefined {
+    const session = find(e => e.id === id, sessions)
+    return session ?
+      {
+        ...session,
+        // Convert from string to Date
+        from: new Date(session.from),
+        to: new Date(session.to),
+        // Convert from string[] to Instructor[]
+        instructors: map(n => ({ name: n }), (session.instructors as unknown as string[]))
+      }
+      : undefined
   }
 
 

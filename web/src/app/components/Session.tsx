@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { SessionData } from '../../types/types';
 import { zipWith } from 'ramda'
 import { useNavigate } from 'react-router-dom'
+import { map } from 'ramda'
 
 // Converts an array of strings to an HTML list of those strings
 function listPeople(arr: string[]) {
@@ -47,11 +48,11 @@ const Session: FC<SessionData> = data => {
                   </div>
                   <div className="mt-5">
                     <span className="title-content">Instruktörer:</span>
-                    {listPeople(data.instructors)}
+                    {listPeople(map(({ name: n }) => n, data.instructors))}
                   </div>
                   <div className="mt-5 ">
                     <span className="title-content">Deltagare:</span>
-                    {listPeople(data.participants)}
+                    {listPeople(map(({ name: n }) => n, data.participants))}
                   </div>
                 </div>
               </div>
