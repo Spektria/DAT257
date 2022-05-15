@@ -74,8 +74,6 @@ function App() {
     </p>)
   const sessions = data!
 
-
-  console.log(state)
   return (
     <>
       <Routes>
@@ -192,7 +190,9 @@ function App() {
         from: new Date(session.from),
         to: new Date(session.to),
         // Convert from string[] to Instructor[]
-        instructors: map(n => ({ name: n }), (session.instructors as unknown as string[]))
+        instructors: map(n => ({ name: n }), (session.instructors as unknown as string[])),
+        // Convert to Student if email is missing
+        participants: map(x => typeof x === "string" ? {name: x, email: x}: x , session.participants)
       }
       : undefined
   }
