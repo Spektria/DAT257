@@ -21,7 +21,7 @@ import java.util.Optional;
 /**
  * REST controller for handling student information.
  *
- * @author Hugo Ekstrand, Jonas Röst
+ * @author Hugo Ekstrand, Jonas Röst, William Schmitz
  */
 @CrossOrigin
 @RestController
