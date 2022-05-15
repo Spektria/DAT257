@@ -1,4 +1,4 @@
-import { useReducer, FC, useState, useEffect } from 'react';
+import { useReducer, useState } from 'react';
 import { CalendarDate } from 'react-awesome-calendar'
 import { SessionData, Either, StudentData, InstructorData } from '../../types/types'
 import MultiInput from './MultiInput'
@@ -62,7 +62,6 @@ function Form(initState : SessionData) {
 
   // Fetch title and location
   const [title, setTitle] = useState(state.title);
-  const [location, setLocation] = useState(state.location);
 
   if (isLoading) return <p className='fixed text-center p-10 top-20 z-20'>Loading...</p>;
   if (error) return <p className='fixed text-center p-10 top-20 z-20'>An error has occurred: {error.message}</p>;
@@ -90,7 +89,7 @@ function Form(initState : SessionData) {
             </div>
 
             <div className='flex-row justify-between mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4'>
-              <input className='input' name='place' type="text" placeholder="Plats" value={location} onChange={e => dispatch({location: e.target.value, id: Math.random()})}/>
+              <input className='input' name='place' type="text" placeholder="Plats" value={state.location} onChange={e => dispatch({location: e.target.value, id: Math.random()})}/>
             </div>
 
             <p className='title-content'>Datum</p>

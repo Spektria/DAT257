@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { IoMdPerson } from 'react-icons/io'
-import { BsCheck2, BsX } from 'react-icons/bs'
+import { BsX } from 'react-icons/bs'
 
 /**
 * @field onChange - Change handler on edit
