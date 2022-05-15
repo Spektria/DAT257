@@ -99,6 +99,10 @@ class StudentController {
 
     @PostMapping("/{email}/updatemoment")
     ResponseEntity<?> postMoments(@PathVariable("email") String email, @RequestBody EduMoment educationalMoment){
+
+        int rowsChanged = db.changeCompletedStatus(email, educationalMoment);
+        if (rowsChanged == 0)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
