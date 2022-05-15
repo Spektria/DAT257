@@ -10,7 +10,10 @@ public class RowMapperFactory {
     final static Map<String, RowMapper<?>> mapToMapper =
         Map.of(
                 // Insert new mappers and their respective constructors here
-            EduMomentRowMapper.class.getSimpleName(), new EduMomentRowMapper()
+                EduMomentRowMapper.class.getSimpleName(), new EduMomentRowMapper(),
+                EventRowMapper.class.getSimpleName(), new EventRowMapper(),
+                InstructorRowMapper.class.getSimpleName(), new InstructorRowMapper(),
+                StudentRowMapper.class.getSimpleName(), new StudentRowMapper()
             );
 
     /**
