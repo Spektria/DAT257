@@ -2,6 +2,7 @@
 Agile Software Management Project GitHub repository for group Def Leppard
 
 Webbsite interface address: http://vattenskoter.fredin.org/
+Trello board: https://trello.com/b/LvVmFprO/agile-software
 
 
 ## About
