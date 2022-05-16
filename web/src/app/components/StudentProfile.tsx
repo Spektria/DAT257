@@ -1,6 +1,8 @@
 import { FC, useState } from 'react'
-import { StudentEducationalMomentsData } from '../../types/types';
+import { StudentData, StudentEducationalMomentsData } from '../../types/types';
 import { useNavigate } from "react-router-dom";
+import { useQuery } from 'react-query';
+import { getStudentMoments } from '../apis/StudentApi';
 
 /**
  * Creates a button that makes the user go back one step in their browser history history.
@@ -48,11 +50,17 @@ function listMoments(educationalMoments: string[], completedMoments: boolean[]) 
  * -navigate back button
  * -Student name and email
  * -list of educational moments both completed and uncompleted
+ * 
+ ta enbart in namn och email sedan kan man fetcha resten här. Map funktion ex.
  * @author Renato Roos Radevski
  * @param data 
  * @returns 
  */
 const StudentProfile : FC<StudentEducationalMomentsData> = data =>{
+  /*
+  const {data:sdata} = useQuery<StudentEducationalMomentsData[]>('moments', () => getStudentMoments(data.email), {staleTime:600000})
+  const sdata = 
+  */
   return (
     <div className="flex flex-col">
       <div>{NavigateBack()}</div>

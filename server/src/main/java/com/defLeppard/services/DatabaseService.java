@@ -1,11 +1,12 @@
 package com.defLeppard.services;
+import com.defLeppard.enteties.EduMoment;
+import com.defLeppard.services.mappers.RowMapperFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.stereotype.Service;
 
 /**
@@ -21,6 +22,19 @@ public
 class DatabaseService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    /**
+     * Returns a list of educational moments for a given student identifier. If the identifier does
+     * not exist in the database the return value will be an empty list.
+     * @param studentEmail the student identifier
+     * @return the list of educational moments
+     */
+    public List<EduMoment> getMoments(String studentEmail){
+
+        final String qMoments = "SELECT educationalMoment, description, completed FROM EducationalMoment," +
+                " StudentEducationalMoments WHERE studentEmail = '" + studentEmail + "' AND name = educationalMoment;";
+        return  jdbcTemplate.query(qMoments, RowMapperFactory.createRowMapper(EduMoment.class));
+    }
 
     /**
      *
@@ -49,7 +63,7 @@ class DatabaseService {
      */
     private int addStudent(Student student) {
 
-        String sqlStatement = "INSERT INTO Student VALUES ('" +student.getStudentEmail() + "', '" +student.getStudentName() + "')";
+        String sqlStatement = "INSERT INTO Student VALUES ('" +student.getloginEmail() + "', '" +student.getName() + "') ON CONFLICT (loginEmail) DO UPDATE SET name = '" + student.getName() + "'";
 
         int rowsAffected = jdbcTemplate.update(sqlStatement);
 

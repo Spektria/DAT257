@@ -1,44 +1,59 @@
-import { FC, useReducer, useState } from 'react'
-import { map, none } from 'ramda'
+import { useReducer, useRef } from 'react'
+import { map, none, find } from 'ramda'
 import ListProfile from './ListProfile'
 import { MdAddCircle } from 'react-icons/md'
 import TextSelector from './TextSelector'
+import { StudentData } from '../../types/types'
+import { orElse } from '../helpers/Helpers'
 
-/**
-* @field options - Options for input
-* @field placeholder - Placeholder for input
-* @field onChange - Callback for when the list updates
-*/
 type Props = {
-  options: string[]
+  options: StudentData[]
   placeholder?: string
-  onChange?: (arr: Input[]) => void
-  defaultValue?: Input[]
+  onChange?: (arr: StudentData[]) => void
+  defaultValue?: StudentData[]
 }
 
-/**
-*  @field name - Name of person/item
-*  @field id - Id of person/item
-*/
-type Input = {
-  name: string
-  id: number
-}
-
-/** Mutli input component with searchable options. */
-const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue }) => {
+/**  
+ * Mutli input component with searchable options.
+ *
+ * @param props
+ * @param props.options     - Options for input
+ * @param props.placeholder - Placeholder for input
+ * @param props.onChange    - Callback for when the list updates
+ */
+function MultiInput({ options, placeholder, onChange, defaultValue } : Props) {
   const [list, dispatch] = useReducer(reducer, defaultValue ? defaultValue : [])
-  const [input, setInput] = useState("")
+
+  // Generalize extraction of names
+  interface HasName { name: string }
+  const getNames = (list: HasName[] | undefined) => orElse(() => list?.map(s => s.name), [])(null);
+
+  /**
+   * Reference for TextSelector
+   * 
+   * @remarks Used for connect icon onClick action.
+   */
+  const ref = useRef<HTMLInputElement>(null)
+
+  
+  /**
+   * Triggers the submit event on TextSelector
+   */
+  function submit(){
+    ref.current?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }))
+    /* focus input on submit. Convenient on pc but a little annoying on mobile */
+    ref.current?.focus() 
+  }
+  
 
   return (
     <div className='flex flex-col mt-2'>
       <ul>
-        {map(({ name, id }) =>
+        {map(({ name, email }) =>
           <ListProfile
-            key={id}
-            onChange={e => updateList(e.target.value)}
+            key={name} /* Prevents items with same name */
             name={name}
-            id={id}
+            email={email}
           />
           , list)}
       </ul>
@@ -46,35 +61,41 @@ const MultiInput: FC<Props> = ({ options, placeholder, onChange, defaultValue })
         <MdAddCircle
           className='cursor-pointer fill-light-primary ml-1 mr-1 inline pb-{1}'
           size='26px'
-          onClick={_ => updateList(input)}
+          onClick={submit}
         />
         <TextSelector
-          onChange={i => { setInput(i); updateList(i) }}
           placeholder={placeholder}
-          selectables={options}
+          selectables={getNames(options)}
+          onSubmit={handleSubmit}
+          ref={ref} 
         />
       </div>
     </div>
   )
+  
 
-  function updateList(input: string) {
-    if (input !== '')
-      dispatch({ name: input, id: Math.random() })
+  /**
+   * Handles TextSelector's submit action 
+   *
+   * @param input
+   */ 
+  function handleSubmit(input : String) {
+    const person = find(x => x.name === input, options)! 
+    dispatch(person) 
+    if(onChange) onChange(list)
   }
 
-
   /** 
-  * Reducer for appending or changing a input. Also triggers the 
-  * onChange callback if there is a new state.
-  * @param prevState - Previous list of items
-  * @param newInput - New input
-  * @returns Updated list of inputs
-  */
-  function reducer(prevState: Input[], newInput: Input): Input[] {
-    const sameId = (x: Input) => x.id === newInput.id
-    const nextState = none(sameId, prevState) ? [...prevState, newInput] : map(input => sameId(input) ? newInput : input, prevState)
-    if (onChange && prevState !== nextState)
-      onChange(nextState)
+   * Reducer for appending or changing a input.
+   *
+   * @param prevState - Previous list of items
+   * @param newInput - New input
+   *
+   * @returns Updated list of inputs
+   */
+  function reducer(prevState: StudentData[], newInput: StudentData): StudentData[] {
+    const sameEmail = (x: StudentData) => x.email === newInput.email
+    const nextState = none(sameEmail, prevState) ? [...prevState, newInput] : map(input => sameEmail(input) ? newInput : input, prevState)
     return nextState
   }
 }

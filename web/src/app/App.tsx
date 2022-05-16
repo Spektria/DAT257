@@ -9,7 +9,6 @@ import SessionEditor from './components/SessionEditor';
 import NotFound from './components/NotFound';
 import { StudentEducationalMomentsData } from '../types/types';
 import StudentProfile from './components/StudentProfile';
-import studentProfileData from './sData';
 import Calendar from './components/Calendar';
 import { LocationState, SessionData } from '../types/types';
 import { CalendarState } from 'react-awesome-calendar'
@@ -25,6 +24,8 @@ import {
 import { useQuery, useQueryClient } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { getEvents } from './apis/EventApi'
+import { getStudentMoments, getStudents } from './apis/StudentApi';
+import studentProfileData from './sData';
 
 /**
  * Root component of the app
@@ -68,15 +69,17 @@ function App() {
    * @see {@link https://react-query.tanstack.com/reference/useQuery}
    * @see {@link https://react-query.tanstack.com/guides/initial-query-data#staletime-and-initialdataupdatedat}
    */
+  
   const { isLoading, error, data } =
     useQuery<SessionData[], Error>('events', () => getEvents(year), { staleTime: 600000 })
+  const {data:sdata} = useQuery<StudentEducationalMomentsData[]>('moments', () => getStudentMoments('renny99@outlook.com'), {staleTime:600000})
   if (isLoading) return <p className='text-center p-10'>Loading...</p>
   if (error) return (
     <p className='text-center p-10'>
       An error has occurred: {error.message}
     </p>)
   const sessions = data!
-
+  const sprofile = sdata!
 
   return (
     <>
@@ -88,6 +91,7 @@ function App() {
         {RouteCalendarModal("/newsession")}
         {RouteCalendarModal("session/:id")}
         {RouteCalendarModal("session/:id/edit")}
+        {RouteCalendarModal("session/:id/:student")}
       </Routes>
 
       {
@@ -100,7 +104,7 @@ function App() {
           <Route path="/newsession" element={<NewSession />} />
           <Route path="/session/:id" element={<ViewSession />} />
           <Route path="/session/:id/edit" element={<EditSession />} />
-          <Route path="/session/studentprofile" element={<StudentProfile student='Alice Albertsson' email='AliceA@outlook.com' educationalMoments={["Starta", "Köra på vågor", "Parkera", "uppkörning"]} completed={[true, false, true, false]} />} />
+          <Route path="/session/:id/:student" element={<ViewProfile />}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
       )}
@@ -171,9 +175,16 @@ function App() {
       return session === undefined ? undefined : <Session {...session} />
     })
   }
-
+  
+  function ViewProfile(){
+    return WithParam<String>(checkStringParam, student => {
+      const profile = find(e => e.email === student, studentProfileData)
+      return profile === undefined ? undefined : <StudentProfile {...profile} />
+    })
+  }
 
 }
+
 
 
 /** 
@@ -199,6 +210,15 @@ function NewSession() {
 function checkIdParam(params: Readonly<Params<string>>): Number | undefined {
   const id = params.id
   return (id === undefined || isNaN(+id)) ? undefined : parseInt(id)
+}
+/**
+ * 
+ * @param params 
+ * @returns 
+ */
+function checkStringParam(params: Readonly<Params<string>>): String | undefined{
+  const student = params.student
+  return (student)
 }
 
 /**

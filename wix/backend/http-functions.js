@@ -131,3 +131,45 @@ export async function get_instructors(request){
    }
 }
 
+export async function get_students(request){
+  const response = {
+       "headers": {
+           "Content-Type": "application/json"
+       },
+       "body": ""
+   };
+
+      const options = {
+     "suppressAuth": true,
+     "suppressHooks": true
+     };
+
+  if(await verify(request)){
+     return wixData.query('Members/PrivateMembersData')
+       .limit(1000)
+       .find(options)
+       .then( (results) => {
+
+         const pruned = results.items
+            // Prune not needed data to minimize internal data accessible.
+            .map( ({ name, loginEmail}) => ({ name, loginEmail }) );
+         response.body = JSON.stringify(pruned);
+
+         return ok(response);
+        }).catch(err => {
+          console.log(err);
+
+          // We do not want to respond with error because of security
+          response.body = "Query error";
+
+          return serverError(response);
+        });
+   }
+   else {
+
+      response.body = "Invalid API key";
+
+      return badRequest(response);
+   }
+}
+

@@ -14,10 +14,10 @@ INSERT INTO Session VALUES (1,'Förarbevis', TO_TIMESTAMP('2022-05-03 12:00:00',
                             (5,'Förarbevis Teoriutbildning', TO_TIMESTAMP('2022-05-07 9:00:00', 'YYYY-MM-DD HH24-MI'), TO_TIMESTAMP('2022-05-07 10:00:00', 'YYYY-MM-DD HH24-MI:SS'), 'Göteborg')
                      ON CONFLICT DO NOTHING;
 
-INSERT INTO Instructor VALUES ('rpeter99', 'rprr@radevski.com', 'Peter Roos'),
-                            ('badrian98','adrianb96@gmail.com', 'Adrian Briar'),
-                            ('ljosse', 'josefin123@gmail.com', 'Josefin Larsson'),
-                            ('ljosse2', 'josefin123@gmail.com', 'Josefin Larsson')
+INSERT INTO Instructor VALUES ('Peter Roos'),
+                            ('Adrian Briar'),
+                            ('Josefin Larsson'),
+                            ('Josefin Larsson')
                      ON CONFLICT DO NOTHING;
 
 INSERT INTO Student VALUES ('renny99@outlook.com', 'Renato Radevski'),
@@ -140,11 +140,11 @@ INSERT INTO StudentEducationalMoments VALUES ('Genomgång av säkerhetsutrustnin
                                    ('Slå av gas, gira och ge gas med kraftigt roderutslag', 'addi@live.se', FALSE),
                                    ('Paddla med vattenskoter, fästa bogserlina i vattenskotern', 'addi@live.se', TRUE)
                             ON CONFLICT DO NOTHING;
-INSERT INTO Attend VALUES ('addi@live.se', 'rpeter99', 2, 'Vänersborg'),
-                     ('jonte32@gmail.com', 'rpeter99', 2, 'Vänersborg'),
-                     ('jessimail@hotmail.com', 'ljosse', 3, 'Göteborg'),
-                     ('andres@hotmail.se', 'ljosse', 3, 'Göteborg'),
-                     ('renny99@outlook.com', 'badrian98', 1, 'Kungsbacka'),
-                     ('tovnils@gmail.com', 'badrian98', 1, 'Kungsbacka')
+INSERT INTO Attend VALUES ('addi@live.se', 'Peter Roos', 2, 'Vänersborg'),
+                     ('jonte32@gmail.com', 'Peter Roos', 2, 'Vänersborg'),
+                     ('jessimail@hotmail.com', 'Josefin Larsson', 3, 'Göteborg'),
+                     ('andres@hotmail.se', 'Josefin Larsson', 3, 'Göteborg'),
+                     ('renny99@outlook.com', 'Adrian Briar', 1, 'Kungsbacka'),
+                     ('tovnils@gmail.com', 'Adrian Briar', 1, 'Kungsbacka')
               ON CONFLICT DO NOTHING;
 

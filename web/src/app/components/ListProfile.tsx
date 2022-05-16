@@ -1,26 +1,27 @@
 import { FC } from 'react'
 import { IoMdPerson } from 'react-icons/io'
 import { BsCheck2, BsX } from 'react-icons/bs'
+import { useNavigate } from 'react-router'
 
 /**
 * @field onChange - Change handler on edit
 * @field name - Initial value of input
-* @field id - Id of person
+* @field email - Email of person
 */
 type Props =
-  { onChange: React.ChangeEventHandler<HTMLInputElement>
-  , name: string
-  , id: number
+  { name: string
+  , email: string
   }
 
 /** Component for displaying a profile list item. Used by MultiInput */
-const ListProfile: FC<Props> = ({ onChange, name, id }) => {
+const ListProfile: FC<Props> = ({ name, email }) => {
+  const navigate = useNavigate();
   return (
     <li className='flex justify-between mb-1 listitem'>
-      <input className='listitem-text' value={name} onChange={onChange} />
+      <label className='listitem-text'>{name}</label>
       <div className='flex justify-between space-x-1'>
         <BsX className='cursor-pointer' size='20px' />
-        <IoMdPerson className='cursor-pointer' size='20px' />
+        <IoMdPerson className='cursor-pointer' onClick={() => navigate(`${email}`,{ state: { /* */ } })} size='20px' />
       </div>
     </li>
   )
