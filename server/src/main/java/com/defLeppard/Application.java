@@ -51,7 +51,7 @@ public class Application {
 	 * 
 	 */
 	@Scheduled(fixedRate = 1000 * 60 * 60 * 3) // ms, i.e. 10 800 seconds
-	private void fetchStudents(){
+	private void fetchWixData(){
 		db.addStudents(wixService.fetchStudent());
 		db.addInstructors(wixService.fetchInstructors());
 	}
