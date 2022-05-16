@@ -1,4 +1,4 @@
-import { InstructorData } from "../../types/types";
+import { Instructor } from "../../types/types";
 import { ServerURL } from "./URIs";
 
 
@@ -12,7 +12,7 @@ import { ServerURL } from "./URIs";
  * Fetches a list of all instructors
  * @returns the promise list of all instructors
  */
-export async function getInstructors(): Promise<InstructorData[]>{
+export async function getInstructors(): Promise<Instructor[]>{
     const res = await fetch(ServerURL + "/instructors");
     return res.json();
 }

@@ -1,6 +1,5 @@
 package com.defLeppard.controllers;
 
-import com.defLeppard.enteties.Event;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
