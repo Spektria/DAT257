@@ -117,7 +117,7 @@ public class DatabaseService {
      * @return the number of rows affected in the database
      *
      */
-    private int addInstructor(Instructor instructor) {
+    public int addInstructor(Instructor instructor) {
 
         String sqlStatement = "INSERT INTO Instructor VALUES ('" +instructor.name() + "')";
 
@@ -134,7 +134,7 @@ public class DatabaseService {
      * @return the number of rows affected in the database
      *
      */
-    private int addInstructors(List<Instructor> instructors) {
+    public int addInstructors(List<Instructor> instructors) {
         int totalRowsAffected = 0;
 
         for (Instructor instructor : instructors) {
@@ -289,5 +289,6 @@ public class DatabaseService {
         String sqlStatement = "UPDATE StudentEducationalMoments SET completed = '" + moment.complete()+ "' WHERE educationalMoment = '" + moment.name() + "' AND studentEmail = '" + studentEmail + "'";
         return jdbcTemplate.update(sqlStatement);
     }
+
 
 }
