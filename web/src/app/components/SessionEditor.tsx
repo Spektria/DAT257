@@ -8,7 +8,7 @@ import { ServerURL } from '../apis/URIs';
 import { getInstructors } from '../apis/InstructorApi';
 import { useNavigate } from 'react-router-dom'
 import { map, filter } from 'ramda';
-import { useQuery } from 'react-query'
+import { useQuery, useQueryClient } from 'react-query'
 import { lefts, rights } from '../helpers/Helpers'
 
 /**
@@ -52,6 +52,7 @@ function Form(initState: SessionData) {
   const [toDate, setToDate] = useState(fromDate)
   const [title, setTitle] = useState(state.title);
 
+  const queryClient = useQueryClient();
   const { isLoading, error, data } = useQuery<{ students: Student[], instructors: Instructor[] }, Error>(
     'student-instructor-names'
     , async () => ({ students: await getStudents(), instructors: await getInstructors() })
@@ -190,12 +191,13 @@ function Form(initState: SessionData) {
               className='button-solid'
               type='submit'
               onClick={() => {
-                fetch(`${ServerURL}/events/new`,
+                {
+                fetch(`${ServerURL}/events/update`,
                   {
                     method: 'POST'
                     , headers:
                       { 'Content-Type': "application/json" }
-                    , body: JSON.stringify({ ...state, id: Math.random() })
+                    , body: JSON.stringify({ ...state, id: state.id === 0 ? Math.random()*1e16 : state.id })
                   })
                   .then(response => {
                     if (response.status === 200) { navigate(-1) }
@@ -207,6 +209,8 @@ function Form(initState: SessionData) {
                 } else {
                   navigate("/");
                 }
+                queryClient.invalidateQueries()
+              }
               }
               }
             > Spara
