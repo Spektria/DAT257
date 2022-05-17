@@ -8,7 +8,7 @@ import Session from './components/Session';
 import SessionEditor from './components/SessionEditor';
 import NotFound from './components/NotFound';
 import Calendar from './components/Calendar';
-import { LocationState, SessionData } from '../types/types';
+import { Instructor, LocationState, SessionData } from '../types/types';
 import { CalendarState } from 'react-awesome-calendar'
 import { find, map } from 'ramda'
 import {
@@ -190,9 +190,9 @@ function App() {
         from: new Date(session.from),
         to: new Date(session.to),
         // Convert from string[] to Instructor[]
-        instructors: map(n => ({ name: n }), (session.instructors as unknown as string[])),
+        instructors: map(x => typeof x === "string" ? {name: x, id: x}: x , session.instructors),
         // Convert to Student if email is missing
-        participants: map(x => typeof x === "string" ? {name: x, email: x}: x , session.participants)
+        participants: map(x => typeof x === "string" ? {name: x, email: x, id: x}: x , session.participants)
       }
       : undefined
   }
