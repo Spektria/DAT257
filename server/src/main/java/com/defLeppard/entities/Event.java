@@ -10,7 +10,7 @@ import java.util.Objects;
  *
  * @author Hugo Ekstrand
  */
-public record Event(int id, String title, Date from, Date to, String[] instructors, Student[] participants, String location) {
+public record Event(int id, String title, Date from, Date to, Instructor[] instructors, Student[] participants, String location) {
 
     public Event{
         Arrays.asList(title, location, from, to, participants, instructors).forEach(Objects::requireNonNull);

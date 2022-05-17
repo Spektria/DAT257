@@ -184,12 +184,9 @@ public class DatabaseService {
 
         // Because of this we have to fetch students & instructors individually
         return allEvents.stream().map(session -> {
-            var students = studentsAttending(session.id()).toArray(new Student[0]);
+            var students = studentsAttending(session.id()).toArray(Student[]::new);
 
-            var instructors = instructorsAttending(session.id())
-                    .stream()
-                    .map(Instructor::name)
-                    .toArray(String[]::new);
+            var instructors = instructorsAttending(session.id()).toArray(Instructor[]::new);
 
             return new Event(session.id()
                     , session.title()
@@ -207,7 +204,7 @@ public class DatabaseService {
     }
 
     public List<Instructor> instructorsAttending(int id){
-        final String q = "SELECT name FROM Attend, Instructor WHERE sessionidnr = " + id + " AND name = instructor GROUP BY name;";
+        final String q = "SELECT name, instructorid FROM Attend, Instructor WHERE sessionidnr = " + id + " AND instructorid = instructorattendid GROUP BY instructorid;";
         return jdbcTemplate.query(q, RowMapperFactory.createRowMapper(Instructor.class));
     }
 
@@ -230,12 +227,9 @@ public class DatabaseService {
 
         // Because of this we have to fetch students & instructors individually
         return allEvents.stream().map(session -> {
-            var students = studentsAttending(session.id()).toArray(new Student[0]);
+            var students = studentsAttending(session.id()).toArray(Student[]::new);
 
-            var instructors = instructorsAttending(session.id())
-                    .stream()
-                    .map(Instructor::name)
-                    .toArray(String[]::new);
+            var instructors = instructorsAttending(session.id()).toArray(Instructor[]::new);
 
             return new Event(session.id()
                     , session.title()
