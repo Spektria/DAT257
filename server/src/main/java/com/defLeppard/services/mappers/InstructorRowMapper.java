@@ -14,6 +14,6 @@ import java.util.UUID;
 class InstructorRowMapper implements RowMapper<Instructor> {
     @Override
     public Instructor mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new Instructor(rs.getString("name"), UUID.fromString(rs.getString("id")));
+        return new Instructor(rs.getString("name"), UUID.fromString(rs.getString("instructorid")));
     }
 }
