@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * REST controller for instructor information.
@@ -37,13 +38,13 @@ public class InstructorController {
 
     /**
      * Returns a specific instructor given an instructors name.
-     * @param name the name of the instructor
+     * @param uuid the uuid of the instructor
      * @return the instructor in JSON format
      */
-    @GetMapping("/{name}")
-    ResponseEntity<?> getInstructor(@PathVariable("name") String name) throws JsonProcessingException {
+    @GetMapping("/{uuid}")
+    ResponseEntity<?> getInstructor(@PathVariable("uuid") UUID uuid) throws JsonProcessingException {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchOneInstructor(name.replace('_', ' ')));
+            return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchOneInstructor(uuid));
         } catch (EmptyResultDataAccessException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Not found");
 
