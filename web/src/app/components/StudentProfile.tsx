@@ -12,7 +12,7 @@ import { ServerURL } from '../apis/URIs';
 function NavigateBack() {
   const navigate = useNavigate();
   return (
-      <button className={'button-outline mt-10'} onClick={() => navigate(-1)}>Tillbaka</button>
+      <button className={'sm:mt-0 sm:w-auto sm:text-sm bg-transparent text-base font-medium text-light-primary hover:text-dark-primary'} onClick={() => navigate(-1)}>Tillbaka</button>
   );
 }
 
@@ -70,6 +70,7 @@ const StudentProfile : FC<StudentData> = data =>{
   const {data:queryData} = useQuery<StudentEducationalMomentData[]>('moments', () => getStudentMoments(data.email), {staleTime:600000})
   const sdata = queryData!;
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   /*
   Calla en funktion här som fixar ihop queryn och email + namn till en och samma som kan användas nedan i return. 
   FC<StudentData> kan passa bra här och det kommer från en query (alternativt om datan redan kanske finns i App från Location så behövs det inte)
@@ -80,16 +81,16 @@ const StudentProfile : FC<StudentData> = data =>{
       <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
           <div className="flex items-end justify-center font-sans h-screen sm:min-h-screen pt-10 sm:px-4 sm:pb-20 text-center sm:block sm:p-0">
 
-            <div
-              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-              aria-hidden="true"
-            />
+              <div
+                  className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+                  aria-hidden="true"
+                  onClick={() => navigate(-1)}
+              />
 
             <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
             <div className="flex flex-col card-modal">
-                <button className='mt-4 mx-2'>{NavigateBack()}</button>
                 <div className="relative px-8 pt-2 ">
-                    <div className=" sm:mt-0 text-left w-full">
+                    <div className=" sm:mt-0 w-full">
                         <div className="border-b-2 border-light-secondary border-opacity-20 pb-5 pt-5">
                             <h1 className="title-page">{data.name}</h1>
                             <p className='subtitle-content'>{data.email}</p>
@@ -98,8 +99,11 @@ const StudentProfile : FC<StudentData> = data =>{
 
 
                         <form onSubmit={() => submitInfo(data.email, sdata)}>
-                        <ol className='subtitle-content pt-3'>{testListMoments()}</ol>
-                        <button type="submit" value="Submit" className="button-solid sm:mt-6 mt-20 mb-10">Spara</button>
+                            <ol className='subtitle-content pt-3'>{testListMoments()}</ol>
+                            <div className='relative sm:flex-row-reverse flex-col mt-10 mb-10 '>
+                            <button type="submit" value="Submit" className="button-solid sm:mt-6 mt-20 sm:mr-3">Spara</button>
+                            <button className='button-outline'>{NavigateBack()}</button>
+                            </div>
                         </form>
                     </div>
                 </div>

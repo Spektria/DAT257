@@ -53,7 +53,7 @@ const Session : FC<SessionData> = data => {
           <div className="card-modal-add">
             <div className="relative px-8 pt-8 sm:p-6 sm:pb-10">
               <div className="flex items-start">
-                <div className="mt-3 sm:mt-0 sm:ml-4 text-left w-full">
+                <div className="mt-3 sm:mt-0 text-left w-full">
                   <div className="border-b-2 border-light-secondary border-opacity-20 pb-5">
                     <h1 className="title-page">Uppkörningstillfälle</h1>
                   </div>
@@ -76,10 +76,10 @@ const Session : FC<SessionData> = data => {
                 </div>
               </div>
             </div>
-            <div className="w-full px-4 py-6 sm:px-6 sm:flex sm:flex-row-reverse">
+            <div className=" text-left py-6 sm:px-6 sm:relative relative sm:flex-row-reverse">
               <button
                 type="button"
-                className="button-solid"
+                className="button-solid mr-3"
                 onClick={() => navigate(-1)}
               >Redigera
               </button>
@@ -87,7 +87,7 @@ const Session : FC<SessionData> = data => {
                 type="button"
                 className="button-outline"
                 onClick={() => navigate(-1)}
-              >Avbryt
+              >Tillbaka
               </button>
             </div>
           </div>
