@@ -1,15 +1,15 @@
-import { useReducer, FC, useState, useEffect } from 'react';
+import { useReducer, useState } from 'react';
 import { CalendarDate } from 'react-awesome-calendar'
-import { SessionData, Either, StudentData, InstructorData } from '../../types/types'
+import { SessionData, Either, Student, Instructor } from '../../types/types'
 import MultiInput from './MultiInput'
 import { FaLongArrowAltRight } from 'react-icons/fa'
 import { getStudents } from '../apis/StudentApi';
 import { ServerURL } from '../apis/URIs';
 import { getInstructors } from '../apis/InstructorApi';
-import { orElse } from '../helpers/Helpers';
 import { useNavigate } from 'react-router-dom'
-import { map } from 'ramda';
+import { map, filter } from 'ramda';
 import { useQuery } from 'react-query'
+import { lefts, rights } from '../helpers/Helpers'
 
 /**
  * Component for creating and editing sessions
@@ -21,7 +21,7 @@ import { useQuery } from 'react-query'
 function SessionEditor({ left, right }: Either<CalendarDate, SessionData>) {
   if (right !== undefined)
     return (<Form {...right} />)
-  
+
   /* Create Date fom CalendarDate */
   const { year, month, day, hour } = left
   const min = hour % 1 * 60
@@ -43,29 +43,22 @@ function SessionEditor({ left, right }: Either<CalendarDate, SessionData>) {
  * 
  * @param initState
  */
-function Form(initState : SessionData) {
+function Form(initState: SessionData) {
   const navigate = useNavigate()
   const [state, dispatch] = useReducer(
     (prevState: SessionData, newFields: Partial<SessionData>) => ({ ...prevState, ...newFields })
     , initState)
   const [fromDate, setFromDate] = useState(dateStr(initState.from))
   const [toDate, setToDate] = useState(fromDate)
+  const [title, setTitle] = useState(state.title);
 
-  const [students, setStudents] = useState<StudentData[]>();
-  const [instructors, setInstructors] = useState<InstructorData[]>();
-  const { isLoading, error, data } = useQuery<[StudentData[], InstructorData[]], Error>(
+  const { isLoading, error, data } = useQuery<{ students: Student[], instructors: Instructor[] }, Error>(
     'student-instructor-names'
-    , async () => [await getStudents(), await getInstructors()]
+    , async () => ({ students: await getStudents(), instructors: await getInstructors() })
     , { staleTime: 600000 })
-
   if (isLoading) return <p className='fixed text-center p-10 top-20 z-20'>Loading...</p>;
   if (error) return <p className='fixed text-center p-10 top-20 z-20'>An error has occurred: {error.message}</p>;
-
-  if (students === undefined)
-    setStudents(orElse(() => data?.[0], []));
-
-  if (instructors === undefined)
-    setInstructors(orElse(() => data?.[1], []));
+  const { students, instructors } = data!
 
   return (
     <div className='fixed inset-0 z-10 scroll overflow-y-hidden'>
@@ -80,11 +73,11 @@ function Form(initState : SessionData) {
               <h1 className="title-page">Lägg till uppkörningstillfälle</h1>
             </div>
             <div className='flex-row justify-between mt-5 mb-1 '>
-              <input className='input' name='title' type="text" placeholder="Titel" onChange={e => dispatch({title: e.target.value, id: Math.random()})}/>
+              <input className='input' name='title' type="text" placeholder="Titel" value={title} onChange={e => setTitle(e.target.value)} />
             </div>
 
             <div className='flex-row justify-between mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4'>
-              <input className='input' name='place' type="text" placeholder="Plats" onChange={e => dispatch({location: e.target.value, id: Math.random()})}/>
+              <input className='input' name='place' type="text" placeholder="Plats" value={state.location} onChange={e => dispatch({ location: e.target.value, id: Math.random() })} />
             </div>
 
             <p className='title-content'>Datum</p>
@@ -101,11 +94,11 @@ function Form(initState : SessionData) {
                   const d = parseInt((e.target.value).substring(8, 9))
                   const date = state.from
                   date.setFullYear(y)
-                  date.setMonth(m-1)
+                  date.setMonth(m - 1)
                   date.setDate(d)
-                  dispatch({from: new Date(date), id: Math.random()})
+                  dispatch({ from: new Date(date), id: Math.random() })
                 }}
-                
+
               />
               <FaLongArrowAltRight className='inline fill-light-secondary ml-2 mr-2' />
               <input
@@ -121,11 +114,11 @@ function Form(initState : SessionData) {
                   const d = parseInt((e.target.value).substring(8, 9))
                   const date = state.to
                   date.setFullYear(y)
-                  date.setMonth(m-1)
+                  date.setMonth(m - 1)
                   date.setDate(d)
-                  dispatch({to: new Date(date), id: Math.random()})
+                  dispatch({ to: new Date(date), id: Math.random() })
                 }}
-                
+
               />
             </div>
 
@@ -140,9 +133,9 @@ function Form(initState : SessionData) {
                   const h = parseInt((e.target.value).substring(0, 2))
                   const m = parseInt((e.target.value).substring(3, 5))
                   const d = state.from
-                  d.setHours(h+2)
+                  d.setHours(h + 2)
                   d.setMinutes(m)
-                  dispatch({from: new Date(d), id: Math.random()})
+                  dispatch({ from: new Date(d) })
                 }}
               />
               <FaLongArrowAltRight className='inline fill-light-secondary ml-2 mr-2' />
@@ -160,37 +153,34 @@ function Form(initState : SessionData) {
                   const h = parseInt((e.target.value).substring(0, 2))
                   const m = parseInt((e.target.value).substring(3, 5))
                   const d = state.to
-                  d.setHours(h+2)
+                  d.setHours(h + 2)
                   d.setMinutes(m)
-                  dispatch({to: new Date(d), id: Math.random()})
+                  dispatch({ to: new Date(d) })
                 }}
               />
             </div>
 
             <div className='mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4'>
               <label
-                  className='title-content'
-                  htmlFor="instructors">
+                className='title-content'
+                htmlFor="instructors">
                 Instruktörer:
               </label>
               <MultiInput
-                options={instructors!}
+                options={map(instructorToEither, listDiff(instructors, state.instructors))}
+                defaultValue={map(instructorToEither, state.instructors)}
                 placeholder='Lägg till en instruktör'
-                onChange={e => {
-                  const i = e.map(x => x.name)
-                  dispatch({instructors: i, id: Math.random()})
-                }}
+                onChange={is => dispatch({ instructors: rights(is) })}
               />
             </div>
             <div className='mt-1 mb-1'>
               <label className='title-content' htmlFor="students">Elever: </label>
               <MultiInput
-                options={students!}
+                options={map(studentToEither, listDiff(students, state.participants))}
+                defaultValue={map(studentToEither, state.participants)}
                 placeholder='Lägg till en elev'
-                onChange={e => {
-                  const i = e.map(x => x.name)
-                  dispatch({participants: i, id: Math.random()})
-                }}
+                onChange={ss => dispatch({ participants: lefts(ss) })
+                }
               />
             </div>
           </div>
@@ -199,24 +189,37 @@ function Form(initState : SessionData) {
             <button
               className='button-solid'
               type='submit'
-              onClick={() => {fetch(`${ServerURL}/events/new`,
-              { method: 'POST'
-              , headers: 
-                  { 'Content-Type': "application/json" }
-              , body: JSON.stringify(state)
-              })
-              .then(response => {
-                if (response.status === 200) {navigate(-1)}
-                else{alert("Something went wrong! Your event was not saved.")}
-              })
-              .catch(error => console.log(error));
+              onClick={() => {
+                fetch(`${ServerURL}/events/new`,
+                  {
+                    method: 'POST'
+                    , headers:
+                      { 'Content-Type': "application/json" }
+                    , body: JSON.stringify({ ...state, id: Math.random() })
+                  })
+                  .then(response => {
+                    if (response.status === 200) { navigate(-1) }
+                    else { alert("Something went wrong! Your event was not saved.") }
+                  })
+                  .catch(error => console.log(error));
+                if (state.id > 0) {
+                  navigate("/session/" + state.id);
+                } else {
+                  navigate("/");
+                }
               }
-            }
+              }
             > Spara
             </button>
             <button
-                className='button-outline'
-                onClick={() => navigate(-1)}
+              className='button-outline'
+              onClick={() => {
+                if (state.id > 0) {
+                  navigate("/session/" + state.id);
+                } else {
+                  navigate("/");
+                }
+              }}
             > Avbryt
             </button>
           </div>
@@ -225,6 +228,41 @@ function Form(initState : SessionData) {
     </div>
 
   )
+}
+
+/**
+ * Converts Student to Either
+ *
+ * @param x - an Student
+ *
+ * @returns an Either with left: x
+ */
+function studentToEither(x: Student) {
+  return { left: x }
+}
+
+
+/**
+ * Converts Instructor to Either
+ *
+ * @param x - an Instructor
+ *
+ * @returns an Either with right: x
+ */
+function instructorToEither(x: Instructor) {
+  return { right: x }
+}
+
+/**
+ * Difference between two lists
+ *
+ * @param xs 
+ * @param ys 
+ *
+ * @returns xs \ ys
+ */
+function listDiff<T>(xs: T[], ys: T[]) {
+  return filter(x => !ys.includes(x), xs)
 }
 
 /** 

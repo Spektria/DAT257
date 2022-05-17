@@ -1,14 +1,13 @@
 package com.defLeppard.services;
-import com.defLeppard.enteties.EduMoment;
-import com.defLeppard.enteties.Event;
-import com.defLeppard.enteties.Instructor;
-import com.defLeppard.enteties.Student;
+import com.defLeppard.entities.EduMoment;
+import com.defLeppard.entities.Event;
+import com.defLeppard.entities.Instructor;
+import com.defLeppard.entities.Student;
 import com.defLeppard.services.mappers.RowMapperFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.io.IOException;
+
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -118,7 +117,7 @@ public class DatabaseService {
      * @return the number of rows affected in the database
      *
      */
-    private int addInstructor(Instructor instructor) {
+    public int addInstructor(Instructor instructor) {
 
         String sqlStatement = "INSERT INTO Instructor VALUES ('" +instructor.name() + "')";
 
@@ -135,7 +134,7 @@ public class DatabaseService {
      * @return the number of rows affected in the database
      *
      */
-    private int addInstructors(List<Instructor> instructors) {
+    public int addInstructors(List<Instructor> instructors) {
         int totalRowsAffected = 0;
 
         for (Instructor instructor : instructors) {
@@ -184,10 +183,7 @@ public class DatabaseService {
 
         // Because of this we have to fetch students & instructors individually
         return allEvents.stream().map(session -> {
-            var students = studentsAttending(session.id())
-                    .stream()
-                    .map(Student::name)
-                    .toArray(String[]::new);
+            var students = studentsAttending(session.id()).toArray(new Student[0]);
 
             var instructors = instructorsAttending(session.id())
                     .stream()
@@ -233,10 +229,7 @@ public class DatabaseService {
 
         // Because of this we have to fetch students & instructors individually
         return allEvents.stream().map(session -> {
-            var students = studentsAttending(session.id())
-                    .stream()
-                    .map(Student::name)
-                    .toArray(String[]::new);
+            var students = studentsAttending(session.id()).toArray(new Student[0]);
 
             var instructors = instructorsAttending(session.id())
                     .stream()
@@ -296,5 +289,6 @@ public class DatabaseService {
         String sqlStatement = "UPDATE StudentEducationalMoments SET completed = '" + moment.complete()+ "' WHERE educationalMoment = '" + moment.name() + "' AND studentEmail = '" + studentEmail + "'";
         return jdbcTemplate.update(sqlStatement);
     }
+
 
 }

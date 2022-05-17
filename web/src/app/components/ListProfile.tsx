@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { IoMdPerson } from 'react-icons/io'
-import { BsCheck2, BsX } from 'react-icons/bs'
+import { BsX } from 'react-icons/bs'
 
 /**
 * @field onChange - Change handler on edit
@@ -9,7 +9,7 @@ import { BsCheck2, BsX } from 'react-icons/bs'
 */
 type Props =
   { name: string
-  , email: string
+  , email?: string
   }
 
 /** Component for displaying a profile list item. Used by MultiInput */
@@ -19,7 +19,7 @@ const ListProfile: FC<Props> = ({ name, email }) => {
       <label className='listitem-text'>{name}</label>
       <div className='flex justify-between space-x-1'>
         <BsX className='cursor-pointer' size='20px' />
-        <IoMdPerson className='cursor-pointer' size='20px' />
+        { email && <IoMdPerson className='cursor-pointer' size='20px' /> }
       </div>
     </li>
   )
