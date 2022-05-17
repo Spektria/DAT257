@@ -27,7 +27,7 @@ function SessionEditor({ left, right }: Either<CalendarDate, SessionData>) {
   const min = hour % 1 * 60
   return (
     <Form
-      id={0}  /* TODO generate session id */
+      id={0}
       title=""
       location=""
       from={new Date(year, month, day, hour, min)}
@@ -78,7 +78,7 @@ function Form(initState: SessionData) {
             </div>
 
             <div className='flex-row justify-between mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4'>
-              <input className='input' name='place' type="text" placeholder="Plats" value={state.location} onChange={e => dispatch({ location: e.target.value, id: Math.random() })} />
+              <input className='input' name='place' type="text" placeholder="Plats" value={state.location} onChange={e => dispatch({ location: e.target.value })} />
             </div>
 
             <p className='title-content'>Datum</p>
@@ -97,7 +97,7 @@ function Form(initState: SessionData) {
                   date.setFullYear(y)
                   date.setMonth(m - 1)
                   date.setDate(d)
-                  dispatch({ from: new Date(date), id: Math.random() })
+                  dispatch({ from: new Date(date) })
                 }}
 
               />
@@ -117,7 +117,7 @@ function Form(initState: SessionData) {
                   date.setFullYear(y)
                   date.setMonth(m - 1)
                   date.setDate(d)
-                  dispatch({ to: new Date(date), id: Math.random() })
+                  dispatch({ to: new Date(date) })
                 }}
 
               />
@@ -191,8 +191,7 @@ function Form(initState: SessionData) {
               className='button-solid'
               type='submit'
               onClick={() => {
-                {
-                fetch(`${ServerURL}/events/update`,
+                fetch(`${ServerURL}/events/new`,
                   {
                     method: 'POST'
                     , headers:
@@ -200,17 +199,13 @@ function Form(initState: SessionData) {
                     , body: JSON.stringify({ ...state, id: state.id === 0 ? Math.random()*1e16 : state.id })
                   })
                   .then(response => {
-                    if (response.status === 200) { navigate(-1) }
+                    if (response.status === 200) { 
+                      if (state.id > 0) { navigate("/session/" + state.id) } 
+                      else { navigate("/") }}
                     else { alert("Something went wrong! Your event was not saved.") }
                   })
                   .catch(error => console.log(error));
-                if (state.id > 0) {
-                  navigate("/session/" + state.id);
-                } else {
-                  navigate("/");
-                }
                 queryClient.invalidateQueries()
-              }
               }
               }
             > Spara
