@@ -59,6 +59,7 @@ function listMoments(sdata: StudentEducationalMomentData[]) {
  */
 const StudentProfile : FC<StudentData> = data =>{
   const {data:queryData} = useQuery<StudentEducationalMomentData[]>('moments', () => getStudentMoments(data.email), {staleTime:600000})
+  const sdata = queryData!;
   /*
   Calla en funktion här som fixar ihop queryn och email + namn till en och samma som kan användas nedan i return. 
   FC<StudentData> kan passa bra här och det kommer från en query (alternativt om datan redan kanske finns i App från Location så behövs det inte)
@@ -74,7 +75,7 @@ const StudentProfile : FC<StudentData> = data =>{
       </div>
       <p className="font-bold">Utbildningsmoment:</p>
       <form onSubmit={submitInfo}>
-      {queryData && <ol>{listMoments(queryData)}</ol>}
+      <ol>{listMoments(sdata)}</ol>
       <div className="px-24 flex flex-col content-center">
         <button type="submit" value="Submit" className="w-16 h-5 rounded-md text-center bg-cyan-500 hover:bg-cyan-600 ">Save</button>
       </div>
