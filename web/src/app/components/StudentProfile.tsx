@@ -15,28 +15,6 @@ function NavigateBack() {
       <button className={'button-outline mt-10'} onClick={() => navigate(-1)}>Tillbaka</button>
   );
 }
-/**
- * Handles the submitted data and updates the status of finished educational moments.
- * @author Renato Roos Radevski
-*/
-function submitInfo(email:String, profile:StudentEducationalMomentData[]){
-  const queryClient = useQueryClient();
-  console.log("This function will then manage the sent data and update accordingly.");
-  fetch(`${ServerURL}/students/${email}/updatemoments`,
-    {
-      method: 'POST'
-      , headers:
-        { 'Content-Type': "application/json" }
-      , body: JSON.stringify({ ...profile})
-    })
-    .then(response => {
-      if (response.status === 200) { 
-        console.log('success')}
-      else { alert("Something went wrong! Your student profile was not saved.") }
-    })
-    .catch(error => console.log(error));
-    queryClient.invalidateQueries();
-}
 
 function testListMoments(){
   const sdata = [{educationalMoment:'Start', completed:true}, {educationalMoment:'Parkera', completed:true},{educationalMoment:'Uppkörning', completed:false}]
@@ -91,6 +69,7 @@ function listMoments(sdata: StudentEducationalMomentData[]) {
 const StudentProfile : FC<StudentData> = data =>{
   const {data:queryData} = useQuery<StudentEducationalMomentData[]>('moments', () => getStudentMoments(data.email), {staleTime:600000})
   const sdata = queryData!;
+  const queryClient = useQueryClient();
   /*
   Calla en funktion här som fixar ihop queryn och email + namn till en och samma som kan användas nedan i return. 
   FC<StudentData> kan passa bra här och det kommer från en query (alternativt om datan redan kanske finns i App från Location så behövs det inte)
@@ -129,6 +108,28 @@ const StudentProfile : FC<StudentData> = data =>{
           </div>
       </div>
   )
+
+/**
+ * Handles the submitted data and updates the status of finished educational moments.
+ * @author Renato Roos Radevski
+*/
+function submitInfo(email:String, profile:StudentEducationalMomentData[]){
+  console.log("This function will then manage the sent data and update accordingly.");
+  fetch(`${ServerURL}/students/${email}/updatemoments`,
+    {
+      method: 'POST'
+      , headers:
+        { 'Content-Type': "application/json" }
+      , body: JSON.stringify({ ...profile})
+    })
+    .then(response => {
+      if (response.status === 200) { 
+        console.log('success')}
+      else { alert("Something went wrong! Your student profile was not saved.") }
+    })
+    .catch(error => console.log(error));
+    queryClient.invalidateQueries();
+}
 }
 
 
