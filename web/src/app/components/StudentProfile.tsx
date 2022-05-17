@@ -11,7 +11,7 @@ import { getStudentMoments } from '../apis/StudentApi';
 function NavigateBack() {
   const navigate = useNavigate();
   return (
-      <button onClick={() => navigate(-1)}>Back</button>
+      <button className={'button-outline mt-10'} onClick={() => navigate(-1)}>Tillbaka</button>
   );
 }
 /**
@@ -67,20 +67,36 @@ const StudentProfile : FC<StudentData> = data =>{
   Trots att fetchad moment data kommer i en lista med objekt så spelar det ingen roll då alla bör tillhöra samam email och namn så man kan använda sig av 1 objekt för alla.
   */
   return (
-    <div className="flex flex-col">
-      <div>{NavigateBack()}</div>
-      <div  className="text-center mb-4">
-        <h1 className="text-xl font-bold text-4xl my-4">{data.name}</h1>
-        <p>{data.email}</p>
+      <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+          <div className="flex items-end justify-center font-sans h-screen sm:min-h-screen pt-10 sm:px-4 sm:pb-20 text-center sm:block sm:p-0">
+
+            <div
+              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+              aria-hidden="true"
+            />
+
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div className="flex flex-col card-modal">
+                <button className='mt-4 mx-2'>{NavigateBack()}</button>
+                <div className="relative px-8 pt-2 ">
+                    <div className=" sm:mt-0 text-left w-full">
+                        <div className="border-b-2 border-light-secondary border-opacity-20 pb-5 pt-5">
+                            <h1 className="title-page">{data.name}</h1>
+                            <p className='subtitle-content'>{data.email}</p>
+                        </div>
+                        <p className="title-content pt-5">Utbildningsmoment:</p>
+
+
+                        <form onSubmit={submitInfo}>
+                        <ol className='subtitle-content pt-3'>{listMoments(sdata)}</ol>
+                        <button type="submit" value="Submit" className="button-solid sm:mt-6 mt-20 mb-10">Spara</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+          </div>
       </div>
-      <p className="font-bold">Utbildningsmoment:</p>
-      <form onSubmit={submitInfo}>
-      <ol>{listMoments(sdata)}</ol>
-      <div className="px-24 flex flex-col content-center">
-        <button type="submit" value="Submit" className="w-16 h-5 rounded-md text-center bg-cyan-500 hover:bg-cyan-600 ">Save</button>
-      </div>
-      </form>
-    </div>
   )
 }
 

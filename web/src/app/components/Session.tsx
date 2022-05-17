@@ -1,10 +1,20 @@
+/**
+ * File contains Session component that shows the details of the event in the calendar.
+ *
+ * @author Matilda Falkenby
+ * @author Martin
+ */
+
 import { FC } from 'react';
 import { SessionData } from '../../types/types';
 import { map, zipWith } from 'ramda'
 import { useNavigate } from 'react-router-dom'
 import ListProfile from './ListProfile';
 
-// Converts an array of strings to an HTML list of those strings
+/**
+ * Converts an array of strings to an HTML list of those strings.
+ * @author Martin
+ */
 function listPeople(arr: string[]) {
   return (
     <div className='subtitle-content'>
@@ -15,8 +25,18 @@ function listPeople(arr: string[]) {
   );
 }
 
-//Element for showing water scooter driving session with CSS styling
-const Session: FC<SessionData> = data => {
+/**
+ * Creates a Session view to show the event details provided from SessionData. The view includes:
+ * - Cancel button
+ * - The place and time of the event
+ * - List of instructors that will be supervising
+ * - List of students that is to be supervised
+ *
+ * @author Matilda Falkenby, Martin Fredin
+ * @param data
+ * @returns
+ */
+const Session : FC<SessionData> = data => {
   const navigate = useNavigate()
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
