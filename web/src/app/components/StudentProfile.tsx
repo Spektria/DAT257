@@ -22,6 +22,21 @@ function submitInfo(){
   console.log("This function will then manage the sent data and update accordingly.");
 }
 
+function testListMoments(){
+  const sdata = [{educationalMoment:'Start', completed:true}, {educationalMoment:'Parkera', completed:true},{educationalMoment:'Uppkörning', completed:false}]
+  return(
+    <div>
+      <ol>
+      {sdata.map(function(moments, key)
+        {
+        const [checked, setChecked] = useState(moments.completed);
+        return(<li key={key} className="mb-0.5"><input type="checkbox" checked={checked} onChange={ () => setChecked(!checked)} value={moments.educationalMoment} className="mr-0.5"></input>{moments.educationalMoment}</li>)
+        })
+      }
+      </ol>
+    </div>
+  );
+}
 
 /**
  * iterates a list of strings and booleans to create individual list items in an unorderedlist with a checkbox inside the item box. 
@@ -88,7 +103,7 @@ const StudentProfile : FC<StudentData> = data =>{
 
 
                         <form onSubmit={submitInfo}>
-                        <ol className='subtitle-content pt-3'>{listMoments(sdata)}</ol>
+                        <ol className='subtitle-content pt-3'>{testListMoments()}</ol>
                         <button type="submit" value="Submit" className="button-solid sm:mt-6 mt-20 mb-10">Spara</button>
                         </form>
                     </div>

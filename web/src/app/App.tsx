@@ -102,7 +102,7 @@ function App() {
           <Route path="/newsession" element={<NewSession />} />
           <Route path="/session/:id" element={<ViewSession />} />
           <Route path="/session/:id/edit" element={<EditSession />} />
-          <Route path="/session/:id/:student" element={<ViewProfile />}/>
+          <Route path="/session/:id/:student" element={<StudentProfile name='Alice Andersson' email='AliceA@outlook.com'/>}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
       )}
