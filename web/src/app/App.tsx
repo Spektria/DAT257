@@ -7,11 +7,9 @@ import { useReducer } from 'react'
 import Session from './components/Session';
 import SessionEditor from './components/SessionEditor';
 import NotFound from './components/NotFound';
-import { StudentEducationalMomentsData } from '../types/types';
 import StudentProfile from './components/StudentProfile';
-import studentProfileData from './sData';
 import Calendar from './components/Calendar';
-import { LocationState, SessionData } from '../types/types';
+import { LocationState, SessionData, StudentData } from '../types/types';
 import { CalendarState } from 'react-awesome-calendar'
 import { find } from 'ramda'
 import {
@@ -25,6 +23,7 @@ import {
 import { useQuery, useQueryClient } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { getEvents } from './apis/EventApi'
+import { getStudents } from './apis/StudentApi';
 
 /**
  * Root component of the app
@@ -68,16 +67,18 @@ function App() {
    * @see {@link https://react-query.tanstack.com/reference/useQuery}
    * @see {@link https://react-query.tanstack.com/guides/initial-query-data#staletime-and-initialdataupdatedat}
    */
+  
   const { isLoading, error, data } =
     useQuery<SessionData[], Error>('events', () => getEvents(year), { staleTime: 600000 })
+  const {data:sdata} = useQuery<StudentData[]>('student', () => getStudents(), { staleTime: 600000});
   if (isLoading) return <p className='text-center p-10'>Loading...</p>
   if (error) return (
     <p className='text-center p-10'>
       An error has occurred: {error.message}
     </p>)
   const sessions = data!
-
-
+  const sprofile = sdata!
+    
   return (
     <>
       <Routes>
@@ -88,6 +89,7 @@ function App() {
         {RouteCalendarModal("/newsession")}
         {RouteCalendarModal("session/:id")}
         {RouteCalendarModal("session/:id/edit")}
+        {RouteCalendarModal("session/:id/:student")}
       </Routes>
 
       {
@@ -100,7 +102,7 @@ function App() {
           <Route path="/newsession" element={<NewSession />} />
           <Route path="/session/:id" element={<ViewSession />} />
           <Route path="/session/:id/edit" element={<EditSession />} />
-          <Route path="/session/studentprofile" element={<StudentProfile student='Alice Albertsson' email='AliceA@outlook.com' educationalMoments={["Starta", "Köra på vågor", "Parkera", "uppkörning"]} completed={[true, false, true, false]} />} />
+          <Route path="/session/:id/:student" element={<ViewProfile />}/>
           <Route path="*" element={<NotFound />} />
         </Routes>
       )}
@@ -171,10 +173,29 @@ function App() {
       return session === undefined ? undefined : <Session {...session} />
     })
   }
-
+  /*TODO:
+  Sätta in {...profile, email:student, name:__} i ViewProfile. 
+  Kanske göra om Listmoments i Studentprofile
+  Fixa en fetch och sätta in email och namn. Möjligvis fetcha studentData och hitta den istället. Då blur studentProfile istället en FC med studentdata som data.
+  därefter kan man fetcha moments baserat på datan från fetch.
+  Ha funktion i studentprofile som mixar ihop datan från StudentData med det man får från fetchen.
+  Det behövs nog ingen ny typ som ska ersätta studenteducationalmoments eftersom det är isolerad användning innanför studentProfile och måste därmed inte matcha någon datatyp.
+  */
+ /*
+  function ViewProfile(){
+    return WithParam<String>(checkStringParam, student => {
+      const profile = find(e => e.email === student, studentProfileData)
+      return profile === undefined ? undefined : <StudentProfile {...profile} />
+    })
+  }*/
+  function ViewProfile(){
+    return WithParam<String>(checkStudentParam, student => {
+      const profile = find(e => e.email === student, sprofile) 
+      return profile === undefined ? undefined : <StudentProfile {...profile} />
+    })
+  }
 
 }
-
 
 /** 
  * Wrapper for SessionEditor
@@ -199,6 +220,15 @@ function NewSession() {
 function checkIdParam(params: Readonly<Params<string>>): Number | undefined {
   const id = params.id
   return (id === undefined || isNaN(+id)) ? undefined : parseInt(id)
+}
+/**
+ * 
+ * @param params 
+ * @returns 
+ */
+function checkStudentParam(params: Readonly<Params<string>>): String | undefined{
+  const student = params.student
+  return (student)
 }
 
 /**

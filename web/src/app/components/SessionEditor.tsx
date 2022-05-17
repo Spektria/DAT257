@@ -4,6 +4,7 @@ import { SessionData, Either, StudentData, InstructorData } from '../../types/ty
 import MultiInput from './MultiInput'
 import { FaLongArrowAltRight } from 'react-icons/fa'
 import { getStudents } from '../apis/StudentApi';
+import { ServerURL } from '../apis/URIs';
 import { getInstructors } from '../apis/InstructorApi';
 import { orElse } from '../helpers/Helpers';
 import { useNavigate } from 'react-router-dom'
@@ -64,10 +65,6 @@ function Form(initState : SessionData) {
 
   if (instructors === undefined)
     setInstructors(orElse(() => data?.[1], []));
-
-  // Generalize extraction of names
-  interface HasName { name: string }
-  const getNames = (list: HasName[] | undefined) => orElse(() => list?.map(s => s.name), [])(null);
 
   return (
     <div className='fixed inset-0 z-10 scroll overflow-y-hidden'>
@@ -176,21 +173,23 @@ function Form(initState : SessionData) {
                 Instruktörer:
               </label>
               <MultiInput
-                options={getNames(instructors)}
+                options={instructors!}
                 placeholder='Lägg till en instruktör'
                 onChange={e => {
                   const i = e.map(x => x.name)
-                  dispatch({instructors: i, id: Math.random()})}}
+                  dispatch({instructors: i, id: Math.random()})
+                }}
               />
             </div>
             <div className='mt-1 mb-1'>
               <label className='title-content' htmlFor="students">Elever: </label>
               <MultiInput
-                options={getNames(students)}
+                options={students!}
                 placeholder='Lägg till en elev'
                 onChange={e => {
                   const i = e.map(x => x.name)
-                  dispatch({participants: i, id: Math.random()})}}
+                  dispatch({participants: i, id: Math.random()})
+                }}
               />
             </div>
           </div>
@@ -199,10 +198,12 @@ function Form(initState : SessionData) {
             <button
               className='button-solid'
               type='submit'
-              onClick={() => {fetch('http://localhost:8080/events/new',
-              {method: 'POST',
-              headers: {'Content-Type': "application/json",},
-              body: JSON.stringify(state)})
+              onClick={() => {fetch(`${ServerURL}/events/new`,
+              { method: 'POST'
+              , headers: 
+                  { 'Content-Type': "application/json" }
+              , body: JSON.stringify(state)
+              })
               .then(response => {
                 if (response.status === 200) {navigate(-1)}
                 else{alert("Something went wrong! Your event was not saved.")}
