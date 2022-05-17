@@ -1,8 +1,9 @@
 import { FC, useState } from 'react'
 import { StudentData, StudentEducationalMomentData } from '../../types/types';
 import { useNavigate } from "react-router-dom";
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { getStudentMoments } from '../apis/StudentApi';
+import { ServerURL } from '../apis/URIs';
 
 /**
  * Creates a button that makes the user go back one step in their browser history history.
@@ -18,8 +19,23 @@ function NavigateBack() {
  * Handles the submitted data and updates the status of finished educational moments.
  * @author Renato Roos Radevski
 */
-function submitInfo(){
+function submitInfo(email:String, profile:StudentEducationalMomentData[]){
+  const queryClient = useQueryClient();
   console.log("This function will then manage the sent data and update accordingly.");
+  fetch(`${ServerURL}/students/${email}/updatemoments`,
+    {
+      method: 'POST'
+      , headers:
+        { 'Content-Type': "application/json" }
+      , body: JSON.stringify({ ...profile})
+    })
+    .then(response => {
+      if (response.status === 200) { 
+        console.log('success')}
+      else { alert("Something went wrong! Your student profile was not saved.") }
+    })
+    .catch(error => console.log(error));
+    queryClient.invalidateQueries();
 }
 
 function testListMoments(){
@@ -30,7 +46,7 @@ function testListMoments(){
       {sdata.map(function(moments, key)
         {
         const [checked, setChecked] = useState(moments.completed);
-        return(<li key={key} className="mb-0.5"><input type="checkbox" checked={checked} onChange={ () => setChecked(!checked)} value={moments.educationalMoment} className="mr-0.5"></input>{moments.educationalMoment}</li>)
+        return(<li key={key} className="mb-0.5"><input type="checkbox" checked={checked} onChange={ () => (moments.completed=!moments.completed)} value={moments.educationalMoment} className="mr-0.5"></input>{moments.educationalMoment}</li>)
         })
       }
       </ol>
@@ -102,7 +118,7 @@ const StudentProfile : FC<StudentData> = data =>{
                         <p className="title-content pt-5">Utbildningsmoment:</p>
 
 
-                        <form onSubmit={submitInfo}>
+                        <form onSubmit={() => submitInfo(data.email, sdata)}>
                         <ol className='subtitle-content pt-3'>{testListMoments()}</ol>
                         <button type="submit" value="Submit" className="button-solid sm:mt-6 mt-20 mb-10">Spara</button>
                         </form>
