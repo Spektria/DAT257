@@ -18,10 +18,10 @@ const ListProfile: FC<Props> = ({ name, email }) => {
   const navigate = useNavigate();
   return (
     <li className='flex justify-between mb-1 listitem'>
-      <label className='listitem-text'>{name}</label>
+      <label className='listitem-text'>{}</label>
       <div className='flex justify-between space-x-1'>
         <BsX className='cursor-pointer' size='20px' />
-        <IoMdPerson className='cursor-pointer' onClick={() => navigate(`${email}`,{ state: { /* */ } })} size='20px' />
+        <IoMdPerson className='cursor-pointer' onClick={() => navigate(`${email}`)} size='20px' />
       </div>
     </li>
   )

@@ -10,11 +10,10 @@ export type SessionData =
   , participants : string[]
   };
 
-export type StudentEducationalMomentsData = 
-  { student      : string,
-    email        : string,
-    educationalMoments: string[],
-    completed    : boolean[]
+export type StudentEducationalMomentData = 
+  { educationalMoment: string,
+    //description      : string,
+    completed        : boolean
   };
 
 

@@ -1,5 +1,5 @@
-import { StudentEducationalMomentsData } from '../types/types'
-
+import { StudentEducationalMomentData } from '../types/types'
+/*
 const studentProfileData: StudentEducationalMomentsData[] = [
   {
   "student": "Renato Radevski",
@@ -14,4 +14,4 @@ const studentProfileData: StudentEducationalMomentsData[] = [
 export default studentProfileData
 
 
-
+*/

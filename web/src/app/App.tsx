@@ -7,10 +7,9 @@ import { useReducer } from 'react'
 import Session from './components/Session';
 import SessionEditor from './components/SessionEditor';
 import NotFound from './components/NotFound';
-import { StudentEducationalMomentsData } from '../types/types';
 import StudentProfile from './components/StudentProfile';
 import Calendar from './components/Calendar';
-import { LocationState, SessionData } from '../types/types';
+import { LocationState, SessionData, StudentData } from '../types/types';
 import { CalendarState } from 'react-awesome-calendar'
 import { find } from 'ramda'
 import {
@@ -24,8 +23,7 @@ import {
 import { useQuery, useQueryClient } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { getEvents } from './apis/EventApi'
-import { getStudentMoments, getStudents } from './apis/StudentApi';
-import studentProfileData from './sData';
+import { getStudents } from './apis/StudentApi';
 
 /**
  * Root component of the app
@@ -72,7 +70,7 @@ function App() {
   
   const { isLoading, error, data } =
     useQuery<SessionData[], Error>('events', () => getEvents(year), { staleTime: 600000 })
-  const {data:sdata} = useQuery<StudentEducationalMomentsData[]>('moments', () => getStudentMoments('renny99@outlook.com'), {staleTime:600000})
+  const {data:sdata} = useQuery<StudentData[]>('student', () => getStudents(), { staleTime: 600000});
   if (isLoading) return <p className='text-center p-10'>Loading...</p>
   if (error) return (
     <p className='text-center p-10'>
@@ -80,7 +78,7 @@ function App() {
     </p>)
   const sessions = data!
   const sprofile = sdata!
-
+    
   return (
     <>
       <Routes>
@@ -175,17 +173,29 @@ function App() {
       return session === undefined ? undefined : <Session {...session} />
     })
   }
-  
+  /*TODO:
+  Sätta in {...profile, email:student, name:__} i ViewProfile. 
+  Kanske göra om Listmoments i Studentprofile
+  Fixa en fetch och sätta in email och namn. Möjligvis fetcha studentData och hitta den istället. Då blur studentProfile istället en FC med studentdata som data.
+  därefter kan man fetcha moments baserat på datan från fetch.
+  Ha funktion i studentprofile som mixar ihop datan från StudentData med det man får från fetchen.
+  Det behövs nog ingen ny typ som ska ersätta studenteducationalmoments eftersom det är isolerad användning innanför studentProfile och måste därmed inte matcha någon datatyp.
+  */
+ /*
   function ViewProfile(){
     return WithParam<String>(checkStringParam, student => {
       const profile = find(e => e.email === student, studentProfileData)
       return profile === undefined ? undefined : <StudentProfile {...profile} />
     })
+  }*/
+  function ViewProfile(){
+    return WithParam<String>(checkStudentParam, student => {
+      const profile = find(e => e.email === student, sprofile) 
+      return profile === undefined ? undefined : <StudentProfile {...profile} />
+    })
   }
 
 }
-
-
 
 /** 
  * Wrapper for SessionEditor
@@ -216,7 +226,7 @@ function checkIdParam(params: Readonly<Params<string>>): Number | undefined {
  * @param params 
  * @returns 
  */
-function checkStringParam(params: Readonly<Params<string>>): String | undefined{
+function checkStudentParam(params: Readonly<Params<string>>): String | undefined{
   const student = params.student
   return (student)
 }
