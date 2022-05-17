@@ -62,7 +62,7 @@ function Form(initState: SessionData) {
   const { students, instructors } = data!
 
   return (
-    <div className='fixed inset-0 z-10 scroll overflow-y-hidden'>
+    <div className='fixed inset-0 z-10'>
       <div
         className='bg-gray-500 bg-opacity-75 h-screen'
         onClick={() => navigate(-1)}
