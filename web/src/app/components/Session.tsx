@@ -6,12 +6,10 @@ import { map } from 'ramda'
 
 // Converts an array of strings to an HTML list of those strings
 function listPeople(arr: string[]) {
-  console.log(arr);
   return (
     <div className='subtitle-content'>
       <ul>
-        {
-        zipWith((x, k) => <li key={k}>{x}</li>, arr, Array.from(Array(arr.length).keys()))}
+        {zipWith((x, k) => <li key={k}>{x}</li>, arr, Array.from(Array(arr.length).keys()))}
       </ul>
     </div>
   );

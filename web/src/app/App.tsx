@@ -7,7 +7,7 @@ import { useReducer } from 'react'
 import Session from './components/Session';
 import SessionEditor from './components/SessionEditor';
 import Calendar from './components/Calendar';
-import { Instructor, LocationState, SessionData } from '../types/types';
+import { LocationState, SessionData } from '../types/types';
 import NotFound from './components/NotFound'
 import { CalendarState } from 'react-awesome-calendar'
 import { find, map } from 'ramda'
