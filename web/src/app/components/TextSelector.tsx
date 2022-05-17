@@ -55,8 +55,9 @@ function TextSelector({ placeholder, selectables, onSubmit}: Props, ref: Forward
       />
 
       <div 
-        className="peer-focus:block absolute hidden h-auto border-l-2 border-r-2
-                   rounded z-20 bg-white overflow-y-auto max-h-32" 
+        className="peer-focus:block group-hover:block absolute hidden h-auto 
+                   border-l-2 border-r-2 rounded z-20 bg-white overflow-y-auto 
+                   max-h-32" 
         role="menu"
       >
         {
