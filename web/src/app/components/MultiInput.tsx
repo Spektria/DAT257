@@ -124,6 +124,7 @@ function MultiInput({ options, placeholder, onChange, defaultValue }: Props) {
  * @remarks Passes in different props if Student or Instructor.
  *
  * @param arr
+ * @param removeFunc Function that removes a person from a list.
  *
  * @returns list of <ListProfile />
  */
