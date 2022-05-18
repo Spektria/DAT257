@@ -67,19 +67,13 @@ function App() {
    * @see {@link https://react-query.tanstack.com/reference/useQuery}
    * @see {@link https://react-query.tanstack.com/guides/initial-query-data#staletime-and-initialdataupdatedat}
    */
-  
-  const { isLoading, error, data } =
+  const { isLoading, data : sessions } =
     useQuery<SessionData[], Error>('events', () => getEvents(year), { staleTime: 600000 })
   const {data:sprofile} = useQuery<Student[]>('student', () => getStudents(), { staleTime: 600000});
-  if (isLoading) return <p className='text-center p-10'>Loading...</p>
-  if (error) return (
-    <p className='text-center p-10'>
-      An error has occurred: {error.message}
-    </p>)
-  const sessions = data!
-    
+
   return (
     <>
+      {isLoading && <LoadingIndicator text="Läser in händelser..."/>}
       <Routes>
         { /* Routes to normal fullscreen views */}
         <Route path="/" element={<Cal />} />
@@ -113,7 +107,7 @@ function App() {
    *  Wrapper for Calendar
    */
   function Cal() {
-    return <Calendar sessions={sessions} onChange={(state: CalendarState) => dispatch(state.year)} />
+    return <Calendar sessions={sessions ? sessions : []} onChange={(state: CalendarState) => dispatch(state.year)} />
   }
 
 
@@ -206,6 +200,8 @@ function App() {
    * result in reduced performace.
    */
   function findSession(id: Number): SessionData | undefined {
+    if (sessions === undefined)
+      return undefined
     const session = find(e => e.id === id, sessions)
     return session ?
       {
