@@ -15,6 +15,28 @@ function NavigateBack() {
       <button className={'sm:mt-0 sm:w-auto sm:text-sm bg-transparent text-base font-medium text-light-primary hover:text-dark-primary'} onClick={() => navigate(-1)}>Tillbaka</button>
   );
 }
+/**
+ * Handles the submitted data and updates the status of finished educational moments.
+ * @author Renato Roos Radevski
+*/
+function submitInfo(email:String, profile:StudentEducationalMomentData[]){
+  const queryClient = useQueryClient();
+  console.log("This function will then manage the sent data and update accordingly.");
+  fetch(`${ServerURL}/students/${email}/updatemoments`,
+    {
+      method: 'POST'
+      , headers:
+        { 'Content-Type': "application/json" }
+      , body: JSON.stringify({ ...profile})
+    })
+    .then(response => {
+      if (response.status === 200) { 
+        console.log('success')}
+      else { alert("Something went wrong! Your student profile was not saved.") }
+    })
+    .catch(error => console.log(error));
+    queryClient.invalidateQueries();
+}
 
 function testListMoments(){
   const sdata = [{educationalMoment:'Start', completed:true}, {educationalMoment:'Parkera', completed:true},{educationalMoment:'Uppkörning', completed:false}]
@@ -69,7 +91,6 @@ function listMoments(sdata: StudentEducationalMomentData[]) {
 const StudentProfile : FC<StudentData> = data =>{
   const {data:queryData} = useQuery<StudentEducationalMomentData[]>('moments', () => getStudentMoments(data.email), {staleTime:600000})
   const sdata = queryData!;
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   /*
   Calla en funktion här som fixar ihop queryn och email + namn till en och samma som kan användas nedan i return. 
@@ -113,27 +134,7 @@ const StudentProfile : FC<StudentData> = data =>{
       </div>
   )
 
-/**
- * Handles the submitted data and updates the status of finished educational moments.
- * @author Renato Roos Radevski
-*/
-function submitInfo(email:String, profile:StudentEducationalMomentData[]){
-  console.log("This function will then manage the sent data and update accordingly.");
-  fetch(`${ServerURL}/students/${email}/updatemoments`,
-    {
-      method: 'POST'
-      , headers:
-        { 'Content-Type': "application/json" }
-      , body: JSON.stringify({ ...profile})
-    })
-    .then(response => {
-      if (response.status === 200) { 
-        console.log('success')}
-      else { alert("Something went wrong! Your student profile was not saved.") }
-    })
-    .catch(error => console.log(error));
-    queryClient.invalidateQueries();
-}
+
 }
 
 
