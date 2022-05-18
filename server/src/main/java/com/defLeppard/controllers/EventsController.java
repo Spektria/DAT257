@@ -51,7 +51,7 @@ public class EventsController {
 
             try {
 
-                var retEvents = dbs.fetchEventsInIntervall(from.get(), to.get()).stream().map(Event::asUTC).toList();
+                var retEvents = dbs.fetchEventsInIntervall(from.get(), to.get()).stream().map(Event::removeDateOffsets).toList();
                 return ResponseEntity.status(HttpStatus.OK).body(retEvents);
 
             } catch (EmptyResultDataAccessException e) {
@@ -60,7 +60,7 @@ public class EventsController {
 
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchAllEvents().stream().map(Event::asUTC).toList());
+        return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchAllEvents().stream().map(Event::removeDateOffsets).toList());
     }
     @PostMapping("/new")
     ResponseEntity<String> newSession(@RequestBody String state){
