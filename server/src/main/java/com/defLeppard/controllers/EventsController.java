@@ -62,9 +62,24 @@ public class EventsController {
 
         return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchAllEvents().stream().map(Event::removeDateOffsets).toList());
     }
+
+
     @PostMapping("/new")
     ResponseEntity<String> newSession(@RequestBody String state){
         return ResponseEntity.status(HttpStatus.OK).body(state);
+    }
+
+
+    /**
+     * Deletes an event with the given idnr and data about who was supposed to attend it from the database.
+     *
+     * @param idnr the idnr of the event that should be deleted
+     * @return OK HTTP status
+     */
+    @PostMapping("/{idnr}/deletesession")
+    ResponseEntity<?> postMoments(@PathVariable("idnr") int idnr ) {
+        dbs.deleteEvent(idnr);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 
