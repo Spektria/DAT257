@@ -173,21 +173,14 @@ function App() {
       return session === undefined ? undefined : <Session {...session} />
     })
   }
-  /*TODO:
-  Sätta in {...profile, email:student, name:__} i ViewProfile. 
-  Kanske göra om Listmoments i Studentprofile
-  Fixa en fetch och sätta in email och namn. Möjligvis fetcha studentData och hitta den istället. Då blur studentProfile istället en FC med studentdata som data.
-  därefter kan man fetcha moments baserat på datan från fetch.
-  Ha funktion i studentprofile som mixar ihop datan från StudentData med det man får från fetchen.
-  Det behövs nog ingen ny typ som ska ersätta studenteducationalmoments eftersom det är isolerad användning innanför studentProfile och måste därmed inte matcha någon datatyp.
-  */
- /*
-  function ViewProfile(){
-    return WithParam<String>(checkStringParam, student => {
-      const profile = find(e => e.email === student, studentProfileData)
-      return profile === undefined ? undefined : <StudentProfile {...profile} />
-    })
-  }*/
+
+  /**
+   * Wrapper for studentProfile
+   * 
+   * @remarks
+   *  
+   * Matches the student id with the corresponding profile.
+   */
   function ViewProfile(){
     return WithParam<String>(checkStudentParam, student => {
       const profile = find(e => e.email === student, sprofile) 
@@ -222,9 +215,9 @@ function checkIdParam(params: Readonly<Params<string>>): Number | undefined {
   return (id === undefined || isNaN(+id)) ? undefined : parseInt(id)
 }
 /**
- * 
+ * Checks if the url has a student id and returns the id as a parameter.
  * @param params 
- * @returns 
+ * @returns student
  */
 function checkStudentParam(params: Readonly<Params<string>>): String | undefined{
   const student = params.student
