@@ -1,7 +1,6 @@
 import { FC } from 'react'
 import { IoMdPerson } from 'react-icons/io'
 import { BsX } from 'react-icons/bs'
-import { Student, Instructor, Either } from '../../types/types'
 
 /**
 * @field onChange - Change handler on edit
