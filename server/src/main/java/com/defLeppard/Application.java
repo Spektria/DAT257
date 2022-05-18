@@ -1,18 +1,18 @@
 package com.defLeppard;
 
+import com.defLeppard.entities.Instructor;
+import com.defLeppard.entities.Student;
 import com.defLeppard.services.DatabaseService;
 import com.defLeppard.services.WixService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.HashMap;
+import java.util.*;
 
 
 /**
@@ -39,10 +39,7 @@ public class Application {
 	 */
 
 	@Autowired
-	private DatabaseService databaseService;
-	@EventListener(ApplicationReadyEvent.class)
-	public void addStudents () throws IOException {
-	}
+	private DatabaseService db;
 
 	@Autowired
 	private WixService wixService;
@@ -54,8 +51,9 @@ public class Application {
 	 * 
 	 */
 	@Scheduled(fixedRate = 1000 * 60 * 60 * 3) // ms, i.e. 10 800 seconds
-	private void fetchStudents() throws IOException {
-		databaseService.addStudentsToDatabase(wixService.call(String.class, "students",new String[]{}).getBody());
+	private void fetchWixData(){
+		db.addStudents(wixService.fetchStudent());
+		db.addInstructors(wixService.fetchInstructors());
 	}
 
 }

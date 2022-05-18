@@ -6,8 +6,8 @@ export type SessionData =
   , location     : string
   , from         : Date
   , to           : Date
-  , instructors  : string[]
-  , participants : string[]
+  , instructors  : Instructor[]
+  , participants : Student[]
   };
 
 export type StudentEducationalMomentData = 
@@ -16,16 +16,16 @@ export type StudentEducationalMomentData =
     completed        : boolean
   };
 
-
-export type StudentData =
+export type Student =
   { name  : string
   , email : string
+  , id    : string
   }
 
-export type InstructorData = 
-  { name    : string
-  , email   : string
-  }  // TODO potentially hash for password? Maybe only server side.
+export type Instructor = 
+  { name: string 
+  , id  : string
+  }
 
 export type LocationState = 
   { background : Location 

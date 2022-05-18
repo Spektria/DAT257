@@ -73,6 +73,7 @@ jobs:
           username: 'lingon'
           key: ${{ secrets.SERVER_KEY }}
           script: |
+            sleep 2m
             sudo rm -r /var/www/vattenskoter.fredin.org/build
             sudo mv /home/lingon/.local/share/vattenskoter/build /var/www/vattenskoter.fredin.org/build
             mkdir /home/lingon/.local/share/vattenskoter/build

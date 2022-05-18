@@ -1,11 +1,15 @@
 package com.defLeppard.services;
+import com.defLeppard.entities.Instructor;
+import com.defLeppard.entities.Student;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.*;
 
-import java.util.Arrays;
+import java.util.*;
 
 /**
  *
@@ -59,5 +63,26 @@ public class WixService {
             System.out.println("Error " + ex.getStatusCode() + " on call  to " + uri);
             throw ex;
         }
+    }
+
+    private List<Map<String, String>> callList(String function, String... args){
+        var resp = call(ArrayList.class, function, args);
+        return (List<Map<String, String>>) call(ArrayList.class, function, args).getBody();
+    }
+
+    /**
+     * Returns a list of all instructors on the wix website.
+     * @return the list of instructors
+     */
+    public List<Instructor> fetchInstructors(){
+        return callList( "instructors").stream().map(map -> new Instructor(map.get("name"), UUID.fromString(map.get("id")))).toList();
+    }
+
+    /**
+     * Returns a list of all students on the wix website.
+     * @return the list of students
+     */
+    public List<Student> fetchStudent(){
+        return callList("students").stream().map(map -> new Student(map.get("name"), map.get("loginEmail"), UUID.fromString(map.get("id")))).toList();
     }
 }

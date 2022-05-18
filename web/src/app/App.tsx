@@ -6,12 +6,12 @@
 import { useReducer } from 'react'
 import Session from './components/Session';
 import SessionEditor from './components/SessionEditor';
-import NotFound from './components/NotFound';
 import StudentProfile from './components/StudentProfile';
+import { LocationState, SessionData, Student } from '../types/types';
 import Calendar from './components/Calendar';
-import { LocationState, SessionData, StudentData } from '../types/types';
+import NotFound from './components/NotFound'
 import { CalendarState } from 'react-awesome-calendar'
-import { find } from 'ramda'
+import { find, map } from 'ramda'
 import {
   Routes,
   Route,
@@ -84,12 +84,12 @@ function App() {
       <Routes>
         { /* Routes to normal fullscreen views */}
         <Route path="/" element={<Cal />} />
-        <Route path="*" element={<NotFound />} />
         { /* Routes to modal views */}
         {RouteCalendarModal("/newsession")}
         {RouteCalendarModal("session/:id")}
         {RouteCalendarModal("session/:id/edit")}
         {RouteCalendarModal("session/:id/:student")}
+        <Route path="*" element={<NotFound state={state}/>} />
       </Routes>
 
       {
@@ -141,7 +141,9 @@ function App() {
         <Cal /> :
         <Navigate
           to={location.pathname}
-          state={{ ...state, background: location }} />}
+          state={{ ...state, background: location }}
+        />
+      }
     />)
   }
 
@@ -155,8 +157,11 @@ function App() {
    */
   function EditSession() {
     return WithParam<Number>(checkIdParam, id => {
-      const session = find(e => e.id === id, sessions)
-      return session === undefined ? undefined : <SessionEditor {...{ right: session }} />
+      const session = findSession(id)
+      if (session === undefined)
+        return undefined
+      const session_: SessionData = { ...session, from: new Date(session.from), to: new Date(session.to) }
+      return session === undefined ? undefined : <SessionEditor {...{ right: session_ }} />
     })
   }
 
@@ -169,7 +174,7 @@ function App() {
    */
   function ViewSession() {
     return WithParam<Number>(checkIdParam, id => {
-      const session = find(e => e.id === id, sessions)
+      const session = findSession(id)
       return session === undefined ? undefined : <Session {...session} />
     })
   }
@@ -186,6 +191,55 @@ function App() {
       const profile = find(e => e.email === student, sprofile) 
       return profile === undefined ? undefined : <StudentProfile {...profile} />
     })
+    
+  /**
+   * Finds session with a specific id
+   *
+   * @param id
+   *
+   * @returns SessionData if match, otherwise undefined 
+   *
+   * @remarks
+   * The parsing should maybe be run on all the 
+   * sessions directly after the query, but might
+   * result in reduced performace.
+   */
+  function findSession(id: Number): SessionData | undefined {
+    const session = find(e => e.id === id, sessions)
+    return session ?
+      {
+        ...session,
+        // Convert from string to Date
+        from: new Date(session.from),
+        to: new Date(session.to),
+        // Convert from string[] to Instructor[]
+        instructors: map(x => typeof x === "string" ? {name: x, id: x}: x , session.instructors),
+        // Convert to Student if email is missing
+        participants: map(x => typeof x === "string" ? {name: x, email: x, id: x}: x , session.participants)
+      }
+      : undefined
+  }
+
+
+
+  /**
+  * HOC that generalise the task of checking and extracting the url params
+  * 
+  * @param f - Function that takes an params and return a maybe value of type T
+  * @param g - Component that takes T as props
+  * @typeParam T - Type of g's props
+  *  
+  * @see {@link https://reactjs.org/docs/higher-order-components.html}
+  * @see {@link https://reactrouter.com/docs/en/v6/api#useparams}
+  */
+  function WithParam<T>(f: (params: Readonly<Params<string>>) => T | undefined, g: (t: T) => JSX.Element | undefined): JSX.Element {
+    const x = f(useParams())
+    if (x === undefined)
+      return <NotFound state={state} />
+    const comp = g(x)
+    if (comp === undefined)
+      return <NotFound state={state} />
+    return comp
   }
 
 }
@@ -224,24 +278,5 @@ function checkStudentParam(params: Readonly<Params<string>>): String | undefined
   return (student)
 }
 
-/**
- * HOC that generalise the task of checking and extracting the url params
- * 
- * @param f - Function that takes an params and return a maybe value of type T
- * @param g - Component that takes T as props
- * @typeParam T - Type of g's props
- *  
- * @see {@link https://reactjs.org/docs/higher-order-components.html}
- * @see {@link https://reactrouter.com/docs/en/v6/api#useparams}
- */
-function WithParam<T>(f: (params: Readonly<Params<string>>) => T | undefined, g: (t: T) => JSX.Element | undefined): JSX.Element {
-  const x = f(useParams())
-  if (x === undefined)
-    return <NotFound />
-  const comp = g(x)
-  if (comp === undefined)
-    return <NotFound />
-  return comp
-}
 
 export default App;

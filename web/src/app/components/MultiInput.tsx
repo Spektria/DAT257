@@ -1,17 +1,19 @@
 import { useReducer, useRef } from 'react'
-import { map, none, find } from 'ramda'
+import { map, find } from 'ramda'
 import ListProfile from './ListProfile'
 import { MdAddCircle } from 'react-icons/md'
 import TextSelector from './TextSelector'
-import { StudentData } from '../../types/types'
-import { orElse } from '../helpers/Helpers'
+import { Student, Instructor, Either } from '../../types/types'
+import { either } from '../helpers/Helpers'
 
 type Props = {
-  options: StudentData[]
+  options: Either<Student, Instructor>[]
   placeholder?: string
-  onChange?: (arr: StudentData[]) => void
-  defaultValue?: StudentData[]
+  onChange?: (arr: Either<Student, Instructor>[]) => void
+  defaultValue?: Either<Student, Instructor>[]
 }
+
+
 
 /**  
  * Mutli input component with searchable options.
@@ -21,12 +23,12 @@ type Props = {
  * @param props.placeholder - Placeholder for input
  * @param props.onChange    - Callback for when the list updates
  */
-function MultiInput({ options, placeholder, onChange, defaultValue } : Props) {
-  const [list, dispatch] = useReducer(reducer, defaultValue ? defaultValue : [])
+function MultiInput({ options, placeholder, onChange, defaultValue }: Props) {
+  const [list, dispatch] = useReducer(
+    (list: Either<Student, Instructor>[]
+      , newInput: Either<Student, Instructor>) => [...list, newInput],
+    defaultValue ? defaultValue : [])
 
-  // Generalize extraction of names
-  interface HasName { name: string }
-  const getNames = (list: HasName[] | undefined) => orElse(() => list?.map(s => s.name), [])(null);
 
   /**
    * Reference for TextSelector
@@ -35,28 +37,20 @@ function MultiInput({ options, placeholder, onChange, defaultValue } : Props) {
    */
   const ref = useRef<HTMLInputElement>(null)
 
-  
+
   /**
    * Triggers the submit event on TextSelector
    */
-  function submit(){
+  function submit() {
     ref.current?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }))
     /* focus input on submit. Convenient on pc but a little annoying on mobile */
-    ref.current?.focus() 
+    ref.current?.focus()
   }
-  
+
 
   return (
     <div className='flex flex-col mt-2'>
-      <ul>
-        {map(({ name, email }) =>
-          <ListProfile
-            key={name} /* Prevents items with same name */
-            name={name}
-            email={email}
-          />
-          , list)}
-      </ul>
+      <ul>{ listProfiles(list) }</ul>
       <div className='flex flex-row items-center '>
         <MdAddCircle
           className='cursor-pointer fill-light-primary ml-1 mr-1 inline pb-{1}'
@@ -65,39 +59,52 @@ function MultiInput({ options, placeholder, onChange, defaultValue } : Props) {
         />
         <TextSelector
           placeholder={placeholder}
-          selectables={getNames(options)}
+          selectables={map(getName, options)}
           onSubmit={handleSubmit}
-          ref={ref} 
+          ref={ref}
         />
       </div>
     </div>
   )
-  
+
 
   /**
    * Handles TextSelector's submit action 
    *
    * @param input
-   */ 
-  function handleSubmit(input : String) {
-    const person = find(x => x.name === input, options)! 
-    dispatch(person) 
-    if(onChange) onChange(list)
-  }
-
-  /** 
-   * Reducer for appending or changing a input.
-   *
-   * @param prevState - Previous list of items
-   * @param newInput - New input
-   *
-   * @returns Updated list of inputs
    */
-  function reducer(prevState: StudentData[], newInput: StudentData): StudentData[] {
-    const sameEmail = (x: StudentData) => x.email === newInput.email
-    const nextState = none(sameEmail, prevState) ? [...prevState, newInput] : map(input => sameEmail(input) ? newInput : input, prevState)
-    return nextState
+  function handleSubmit(input: String) {
+    const person = find(opt => getName(opt) === input, options)!
+    dispatch(person)
+    if (onChange) onChange(list)
   }
+}
+
+/** 
+ * Maps Either<Student, Instructor> to <ListProfile />
+ * 
+ * @remarks Passes in different props if Student or Instructor.
+ *
+ * @param arr
+ *
+ * @returns list of <ListProfile />
+ */
+function listProfiles(arr: Either<Student, Instructor>[]) : JSX.Element[] {
+  return map(xs => either(
+    s => <ListProfile key={s.name} name={s.name} email={s.email} id={s.id}/>,
+    i => <ListProfile key={i.name} name={i.name} id={i.id}/>,
+    xs), arr)
+}
+
+/**
+ * Extracts name field  
+ * 
+ * @param e - Either with left: Student and right: Instructor
+ * 
+ * @returns the name 
+ */
+function getName(e: Either<Student, Instructor>): string {
+  return either(s => s.name, i => i.name, e)
 }
 
 export default MultiInput
