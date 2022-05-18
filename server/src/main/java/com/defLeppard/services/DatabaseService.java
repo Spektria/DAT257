@@ -192,8 +192,8 @@ public class DatabaseService {
 
             return new Event(session.id()
                     , session.title()
-                    , session.to()
                     , session.from()
+                    , session.to()
                     , instructors
                     , students
                     , session.location());
@@ -238,8 +238,8 @@ public class DatabaseService {
 
             return new Event(session.id()
                     , session.title()
-                    , session.to()
                     , session.from()
+                    , session.to()
                     , instructors
                     , students
                     , session.location());
