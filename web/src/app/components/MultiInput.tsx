@@ -50,7 +50,7 @@ function MultiInput({ options, placeholder, onChange, defaultValue }: Props) {
 
   return (
     <div className='flex flex-col mt-2'>
-      <ul>{ listProfiles(list) }</ul>
+      <ul>{ listProfiles(list, removePerson) }</ul>
       <div className='flex flex-row items-center '>
         <MdAddCircle
           className='cursor-pointer fill-light-primary ml-1 mr-1 inline pb-{1}'
@@ -78,6 +78,44 @@ function MultiInput({ options, placeholder, onChange, defaultValue }: Props) {
     dispatch(person)
     if (onChange) onChange(list)
   }
+
+  /**
+   * Handles ListProfile remove button
+   * 
+   * @param arr List to remove person from.
+   * @param id	ID of the person to remove.
+   */
+  function removePerson(arr: Either<Student, Instructor>[], id: String) {
+    // For each element in the list, check if the ID of the current student or
+    // instructor matches the ID to remove. If it matches, remove the current
+    // element from the list.
+    for (var i = 0; i < arr.length; i++) {
+      var thisId: String; // The ID of the current element
+      if (arr[i].left != undefined) {
+        // Get ID of student
+        const student = arr[i].left!;
+        thisId = student.id;
+      } else if (arr[i].right != undefined) {
+        // Get ID of instructor
+        const instructor = arr[i].right!;
+        thisId = instructor.id;
+      } else {
+        // Not a student or instructor. Shouldn't be possible, but skip anyway.
+        continue;
+      }
+
+      if (thisId == id) {
+        // Remove element from list.
+        arr.splice(i, 1);
+        i--;
+        continue;
+      }
+    }
+
+    // Update list
+    if (onChange)
+      onChange(arr);
+  }
 }
 
 /** 
@@ -89,11 +127,21 @@ function MultiInput({ options, placeholder, onChange, defaultValue }: Props) {
  *
  * @returns list of <ListProfile />
  */
-function listProfiles(arr: Either<Student, Instructor>[]) : JSX.Element[] {
+function listProfiles(arr: Either<Student, Instructor>[], removeFunc: (arr: Either<Student, Instructor>[], id: String) => void) : JSX.Element[] {
   return map(xs => either(
-    s => <ListProfile key={s.name} name={s.name} email={s.email} id={s.id}/>,
-    i => <ListProfile key={i.name} name={i.name} id={i.id}/>,
+    s => <ListProfile key={s.name} name={s.name} email={s.email} id={s.id} removeFunction={removePerson}/>,
+    i => <ListProfile key={i.name} name={i.name} id={i.id} removeFunction={removePerson}/>,
     xs), arr)
+  
+    /**
+     * Handles removing a single person
+     * 
+     * @param id ID of person to remove.
+     */
+    function removePerson(id: String) {
+      // Pass the id and list to the *real* remover.
+      removeFunc(arr, id);
+    }
 }
 
 /**

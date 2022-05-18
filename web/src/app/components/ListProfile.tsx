@@ -1,6 +1,7 @@
 import { FC } from 'react'
 import { IoMdPerson } from 'react-icons/io'
 import { BsX } from 'react-icons/bs'
+import { Student, Instructor, Either } from '../../types/types'
 
 /**
 * @field onChange - Change handler on edit
@@ -11,10 +12,11 @@ type Props =
   { name: string
   , email?: string
   , id?   : string
+  , removeFunction : (id: String) => void
   }
 
 /** Component for displaying a profile list item. Used by MultiInput */
-const ListProfile: FC<Props> = ({ name, email, id }) => {
+const ListProfile: FC<Props> = ({ name, email, id, removeFunction }) => {
   return (
     <li className='flex justify-between mb-1 listitem'>
       <label className='listitem-text'>{name}</label>
@@ -23,7 +25,11 @@ const ListProfile: FC<Props> = ({ name, email, id }) => {
         <BsX
 		  className='cursor-pointer'
 		  size='20px'
-		  onClick={ _ => {} }
+		  onClick={ _ => {
+		    if (id) {
+			  removeFunction(id);
+			}
+		  }}
 		/>
         { id && <IoMdPerson className='cursor-pointer' size='20px' /> }
       </div>
