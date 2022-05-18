@@ -285,5 +285,10 @@ public class DatabaseService {
         return jdbcTemplate.update(sqlStatement);
     }
 
+    public void deleteEvent(int id) {
+        String sqlStatement1 = "DELETE FROM Session WHERE idnr = " + id;
+        jdbcTemplate.update(sqlStatement1);
+    }
+
 
 }
