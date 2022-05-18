@@ -19,7 +19,12 @@ const ListProfile: FC<Props> = ({ name, email, id }) => {
     <li className='flex justify-between mb-1 listitem'>
       <label className='listitem-text'>{name}</label>
       <div className='flex justify-between space-x-1'>
-        <BsX className='cursor-pointer' size='20px' />
+		{ /* Remove button */ }
+        <BsX
+		  className='cursor-pointer'
+		  size='20px'
+		  onClick={ _ => {} }
+		/>
         { id && <IoMdPerson className='cursor-pointer' size='20px' /> }
       </div>
     </li>
