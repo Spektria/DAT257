@@ -6,6 +6,7 @@ import { BsX } from 'react-icons/bs'
 * @field onChange - Change handler on edit
 * @field name - Initial value of input
 * @field email - Email of person
+* @field removeFunction - Remove handler
 */
 type Props =
   { name: string
