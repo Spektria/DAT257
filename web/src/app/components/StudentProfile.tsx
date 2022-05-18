@@ -15,29 +15,11 @@ function NavigateBack() {
       <button className={'sm:mt-0 sm:w-auto sm:text-sm bg-transparent text-base font-medium text-light-primary hover:text-dark-primary'} onClick={() => navigate(-1)}>Tillbaka</button>
   );
 }
-/**
- * Handles the submitted data and updates the status of finished educational moments.
- * @author Renato Roos Radevski
-*/
-function submitInfo(email:String, profile:StudentEducationalMomentData[]){
-  const queryClient = useQueryClient();
-  console.log("This function will then manage the sent data and update accordingly.");
-  fetch(`${ServerURL}/students/${email}/updatemoments`,
-    {
-      method: 'POST'
-      , headers:
-        { 'Content-Type': "application/json" }
-      , body: JSON.stringify({ ...profile})
-    })
-    .then(response => {
-      if (response.status === 200) { 
-        console.log('success')}
-      else { alert("Something went wrong! Your student profile was not saved.") }
-    })
-    .catch(error => console.log(error));
-    queryClient.invalidateQueries();
-}
 
+/**
+ * A function that works like testListMoments but with uses testdata so that you can use the demo without needing actual data from the server.
+ * @returns 
+ */
 function testListMoments(){
   const sdata = [{educationalMoment:'Start', completed:true}, {educationalMoment:'Parkera', completed:true},{educationalMoment:'Uppkörning', completed:false}]
   return(
@@ -46,7 +28,7 @@ function testListMoments(){
       {sdata.map(function(moments, key)
         {
         const [checked, setChecked] = useState(moments.completed);
-        return(<li key={key} className="mb-0.5"><input type="checkbox" checked={checked} onChange={ () => (moments.completed=!moments.completed)} value={moments.educationalMoment} className="mr-0.5"></input>{moments.educationalMoment}</li>)
+        return(<li key={key} className="mb-0.5"><input type="checkbox" checked={checked} onChange={ () => setChecked(!checked)} value={moments.educationalMoment} className="mr-0.5"></input>{moments.educationalMoment}</li>)
         })
       }
       </ol>
@@ -55,14 +37,11 @@ function testListMoments(){
 }
 
 /**
- * iterates a list of strings and booleans to create individual list items in an unorderedlist with a checkbox inside the item box. 
+ * Iterates through sdata that is have data according to the StudentEducationalMomentData type. It creates an unordered list with HTML checkboxes that have a state based on a boolean from sdata.
  * @author Renato Roos Radevski
- * @param educationalMoments
- * @param completedMoments
- * TODO: Det kan vara så att man loopar denna funktionen istället för att det loopas inuti funktionen. På så sätt kan man nog använda sig av enskilda objekten med moment osv.
+ * @param sdata
  */
 function listMoments(sdata: StudentEducationalMomentData[]) {
-
 	return(
     <div>
       <ol>
@@ -82,22 +61,16 @@ function listMoments(sdata: StudentEducationalMomentData[]) {
  * -navigate back button
  * -Student name and email
  * -list of educational moments both completed and uncompleted
- * 
- ta enbart in namn och email sedan kan man fetcha resten här. Map funktion ex.
+ * -A submit info button that posts the updated checkboxes' data to the server in order to update the student's profile.
  * @author Renato Roos Radevski
  * @param data 
- * @returns 
+ * @returns a student profile view with data from @param data
  */
 const StudentProfile : FC<StudentData> = data =>{
+  const queryClient = useQueryClient();
   const {data:queryData} = useQuery<StudentEducationalMomentData[]>('moments', () => getStudentMoments(data.email), {staleTime:600000})
   const sdata = queryData!;
   const navigate = useNavigate();
-  /*
-  Calla en funktion här som fixar ihop queryn och email + namn till en och samma som kan användas nedan i return. 
-  FC<StudentData> kan passa bra här och det kommer från en query (alternativt om datan redan kanske finns i App från Location så behövs det inte)
-  Så det enda som behövs för studentprofile är StudentData props, resten fixas i denna filen.
-  Trots att fetchad moment data kommer i en lista med objekt så spelar det ingen roll då alla bör tillhöra samam email och namn så man kan använda sig av 1 objekt för alla.
-  */
   return (
       <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
           <div className="flex items-end justify-center font-sans h-screen sm:min-h-screen pt-10 sm:px-4 sm:pb-20 text-center sm:block sm:p-0">
@@ -118,7 +91,6 @@ const StudentProfile : FC<StudentData> = data =>{
                         </div>
                         <p className="title-content pt-5">Utbildningsmoment:</p>
 
-
                         <form onSubmit={() => submitInfo(data.email, sdata)}>
                             <ol className='subtitle-content pt-3'>{testListMoments()}</ol>
                             <div className='relative sm:flex-row-reverse flex-col mt-10 mb-10 '>
@@ -126,16 +98,38 @@ const StudentProfile : FC<StudentData> = data =>{
                             <button className='button-outline'>{NavigateBack()}</button>
                             </div>
                         </form>
+                        
                     </div>
                 </div>
-
             </div>
           </div>
       </div>
   )
 
+/**
+ * Handles the submitted data and updates the status of finished educational moments.
+ * Added exceptions when an error might occur.
+ * @param email, profile
+ * @author Renato Roos Radevski
+*/
+function submitInfo(email:String, profile:StudentEducationalMomentData[]){
+  console.log("This function will then manage the sent data and update accordingly.");
+  fetch(`${ServerURL}/students/${email}/updatemoments`,
+    {
+      method: 'POST'
+      , headers:
+        { 'Content-Type': "application/json" }
+      , body: JSON.stringify({ ...profile})
+    })
+    .then(response => {
+      if (response.status === 200) { 
+        console.log('success')}
+      else { alert("Something went wrong! Your student profile was not saved.") }
+    })
+    .catch(error => console.log(error));
+    queryClient.invalidateQueries();
+  }
 
 }
-
 
 export default StudentProfile;
