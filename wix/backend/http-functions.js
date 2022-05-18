@@ -24,7 +24,7 @@ backend/http-functions.js
 **********************/
 
 import {getSecret} from 'wix-secrets-backend';
-import { ok, badRequest, notFound } from 'wix-http-functions';
+import { ok, badRequest, notFound, serverError } from 'wix-http-functions';
 
 // Used to verify that the request contains 
 // a valid API key in path 0.
@@ -59,77 +59,6 @@ export async function get_hello(request) {
 
 import wixData from 'wix-data';
 
-export async function get_services(request){
-   const response = {
-       "headers": {
-           "Content-Type": "application/json"
-       },
-       "body": ""
-   };
-
-   if(await verify(request)){
-     await wixData.query('Bookings/Services')
-       .find()
-       .then( (results) => {
-         if(results.items.length > 0) {
-            let firstItem = results.items[0]; 
-            response.body = firstItem;               
-          } 
-          else {
-            response.body = "EMPTY!";
-          }
-        }).catch(err => console.log(err))
-
-     return ok(response);
-   }
-   return badRequest(response);
-}
-
-
-/**
- * Exposes endpoint for fetching instructor names. 
- * Requires API-key auth.
- */
-export async function get_instructors(request){
-  const response = {
-       "headers": {
-           "Content-Type": "application/json"
-       },
-       "body": ""
-   };
-
-  if(await verify(request)){
-     return wixData.query('Members/PublicData')
-       .find()
-       .then( (results) => {
-
-         const pruned = results.items
-            // Change nickname to name
-            .map( (obj) => {
-                 obj.name = obj.nickname;
-                 return obj;
-            })
-            // Prune not needed data to minimize internal data accessible.
-            .map( ({ name }) => ({ name }) );
-         response.body = JSON.stringify(pruned);
-
-         return ok(response);
-        }).catch(err => {
-          console.log(err);
-
-          // We do not want to respond with error because of security
-          response.body = "Query error";  
-
-          return serverError(response);
-        });
-   }
-   else {
-
-      response.body = "Invalid API key";
-
-      return badRequest(response);
-   }
-}
 
 export async function get_students(request){
   const response = {
@@ -151,8 +80,12 @@ export async function get_students(request){
        .then( (results) => {
 
          const pruned = results.items
+            .map( (obj) => {
+              obj.id = obj._id;
+              return obj;
+            })
             // Prune not needed data to minimize internal data accessible.
-            .map( ({ name, loginEmail}) => ({ name, loginEmail }) );
+            .map( ({ name, loginEmail, id}) => ({ name, loginEmail, id }) );
          response.body = JSON.stringify(pruned);
 
          return ok(response);
@@ -161,6 +94,53 @@ export async function get_students(request){
 
           // We do not want to respond with error because of security
           response.body = "Query error";
+
+          return serverError(response);
+        });
+   }
+   else {
+
+      response.body = "Invalid API key";
+
+      return badRequest(response);
+   }
+}
+
+     
+/**
+ * Exposes endpoint for fetching instructor names. 
+ * Requires API-key auth.
+ */
+export async function get_instructors(request){
+  const response = {
+       "headers": {
+           "Content-Type": "application/json"
+       },
+       "body": ""
+   };
+
+  if(await verify(request)){
+     return wixData.query('Members/PublicData')
+       .find()
+       .then( (results) => {
+
+         const pruned = results.items
+            // Change nickname to name
+            .map( (obj) => {
+                 obj.name = obj.nickname;
+                 obj.id = obj._id;
+                 return obj;
+            })
+            // Prune not needed data to minimize internal data accessible.
+            .map( ({ name, id }) => ({ name, id }) );
+         response.body = JSON.stringify(pruned);
+
+         return ok(response);
+        }).catch(err => {
+          console.log(err);
+
+          // We do not want to respond with error because of security
+          response.body = "Query error";  
 
           return serverError(response);
         });

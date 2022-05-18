@@ -10,10 +10,12 @@ CREATE TABLE IF NOT EXISTS Session(
 	PRIMARY KEY (idnr, location)); 
 
 CREATE TABLE IF NOT EXISTS Instructor(
-	name TEXT PRIMARY KEY NOT NULL);
+    instructorid UUID PRIMARY KEY NOT NULL,
+	name TEXT NOT NULL);
 
 CREATE TABLE IF NOT EXISTS Student(
-	loginEmail TEXT PRIMARY KEY NOT NULL,
+    studentid UUID PRIMARY KEY NOT NULL,
+	loginEmail TEXT NOT NULL,
 	name TEXT NOT NULL);
 
 CREATE TABLE IF NOT EXISTS EducationalMoment(
@@ -22,14 +24,13 @@ CREATE TABLE IF NOT EXISTS EducationalMoment(
 	
 CREATE TABLE IF NOT EXISTS StudentEducationalMoments(
 	educationalMoment TEXT REFERENCES EducationalMoment(name) NOT NULL,
-	studentEmail TEXT REFERENCES Student(loginEmail) NOT NULL,
+	studentmomentid UUID REFERENCES Student(studentid) NOT NULL,
 	completed BOOLEAN NOT NULL,
-	PRIMARY KEY (educationalMoment, studentEmail));
+	PRIMARY KEY (educationalMoment, studentmomentid));
 
 CREATE TABLE IF NOT EXISTS Attend( 
-	studentEmail TEXT REFERENCES Student(loginEmail) NOT NULL,
-	instructor TEXT REFERENCES Instructor(name) NOT NULL,
-
+	studentattendid    UUID REFERENCES Student(studentid) NOT NULL,
+	instructorattendid UUID REFERENCES Instructor(instructorid) NOT NULL,
 	sessionIdnr INT NOT NULL,
 	sessionLocation TEXT NOT NULL,
 	FOREIGN KEY(sessionIdnr, sessionLocation) REFERENCES Session(idnr,location)); 
