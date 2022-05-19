@@ -62,10 +62,15 @@ public class EventsController {
 
         return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchAllEvents().stream().map(Event::removeDateOffsets).toList());
     }
-    @PostMapping("/new")
-    ResponseEntity<String> newSession(@RequestBody String state){
+    @PostMapping("/updatesession")
+    ResponseEntity<String> updateSession(@RequestBody String state){
         return ResponseEntity.status(HttpStatus.OK).body(state);
     }
 
+    @PostMapping("/newsession")
+    ResponseEntity<String> newSession(@RequestBody Event event){
+        dbs.functionAddEvents(event);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
 }
