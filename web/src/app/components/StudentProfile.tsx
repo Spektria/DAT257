@@ -54,11 +54,21 @@ const StudentProfile: FC<Student> = data => {
               </div>
               <p className="title-content pt-5">Utbildningsmoment:</p>
               <ol className='subtitle-content pt-3'>{map(ListMoment, moments)}</ol>
-              <form onSubmit={() => submitInfo(data.id, moments)}>
+              <form onSubmit={e => {
+                e.preventDefault()
+                submitInfo(data.id, moments).then(ok => {
+                if(ok){
+                  queryClient.invalidateQueries('moments') 
+                  navigate(location.pathname.replace(data.id,''))
+                }else
+                  alert("Something went wrong! Your student profile was not saved.")
+                })
+              }}
+              >
 
                 <div className='relative sm:flex-row-reverse flex-col mt-10 mb-10 '>
                   <button type="submit" className="button-solid sm:mt-6 mt-20 sm:mr-3">Spara</button>
-                  <button type="button" className={'button-outline sm:mt-0 sm:w-auto sm:text-sm bg-transparent text-base font-medium text-light-primary hover:text-dark-primary'} onClick={() => navigate(location.pathname.replace(data.id,''))}>Tillbaka</button>
+                  <button type="button" className={'button-outline sm:mt-0 sm:w-auto sm:text-sm bg-transparent text-base font-medium text-light-primary hover:text-dark-primary'} onClick={() => navigate(location.pathname.replace(data.id, ''))}>Tillbaka</button>
                 </div>
               </form>
             </div>
@@ -68,29 +78,6 @@ const StudentProfile: FC<Student> = data => {
     </div>
   )
 
-  /**
-   * Handles the submitted data and updates the status of educational moments.
-   * Added exceptions when an error might occur.
-   * @param id, profile
-   * @author Renato Roos Radevski
-  */
-  function submitInfo(id: String, profile: StudentEducationalMomentData[]) {
-    fetch(`${ServerURL}/students/${id}/updatemoments`,
-      {
-        method: 'POST'
-        , headers:
-          { 'Content-Type': "application/json" }
-        , body: JSON.stringify(profile)
-      })
-      .then(response => {
-        if (response.status === 200) {
-          queryClient.invalidateQueries('moments');
-          navigate(location.pathname.replace(data.id,''))
-        }
-        else { alert("Something went wrong! Your student profile was not saved.") }
-      })
-      .catch(error => console.log(error));
-  }
 
   /**
    * Creates a list item that includes the educational moment. 
@@ -116,6 +103,24 @@ const StudentProfile: FC<Student> = data => {
     )
 
   }
+}
+
+
+/**
+ * Handles the submitted data and updates the status of educational moments.
+ * Added exceptions when an error might occur.
+ * @param id, profile
+ * @author Renato Roos Radevski
+*/
+async function submitInfo(id: String, profile: StudentEducationalMomentData[]) {
+  return fetch(`${ServerURL}/students/${id}/updatemoments`,
+    {
+      method: 'POST'
+      , headers:
+        { 'Content-Type': "application/json" }
+      , body: JSON.stringify(profile)
+    })
+    .then(response => response.status === 200)
 }
 
 /**
