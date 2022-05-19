@@ -191,7 +191,7 @@ function Form(initState: SessionData) {
               className='button-solid'
               type='submit'
               onClick={() => {
-                fetch(`${ServerURL}/events/new`,
+                fetch(`${ServerURL}/events/update`,
                   {
                     method: 'POST'
                     , headers:
