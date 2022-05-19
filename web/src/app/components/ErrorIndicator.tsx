@@ -12,7 +12,6 @@ type Props = { text: string }
  * @see {@link https://github.com/yocontra/react-responsive}
  */
 function ErrorIndicator({ text }: Props) {
-
   return (
     <MediaQuery minWidth={768} >
       {(matches: boolean) => matches ? <Desktop text={text} /> : <Mobile />}
