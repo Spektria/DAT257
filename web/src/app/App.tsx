@@ -70,14 +70,13 @@ function App() {
   
   const { isLoading, error, data } =
     useQuery<SessionData[], Error>('events', () => getEvents(year), { staleTime: 600000 })
-  const {data:sdata} = useQuery<Student[]>('student', () => getStudents(), { staleTime: 600000});
+  const {data:sprofile} = useQuery<Student[]>('student', () => getStudents(), { staleTime: 600000});
   if (isLoading) return <p className='text-center p-10'>Loading...</p>
   if (error) return (
     <p className='text-center p-10'>
       An error has occurred: {error.message}
     </p>)
   const sessions = data!
-  const sprofile = sdata!
     
   return (
     <>
@@ -187,6 +186,8 @@ function App() {
    */
   function ViewProfile(){
     return WithParam<string>(checkStudentIdParam, studentID => {
+      if (!sprofile)
+        return undefined
       const profile = find(e => e.id === studentID, sprofile)
       return profile === undefined ? undefined : <StudentProfile {...profile} />
     })

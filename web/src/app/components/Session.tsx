@@ -71,7 +71,7 @@ const Session : FC<SessionData> = data => {
                   </div>
                   <div className="mt-5 ">
                     <span className="title-content">Deltagare:</span>
-                    {data.participants.map((s)=> <ListProfile name={s.name} email={s.email} id={s.id}/>)}
+                    {data.participants.map((s)=> <ListProfile key={s.id} name={s.name} email={s.email} id={s.id}/>)}
                   </div>
                 </div>
               </div>
