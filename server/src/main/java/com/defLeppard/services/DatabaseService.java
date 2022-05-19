@@ -285,6 +285,12 @@ public class DatabaseService {
         return jdbcTemplate.update(sqlStatement);
     }
 
+    /**
+     *
+     * Given an event, all students and instructors will be added to this event. The event itself will also be added
+     * @param event the event which is added
+     * @return the number of rows affected
+     */
     public int functionAddEvents(Event event){
         String sqlStatement = "DELETE FROM Attend WHERE sessionIdnr = '" + event.id() + "'; ";
         String sqlstatement2 = "DELETE FROM Session WHERE idnr = '" + event.id() + "'; ";
