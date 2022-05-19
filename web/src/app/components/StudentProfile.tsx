@@ -5,56 +5,27 @@ import { useQuery, useQueryClient } from 'react-query';
 import { getStudentMoments } from '../apis/StudentApi';
 import { ServerURL } from '../apis/URIs';
 
-/**
- * Creates a button that makes the user go back one step in their browser history history.
- * @author Renato Roos Radevski
-*/
-function NavigateBack() {
-  const navigate = useNavigate();
-  return (
-      <button className={'sm:mt-0 sm:w-auto sm:text-sm bg-transparent text-base font-medium text-light-primary hover:text-dark-primary'} onClick={() => navigate(-1)}>Tillbaka</button>
-  );
-}
+
 
 /**
- * A function that works like testListMoments but with uses testdata so that you can use the demo without needing actual data from the server.
- * @returns 
- */
-function testListMoments(data: StudentEducationalMomentData[]){
-  const sdata = [{educationalMoment:'Start', completed:true}, {educationalMoment:'Parkera', completed:true},{educationalMoment:'Uppkörning', completed:false}]
-  return(
-    <div>
-      <ol>
-      {sdata.map(function(moments, key)
-        {
-        const [checked, setChecked] = useState(moments.completed);
-        return(<li key={key} className="mb-0.5"><input type="checkbox" checked={checked} onChange={ () => setChecked(!checked)} value={moments.educationalMoment} className="mr-0.5"></input>{moments.educationalMoment}</li>)
-        })
-      }
-      </ol>
-    </div>
-  );
-}
-
-/**
- * Iterates through sdata that is have data according to the StudentEducationalMomentData type. It creates an unordered list with HTML checkboxes that have a state based on a boolean from sdata.
+ * Iterates through sdata that have data according to the StudentEducationalMomentData type. It creates an unordered list with HTML checkboxes that have a state based on a boolean from sdata.
  * @author Renato Roos Radevski
  * @param sdata
  */
-function listMoments(sdata: StudentEducationalMomentData[]) {
+ function listMoments(sdata: StudentEducationalMomentData[]) {
 	return(
     <div>
       <ol>
-      {sdata.map(function(moments, key)
-        {
-        const [checked, setChecked] = useState(moments.completed);
-        return(<li key={key} className="mb-0.5"><input type="checkbox" checked={checked} onChange={ () => setChecked(!checked)} value={moments.educationalMoment} className="mr-0.5"></input>{moments.educationalMoment}</li>)
+      {sdata.map(function(moments, key){
+        //const [checked, setChecked] = useState(moments.complete);
+        return(<li key={key} className="mb-0.5 text-inherit"><input type="checkbox" checked={moments.complete} onChange={() => {console.log(moments.complete + ' : before'); moments.complete=!moments.complete; console.log(moments);}} value={moments.name} className="mr-0.5"></input>{moments.name}</li>)
+
         })
       }
       </ol>
     </div>
-  );
-}
+    )
+ }
 
 /**
  * Creates a studentProfile view following the data structure of StudentEducationalMomentsData. The view includes:
@@ -67,10 +38,12 @@ function listMoments(sdata: StudentEducationalMomentData[]) {
  * @returns a student profile view with data from @param data
  */
 const StudentProfile : FC<Student> = data =>{
-  const queryClient = useQueryClient();
-  const {data:queryData} = useQuery<StudentEducationalMomentData[]>('moments', () => getStudentMoments(data.id), {staleTime:600000})
-  const sdata = queryData!;
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const {isLoading, data:queryData} = useQuery<StudentEducationalMomentData[]>('moments', () => getStudentMoments(data.id), {staleTime:600000})
+  if (isLoading) return <p className='text-center p-10'>Loading...</p>
+  
+  const sdata = queryData!;
   return (
       <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
           <div className="flex items-end justify-center font-sans h-screen sm:min-h-screen pt-10 sm:px-4 sm:pb-20 text-center sm:block sm:p-0">
@@ -90,12 +63,12 @@ const StudentProfile : FC<Student> = data =>{
                             <p className='subtitle-content'>{data.email}</p>
                         </div>
                         <p className="title-content pt-5">Utbildningsmoment:</p>
-
+                        <ol className='subtitle-content pt-3'>{listMoments(sdata)}</ol>
                         <form onSubmit={() => submitInfo(data.id, sdata)}>
-                            <ol className='subtitle-content pt-3'>{testListMoments(sdata)}</ol>
+                            
                             <div className='relative sm:flex-row-reverse flex-col mt-10 mb-10 '>
-                            <button type="submit" value="Submit" className="button-solid sm:mt-6 mt-20 sm:mr-3">Spara</button>
-                            <button className='button-outline'>{NavigateBack()}</button>
+                            <button type="submit" className="button-solid sm:mt-6 mt-20 sm:mr-3">Spara</button>
+                            <button type="button" className={'button-outline sm:mt-0 sm:w-auto sm:text-sm bg-transparent text-base font-medium text-light-primary hover:text-dark-primary'} onClick={() => navigate(-1)}>Tillbaka</button>
                             </div>
                         </form>
                         
@@ -113,6 +86,7 @@ const StudentProfile : FC<Student> = data =>{
  * @author Renato Roos Radevski
 */
 function submitInfo(id:String, profile:StudentEducationalMomentData[]){
+  console.log(profile)
   fetch(`${ServerURL}/students/${id}/updatemoments`,
     {
       method: 'POST'
@@ -128,6 +102,8 @@ function submitInfo(id:String, profile:StudentEducationalMomentData[]){
     .catch(error => console.log(error));
     queryClient.invalidateQueries();
   }
+
+  
 
 }
 
