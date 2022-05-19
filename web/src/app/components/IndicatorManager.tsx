@@ -88,15 +88,15 @@ function Mobile({ indicators }: Props) {
   return (
     <div className='absolute z-30 flex top-2 left-4 justify-between space-x-2'>
       {nLoad > 0 &&
-        <div className='text-light-primary flex items-center justify-between space-x-1.5'>
-          {nLoad > 1 && <p>{nLoad}</p>}
+        <div className='text-light-primary flex justify-between space-x-1.5'>
           <LoadingIndicator text='' />
+          {nLoad > 1 && <p className='leading-none pt-[0.75px]'>{nLoad}</p>}
         </div>
       }
       {nErr > 0 &&
-        <div className='text-red-500 flex items-center justify-between space-x-1.5'>
-          {nErr > 1 && <p>{nErr}</p>}
+        <div className='text-red-500 flex justify-between space-x-1.5'>
           <ErrorIndicator text='' />
+          {nErr > 1 && <p className='leading-none pt-[0.75px]'>{nErr}</p>}
         </div>
       }
     </div>
