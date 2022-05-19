@@ -84,12 +84,12 @@ const StudentProfile: FC<Student> = data => {
       })
       .then(response => {
         if (response.status === 200) {
-          console.log('success')
+          queryClient.invalidateQueries('moments');
+          navigate(location.pathname.replace(data.id,''))
         }
         else { alert("Something went wrong! Your student profile was not saved.") }
       })
       .catch(error => console.log(error));
-    queryClient.invalidateQueries();
   }
 
   /**
