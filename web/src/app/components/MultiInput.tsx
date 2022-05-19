@@ -91,8 +91,8 @@ function MultiInput({ options, placeholder, onChange, defaultValue }: Props) {
  */
 function listProfiles(arr: Either<Student, Instructor>[]) : JSX.Element[] {
   return map(xs => either(
-    s => <ListProfile key={s.name} name={s.name} email={s.email} />,
-    i => <ListProfile key={i.name} name={i.name} />,
+    s => <ListProfile key={s.name} name={s.name} email={s.email} id={s.id}/>,
+    i => <ListProfile key={i.name} name={i.name} id={i.id}/>,
     xs), arr)
 }
 

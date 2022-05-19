@@ -10,16 +10,17 @@ import { BsX } from 'react-icons/bs'
 type Props =
   { name: string
   , email?: string
+  , id?   : string
   }
 
 /** Component for displaying a profile list item. Used by MultiInput */
-const ListProfile: FC<Props> = ({ name, email }) => {
+const ListProfile: FC<Props> = ({ name, email, id }) => {
   return (
     <li className='flex justify-between mb-1 listitem'>
       <label className='listitem-text'>{name}</label>
       <div className='flex justify-between space-x-1'>
         <BsX className='cursor-pointer' size='20px' />
-        { email && <IoMdPerson className='cursor-pointer' size='20px' /> }
+        { id && <IoMdPerson className='cursor-pointer' size='20px' /> }
       </div>
     </li>
   )

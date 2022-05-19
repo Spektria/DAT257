@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -31,13 +32,13 @@ public class DatabaseService {
     /**
      * Returns a list of educational moments for a given student identifier. If the identifier does
      * not exist in the database the return value will be an empty list.
-     * @param studentEmail the student identifier
+     * @param studentmomentid the student identifier
      * @return the list of educational moments
      */
-    public List<EduMoment> getMoments(String studentEmail){
+    public List<EduMoment> getMoments(UUID studentmomentid){
 
         final String qMoments = "SELECT educationalMoment, description, completed FROM EducationalMoment," +
-                " StudentEducationalMoments WHERE studentEmail = '" + studentEmail + "' AND name = educationalMoment;";
+                " StudentEducationalMoments WHERE studentmomentid = '" + studentmomentid + "' AND name = educationalMoment;";
         return  jdbcTemplate.query(qMoments, RowMapperFactory.createRowMapper(EduMoment.class));
     }
 
@@ -50,7 +51,7 @@ public class DatabaseService {
      */
     public int addStudent(Student student) {
 
-        final String sqlStatement = "INSERT INTO Student VALUES ('" +student.email() + "', '" +student.name() + "') ON CONFLICT (loginEmail) DO UPDATE SET name = '" + student.name() + "'";
+        final String sqlStatement = "INSERT INTO Student VALUES ('" + student.id() + "', '" +student.email() + "', '" +student.name() + "') ON CONFLICT (studentid) DO UPDATE SET name = '" + student.name() + "', loginemail = '" + student.email() + "';";
 
         int rowsAffected = jdbcTemplate.update(sqlStatement);
 
@@ -119,7 +120,7 @@ public class DatabaseService {
      */
     public int addInstructor(Instructor instructor) {
 
-        String sqlStatement = "INSERT INTO Instructor VALUES ('" +instructor.name() + "')";
+        String sqlStatement = "INSERT INTO Instructor VALUES ('" +  instructor.id() + "', '" +instructor.name() + "') ON CONFLICT (instructorid) DO UPDATE SET name = '" + instructor.name() + "';";
 
         int rowsAffected = jdbcTemplate.update(sqlStatement);
 
@@ -158,13 +159,13 @@ public class DatabaseService {
 
     /***
      *
-     * Fetch a student from the database that matches the given email
-     * @param studentEmail email of the student that is being queried for
-     * @return the student with the given email, as type Student
+     * Fetch a student from the database that matches the given uuid
+     * @param id uuid of the student that is being queried for
+     * @return the student with the given uuid, as type Student
      *
      */
-    public Student fetchOneStudent(String studentEmail) throws EmptyResultDataAccessException {
-        final String sqlQuery = "SELECT * FROM Student WHERE loginemail = '" + studentEmail + "';";
+    public Student fetchOneStudent(UUID id) throws EmptyResultDataAccessException {
+        final String sqlQuery = "SELECT * FROM Student WHERE studentid = '" + id + "';";
         return jdbcTemplate.queryForObject(sqlQuery, RowMapperFactory.createRowMapper(Student.class));
     }
 
@@ -183,17 +184,14 @@ public class DatabaseService {
 
         // Because of this we have to fetch students & instructors individually
         return allEvents.stream().map(session -> {
-            var students = studentsAttending(session.id()).toArray(new Student[0]);
+            var students = studentsAttending(session.id()).toArray(Student[]::new);
 
-            var instructors = instructorsAttending(session.id())
-                    .stream()
-                    .map(Instructor::name)
-                    .toArray(String[]::new);
+            var instructors = instructorsAttending(session.id()).toArray(Instructor[]::new);
 
             return new Event(session.id()
                     , session.title()
-                    , session.to()
                     , session.from()
+                    , session.to()
                     , instructors
                     , students
                     , session.location());
@@ -201,12 +199,12 @@ public class DatabaseService {
     }
 
     public List<Student> studentsAttending(int id){
-        final String q = "SELECT name, loginemail FROM Attend, Student WHERE sessionidnr = " + id + " AND loginEmail = studentEmail GROUP BY loginemail";
+        final String q = "SELECT name, loginemail, studentid FROM Attend, Student WHERE sessionidnr = " + id + " AND studentid = studentattendid GROUP BY studentid";
         return jdbcTemplate.query(q, RowMapperFactory.createRowMapper(Student.class));
     }
 
     public List<Instructor> instructorsAttending(int id){
-        final String q = "SELECT name FROM Attend, Instructor WHERE sessionidnr = " + id + " AND name = instructor GROUP BY name;";
+        final String q = "SELECT name, instructorid FROM Attend, Instructor WHERE sessionidnr = " + id + " AND instructorid = instructorattendid GROUP BY instructorid;";
         return jdbcTemplate.query(q, RowMapperFactory.createRowMapper(Instructor.class));
     }
 
@@ -229,17 +227,14 @@ public class DatabaseService {
 
         // Because of this we have to fetch students & instructors individually
         return allEvents.stream().map(session -> {
-            var students = studentsAttending(session.id()).toArray(new Student[0]);
+            var students = studentsAttending(session.id()).toArray(Student[]::new);
 
-            var instructors = instructorsAttending(session.id())
-                    .stream()
-                    .map(Instructor::name)
-                    .toArray(String[]::new);
+            var instructors = instructorsAttending(session.id()).toArray(Instructor[]::new);
 
             return new Event(session.id()
                     , session.title()
-                    , session.to()
                     , session.from()
+                    , session.to()
                     , instructors
                     , students
                     , session.location());
@@ -264,30 +259,56 @@ public class DatabaseService {
 
     /***
      *
-     * Fetch a student from the database that matches the given email
-     * @param instructorName email of the student that is being queried for
-     * @return the student with the given email, as type Student
+     * Fetch an instructor from the database that matches the given uuid
+     * @param instructorid uuid of the instructor that is being queried for
+     * @return the instructor with the given uuid, as type Instructor
      *
      */
-    public Instructor fetchOneInstructor(String instructorName) throws EmptyResultDataAccessException {
-        String sqlQuery = "SELECT * FROM Instructor WHERE name = ?";
+    public Instructor fetchOneInstructor(UUID instructorid) throws EmptyResultDataAccessException {
+        String sqlQuery = "SELECT * FROM Instructor WHERE instructorid = ?";
 
-        Instructor instructor = jdbcTemplate.queryForObject(sqlQuery, RowMapperFactory.createRowMapper(Instructor.class), instructorName);
+        Instructor instructor = jdbcTemplate.queryForObject(sqlQuery, RowMapperFactory.createRowMapper(Instructor.class), instructorid);
 
         return instructor;
     }
 
     /**
      *
-     * Given a student email and educational moment, update the completed status
-     * @param studentEmail the email of the student.
+     * Given a student uuid and educational moment, update the completed status
+     * @param studentmomentid the uuid of the student.
      * @param moment the educational moment which status should be updated
      * @return the number of rows affected in the database
      *
      */
-    public int changeCompletedStatus(String studentEmail, EduMoment moment) {
-        String sqlStatement = "UPDATE StudentEducationalMoments SET completed = '" + moment.complete()+ "' WHERE educationalMoment = '" + moment.name() + "' AND studentEmail = '" + studentEmail + "'";
+    public int changeCompletedStatus(UUID studentmomentid, EduMoment moment) {
+        String sqlStatement = "UPDATE StudentEducationalMoments SET completed = '" + moment.complete()+ "' WHERE educationalMoment = '" + moment.name() + "' AND studentmomentid = '" + studentmomentid + "'";
         return jdbcTemplate.update(sqlStatement);
+    }
+
+    /**
+     *
+     * Given an event, all students and instructors will be added to this event. The event itself will also be added
+     * @param event the event which is added
+     * @return the number of rows affected
+     */
+    public int functionAddEvents(Event event){
+        String sqlStatement = "DELETE FROM Attend WHERE sessionIdnr = '" + event.id() + "'; ";
+        String sqlstatement2 = "DELETE FROM Session WHERE idnr = '" + event.id() + "'; ";
+        String sqlstatement3 = "INSERT INTO Session VALUES ('" + event.id() + "', '" + event.title() + "', '" + event.from() + "', '" + event.to() + "', '" + event.location() + "'); ";
+
+        int rowsAffected = jdbcTemplate.update(sqlStatement);
+        jdbcTemplate.update(sqlstatement2);
+        jdbcTemplate.update(sqlstatement3);
+
+        for(Instructor instructor:event.instructors()){
+            for(Student student:event.participants()){
+                String sqlstatement4 = "INSERT INTO Attend VALUES ('" + student.id() + "', '" + instructor.id() + "', '" + event.id() + "' , '" + event.location() + "');";
+                jdbcTemplate.update(sqlstatement4);
+            }
+
+        }
+
+        return rowsAffected;
     }
 
 

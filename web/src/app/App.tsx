@@ -6,9 +6,9 @@
 import { useReducer } from 'react'
 import Session from './components/Session';
 import SessionEditor from './components/SessionEditor';
-import NotFound from './components/NotFound';
 import Calendar from './components/Calendar';
 import { LocationState, SessionData } from '../types/types';
+import NotFound from './components/NotFound'
 import { CalendarState } from 'react-awesome-calendar'
 import { find, map } from 'ramda'
 import {
@@ -79,11 +79,11 @@ function App() {
       <Routes>
         { /* Routes to normal fullscreen views */}
         <Route path="/" element={<Cal />} />
-        <Route path="*" element={<NotFound />} />
         { /* Routes to modal views */}
         {RouteCalendarModal("/newsession")}
         {RouteCalendarModal("session/:id")}
         {RouteCalendarModal("session/:id/edit")}
+        <Route path="*" element={<NotFound state={state}/>} />
       </Routes>
 
       {
@@ -133,7 +133,9 @@ function App() {
         <Cal /> :
         <Navigate
           to={location.pathname}
-          state={{ ...state, background: location }} />}
+          state={{ ...state, background: location }}
+        />
+      }
     />)
   }
 
@@ -147,7 +149,7 @@ function App() {
    */
   function EditSession() {
     return WithParam<Number>(checkIdParam, id => {
-      const session = findSession(id) 
+      const session = findSession(id)
       if (session === undefined)
         return undefined
       const session_: SessionData = { ...session, from: new Date(session.from), to: new Date(session.to) }
@@ -164,7 +166,7 @@ function App() {
    */
   function ViewSession() {
     return WithParam<Number>(checkIdParam, id => {
-      const session = findSession(id) 
+      const session = findSession(id)
       return session === undefined ? undefined : <Session {...session} />
     })
   }
@@ -190,13 +192,34 @@ function App() {
         from: new Date(session.from),
         to: new Date(session.to),
         // Convert from string[] to Instructor[]
-        instructors: map(n => ({ name: n }), (session.instructors as unknown as string[])),
+        instructors: map(x => typeof x === "string" ? {name: x, id: x}: x , session.instructors),
         // Convert to Student if email is missing
-        participants: map(x => typeof x === "string" ? {name: x, email: x}: x , session.participants)
+        participants: map(x => typeof x === "string" ? {name: x, email: x, id: x}: x , session.participants)
       }
       : undefined
   }
 
+
+
+  /**
+  * HOC that generalise the task of checking and extracting the url params
+  * 
+  * @param f - Function that takes an params and return a maybe value of type T
+  * @param g - Component that takes T as props
+  * @typeParam T - Type of g's props
+  *  
+  * @see {@link https://reactjs.org/docs/higher-order-components.html}
+  * @see {@link https://reactrouter.com/docs/en/v6/api#useparams}
+  */
+  function WithParam<T>(f: (params: Readonly<Params<string>>) => T | undefined, g: (t: T) => JSX.Element | undefined): JSX.Element {
+    const x = f(useParams())
+    if (x === undefined)
+      return <NotFound state={state} />
+    const comp = g(x)
+    if (comp === undefined)
+      return <NotFound state={state} />
+    return comp
+  }
 
 }
 
@@ -226,24 +249,5 @@ function checkIdParam(params: Readonly<Params<string>>): Number | undefined {
   return (id === undefined || isNaN(+id)) ? undefined : parseInt(id)
 }
 
-/**
- * HOC that generalise the task of checking and extracting the url params
- * 
- * @param f - Function that takes an params and return a maybe value of type T
- * @param g - Component that takes T as props
- * @typeParam T - Type of g's props
- *  
- * @see {@link https://reactjs.org/docs/higher-order-components.html}
- * @see {@link https://reactrouter.com/docs/en/v6/api#useparams}
- */
-function WithParam<T>(f: (params: Readonly<Params<string>>) => T | undefined, g: (t: T) => JSX.Element | undefined): JSX.Element {
-  const x = f(useParams())
-  if (x === undefined)
-    return <NotFound />
-  const comp = g(x)
-  if (comp === undefined)
-    return <NotFound />
-  return comp
-}
 
 export default App;

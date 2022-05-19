@@ -35,7 +35,7 @@ public class StudentControllerTest {
         // Fetch property of same student
         var resp = this.template.getForEntity("http://localhost:"
                 + port + "/students/"
-                + students.get(0).get("email")
+                + students.get(0).get("id")
                 + "?property=" + prop, String.class);
 
         // Check fetch worked and

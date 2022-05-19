@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 /**
@@ -42,14 +43,14 @@ class StudentController {
 
     /**
      * Returns a specific student or a student's property given a student email and optionally a specific property name.
-     * @param email the email of the student
+     * @param uuid the uuid of the student
      * @param property the optional property name
      * @return the student or student property in JSON format
      */
-    @GetMapping("/{email}")
-    ResponseEntity<?> getStudent(@PathVariable("email") String email, @RequestParam("property") Optional<String> property)  {
+    @GetMapping("/{uuid}")
+    ResponseEntity<?> getStudent(@PathVariable("uuid") UUID uuid, @RequestParam("property") Optional<String> property)  {
         try {
-            var stud = dbs.fetchOneStudent(email.toLowerCase());
+            var stud = dbs.fetchOneStudent(uuid);
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             var student = new JSONObject(ow.writeValueAsString(stud));
 
@@ -76,12 +77,12 @@ class StudentController {
     /**
      * Returns a list of {@link EduMoment educational moments} for the given student or, given optional parameter,
      * a single educational moment for the given student, given the name of the moment.
-     * @param email the student's email.
+     * @param uuid the student's uuid.
      * @return the list of educational moments.
      */
-    @GetMapping("/{email}/moments")
-    ResponseEntity<?> getMoments(@PathVariable("email") String email, @RequestParam("moment") Optional<String> momentName){
-        var moments = dbs.getMoments(email);
+    @GetMapping("/{uuid}/moments")
+    ResponseEntity<?> getMoments(@PathVariable("uuid") UUID uuid, @RequestParam("moment") Optional<String> momentName){
+        var moments = dbs.getMoments(uuid);
 
         if(momentName.isPresent()){
             var foundMoment = moments.stream().filter(mom ->
@@ -93,10 +94,10 @@ class StudentController {
         return ResponseEntity.status(moments.isEmpty() ? HttpStatus.BAD_REQUEST : HttpStatus.OK).body(moments);
     }
 
-    @PostMapping("/{email}/updatemoment")
-    ResponseEntity<?> postMoments(@PathVariable("email") String email, @RequestBody EduMoment educationalMoment){
+    @PostMapping("/{uuid}/updatemoment")
+    ResponseEntity<?> postMoments(@PathVariable("uuid") UUID uuid, @RequestBody EduMoment educationalMoment){
 
-        int rowsChanged = dbs.changeCompletedStatus(email, educationalMoment);
+        int rowsChanged = dbs.changeCompletedStatus(uuid, educationalMoment);
         if (rowsChanged == 0)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.status(HttpStatus.OK).build();

@@ -9,10 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -78,7 +75,7 @@ public class WixService {
      * @return the list of instructors
      */
     public List<Instructor> fetchInstructors(){
-        return callList( "instructors").stream().map(map -> new Instructor(map.get("name"))).toList();
+        return callList( "instructors").stream().map(map -> new Instructor(map.get("name"), UUID.fromString(map.get("id")))).toList();
     }
 
     /**
@@ -86,6 +83,6 @@ public class WixService {
      * @return the list of students
      */
     public List<Student> fetchStudent(){
-        return callList("students").stream().map(map -> new Student(map.get("name"), map.get("loginEmail"))).toList();
+        return callList("students").stream().map(map -> new Student(map.get("name"), map.get("loginEmail"), UUID.fromString(map.get("id")))).toList();
     }
 }
