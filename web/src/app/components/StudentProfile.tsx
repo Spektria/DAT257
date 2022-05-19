@@ -86,13 +86,12 @@ const StudentProfile : FC<Student> = data =>{
  * @author Renato Roos Radevski
 */
 function submitInfo(id:String, profile:StudentEducationalMomentData[]){
-  console.log(profile)
   fetch(`${ServerURL}/students/${id}/updatemoments`,
     {
       method: 'POST'
       , headers:
         { 'Content-Type': "application/json" }
-      , body: JSON.stringify({ ...profile})
+      , body: JSON.stringify(profile)
     })
     .then(response => {
       if (response.status === 200) { 
