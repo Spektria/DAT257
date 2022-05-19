@@ -13,10 +13,17 @@ type Indicator = {
 
 type Status = "idle" | "error" | "loading" | "success"
 
+/**
+ * Observes and displays query indicators
+ */
 function IndicatorManager() {
+  /* Observeres */ 
   const { status: events_status } = useQuery('events', { enabled: false })
   const { status: users_status } = useQuery('student-instructor-names', { enabled: false })
 
+  /**
+   * Constructor for record
+   */
   function newIndicator(status: Status, loadingMsg: string, errMsg: string) {
     return ({
       status: status,
@@ -30,8 +37,6 @@ function IndicatorManager() {
     newIndicator(users_status, 'Hämtar användare...', 'Gick inte att hämta användare!'),
   ]
 
-  console.log(errors(indicators).n + loadings(indicators).n)
-
   return (
     <>
       {(errors(indicators).n + loadings(indicators).n) !== 0 &&
@@ -43,12 +48,16 @@ function IndicatorManager() {
       }
     </>
   )
-
-
 }
 
 type Props = { indicators: Indicator[] }
 
+/**
+ * Displays indicators on Desktop
+ * 
+ * @param props 
+ * @param props.indicators
+ */
 function Desktop({ indicators }: Props) {
   const { msgs: msgsLoad } = loadings(indicators)
   const { msgs: msgsErr } = errors(indicators)
@@ -62,6 +71,12 @@ function Desktop({ indicators }: Props) {
   )
 }
 
+/**
+ * Displays indicators on Desktop
+ * 
+ * @param props 
+ * @param props.indicators
+ */
 function Mobile({ indicators }: Props) {
   const { n: nLoad } = loadings(indicators)
   const { n: nErr } = errors(indicators)
@@ -88,6 +103,13 @@ type Tuple = {
   msgs: string[]
 }
 
+/**
+ * Extracts the indicators that have status error
+ *
+ * @param indicators
+ *
+ * @returns a Tuple an indicator count and the messages
+ */
 function errors(indicators: Indicator[]): Tuple {
   const xs = map(
     (x: Indicator) => x.errMsg,
@@ -96,6 +118,13 @@ function errors(indicators: Indicator[]): Tuple {
   return { n: xs.length, msgs: xs }
 }
 
+/**
+ * Extracts the indicators that have status loading
+ *
+ * @param indicators
+ *
+ * @returns a Tuple an indicator count and the messages
+ */
 function loadings(indicators: Indicator[]): Tuple {
   const xs = map(
     (x: Indicator) => x.loadingMsg,
