@@ -69,8 +69,8 @@ function App() {
    * @see {@link https://react-query.tanstack.com/guides/initial-query-data#staletime-and-initialdataupdatedat}
    */
   const { data : sessions } =
-    useQuery<SessionData[], Error>('events', () => getEvents(year), { staleTime: 600000 })
-  const {data:sprofile} = useQuery<Student[]>('student', () => getStudents(), { staleTime: 600000});
+    useQuery<SessionData[], Error>('events', () => getEvents(year))
+  const {data:sprofile} = useQuery<Student[]>('student', () => getStudents());
 
   return (
     <>
