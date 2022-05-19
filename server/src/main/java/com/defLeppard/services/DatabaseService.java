@@ -32,13 +32,13 @@ public class DatabaseService {
     /**
      * Returns a list of educational moments for a given student identifier. If the identifier does
      * not exist in the database the return value will be an empty list.
-     * @param studentid the student identifier
+     * @param studentmomentid the student identifier
      * @return the list of educational moments
      */
-    public List<EduMoment> getMoments(UUID studentid){
+    public List<EduMoment> getMoments(UUID studentmomentid){
 
         final String qMoments = "SELECT educationalMoment, description, completed FROM EducationalMoment," +
-                " StudentEducationalMoments WHERE studentid = '" + studentid + "' AND name = educationalMoment;";
+                " StudentEducationalMoments WHERE studentmomentid = '" + studentmomentid + "' AND name = educationalMoment;";
         return  jdbcTemplate.query(qMoments, RowMapperFactory.createRowMapper(EduMoment.class));
     }
 
