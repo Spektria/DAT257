@@ -63,9 +63,9 @@ const StudentProfile : FC<Student> = data =>{
                             <p className='subtitle-content'>{data.email}</p>
                         </div>
                         <p className="title-content pt-5">Utbildningsmoment:</p>
-                        <ol className='subtitle-content pt-3'>{listMoments(sdata)}</ol>
+
                         <form onSubmit={() => submitInfo(data.id, sdata)}>
-                            
+                            <ol className='subtitle-content pt-3'>{listMoments(sdata)}</ol>
                             <div className='relative sm:flex-row-reverse flex-col mt-10 mb-10 '>
                             <button type="submit" className="button-solid sm:mt-6 mt-20 sm:mr-3">Spara</button>
                             <button type="button" className={'button-outline sm:mt-0 sm:w-auto sm:text-sm bg-transparent text-base font-medium text-light-primary hover:text-dark-primary'} onClick={() => navigate(-1)}>Tillbaka</button>
