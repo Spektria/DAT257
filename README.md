@@ -1,8 +1,8 @@
 # DAT257-Def-Leppard
 Agile Software Management Project GitHub repository for group Def Leppard
 
-Webbsite interface address: http://vattenskoter.fredin.org/
-Trello board: https://trello.com/b/LvVmFprO/agile-software
+- Webbsite interface address: http://vattenskoter.fredin.org/
+- Trello board: https://trello.com/b/LvVmFprO/agile-software
 
 
 ## About
@@ -51,7 +51,7 @@ Github actions for build and continous integration automation.
 | RenatoRR  | Renato Roos Radevski |
 
 ## External Links
-Website (for running the application): https://vattenskoter.fredin.org/
-Scrum board: https://trello.com/b/LvVmFprO/agile-software
-Drive (meeting documents, refelctions are also on github): https://drive.google.com/drive/folders/1U1GaQBmhPV5aeI-cYQiMUbfXyeF09ovp
+- Website (for running the application): https://vattenskoter.fredin.org/
+- Scrum board: https://trello.com/b/LvVmFprO/agile-software
+- Drive (meeting documents, refelctions are also on github): https://drive.google.com/drive/folders/1U1GaQBmhPV5aeI-cYQiMUbfXyeF09ovp
 
