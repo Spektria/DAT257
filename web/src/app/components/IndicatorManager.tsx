@@ -17,9 +17,12 @@ type Status = "idle" | "error" | "loading" | "success"
  * Observes and displays query indicators
  */
 function IndicatorManager() {
+  const conf = { enabled: false }
   /* Observeres */ 
-  const { status: events_status } = useQuery('events', { enabled: false })
-  const { status: users_status } = useQuery('student-instructor-names', { enabled: false })
+  const { status: events_status } = useQuery('events', conf)
+  const { status: instructor_status } = useQuery('student-instructor-names', conf)
+  const { status: student_status } = useQuery('student', conf)
+  const { status: moments_status } = useQuery('moments', conf)
 
   /**
    * Constructor for record
@@ -34,7 +37,9 @@ function IndicatorManager() {
 
   const indicators = [
     newIndicator(events_status, 'Hämtar händelser...', 'Gick inte att hämta händelser!'),
-    newIndicator(users_status, 'Hämtar användare...', 'Gick inte att hämta användare!'),
+    newIndicator(instructor_status, 'Hämtar instruktörer...', 'Gick inte att hämta instruktörer!'),
+    newIndicator(student_status, 'Hämtar elever...', 'Gick inte att hämta elever!'),
+    newIndicator(moments_status, 'Hämtar kunskapsmoment...', 'Gick inte att hämta kunskapsmoment!'),
   ]
 
   return (
