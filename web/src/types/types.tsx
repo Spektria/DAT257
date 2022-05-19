@@ -13,9 +13,13 @@ export type SessionData =
 export type Student =
   { name  : string
   , email : string
+  , id    : string
   }
 
-export type Instructor = { name: string }
+export type Instructor = 
+  { name: string 
+  , id  : string
+  }
 
 export type LocationState = 
   { background : Location 

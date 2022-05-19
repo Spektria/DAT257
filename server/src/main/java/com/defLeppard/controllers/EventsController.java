@@ -1,9 +1,9 @@
 package com.defLeppard.controllers;
 
+import com.defLeppard.entities.Event;
 import com.defLeppard.services.DatabaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +51,7 @@ public class EventsController {
 
             try {
 
-                var retEvents = dbs.fetchEventsInIntervall(from.get(), to.get());
+                var retEvents = dbs.fetchEventsInIntervall(from.get(), to.get()).stream().map(Event::removeDateOffsets).toList();
                 return ResponseEntity.status(HttpStatus.OK).body(retEvents);
 
             } catch (EmptyResultDataAccessException e) {
@@ -60,12 +60,17 @@ public class EventsController {
 
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchAllEvents());
+        return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchAllEvents().stream().map(Event::removeDateOffsets).toList());
     }
-    @PostMapping("/new")
-    ResponseEntity<String> newSession(@RequestBody String state){
+    @PostMapping("/updatesession")
+    ResponseEntity<String> updateSession(@RequestBody String state){
         return ResponseEntity.status(HttpStatus.OK).body(state);
     }
 
+    @PostMapping("/newsession")
+    ResponseEntity<String> newSession(@RequestBody Event event){
+        dbs.functionAddEvents(event);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
 }
