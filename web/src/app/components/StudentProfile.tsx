@@ -23,7 +23,7 @@ const StudentProfile: FC<Student> = data => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
-  const { isLoading, data: queryData } = useQuery<StudentEducationalMomentData[]>('moments', () => getStudentMoments(data.id), { staleTime: 600000 })
+  const { data: queryData } = useQuery<StudentEducationalMomentData[]>('moments', () => getStudentMoments(data.id))
   const [moments, setMoments] = useState<StudentEducationalMomentData[]>(queryData ? queryData : [])
 
   useEffect(() => {
@@ -33,7 +33,6 @@ const StudentProfile: FC<Student> = data => {
     [queryData]
   )
 
-  if (isLoading) return <p className='text-center p-10'>Loading...</p>
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="flex items-end justify-center font-sans h-screen sm:min-h-screen pt-10 sm:px-4 sm:pb-20 text-center sm:block sm:p-0">
@@ -57,11 +56,11 @@ const StudentProfile: FC<Student> = data => {
               <form onSubmit={e => {
                 e.preventDefault()
                 submitInfo(data.id, moments).then(ok => {
-                if(ok){
-                  queryClient.invalidateQueries('moments') 
-                  navigate(location.pathname.replace(data.id,''))
-                }else
-                  alert("Something went wrong! Your student profile was not saved.")
+                  if (ok) {
+                    queryClient.invalidateQueries('moments')
+                    navigate(location.pathname.replace(data.id, ''))
+                  } else
+                    alert("Something went wrong! Your student profile was not saved.")
                 })
               }}
               >
