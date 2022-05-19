@@ -24,6 +24,7 @@ import { useQuery, useQueryClient } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { getEvents } from './apis/EventApi'
 import { getStudents } from './apis/StudentApi';
+import IndicatorManager from './components/IndicatorManager'
 
 /**
  * Root component of the app
