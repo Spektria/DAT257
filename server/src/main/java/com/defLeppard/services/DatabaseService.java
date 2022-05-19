@@ -285,5 +285,25 @@ public class DatabaseService {
         return jdbcTemplate.update(sqlStatement);
     }
 
+    public int functionAddEvents(Event event){
+        String sqlStatement = "DELETE FROM Attend WHERE sessionIdnr = '" + event.id() + "'; ";
+        String sqlstatement2 = "DELETE FROM Session WHERE idnr = '" + event.id() + "'; ";
+        String sqlstatement3 = "INSERT INTO Session VALUES ('" + event.id() + "', '" + event.title() + "', '" + event.from() + "', '" + event.to() + "', '" + event.location() + "'); ";
+
+        int rowsAffected = jdbcTemplate.update(sqlStatement);
+        jdbcTemplate.update(sqlstatement2);
+        jdbcTemplate.update(sqlstatement3);
+
+        for(Instructor instructor:event.instructors()){
+            for(Student student:event.participants()){
+                String sqlstatement4 = "INSERT INTO Attend VALUES ('" + student.id() + "', '" + instructor.id() + "', '" + event.id() + "' , '" + event.location() + "');";
+                jdbcTemplate.update(sqlstatement4);
+            }
+
+        }
+
+        return rowsAffected;
+    }
+
 
 }
