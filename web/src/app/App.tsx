@@ -67,13 +67,13 @@ function App() {
    * @see {@link https://react-query.tanstack.com/reference/useQuery}
    * @see {@link https://react-query.tanstack.com/guides/initial-query-data#staletime-and-initialdataupdatedat}
    */
-  const { isLoading, data : sessions } =
+  const { data : sessions } =
     useQuery<SessionData[], Error>('events', () => getEvents(year), { staleTime: 600000 })
   const {data:sprofile} = useQuery<Student[]>('student', () => getStudents(), { staleTime: 600000});
 
   return (
     <>
-      {isLoading && <LoadingIndicator text="Läser in händelser..."/>}
+      <IndicatorManager/>
       <Routes>
         { /* Routes to normal fullscreen views */}
         <Route path="/" element={<Cal />} />
