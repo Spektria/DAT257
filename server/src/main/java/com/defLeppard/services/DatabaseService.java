@@ -275,13 +275,13 @@ public class DatabaseService {
     /**
      *
      * Given a student uuid and educational moment, update the completed status
-     * @param studentid the uuid of the student.
+     * @param studentmomentid the uuid of the student.
      * @param moment the educational moment which status should be updated
      * @return the number of rows affected in the database
      *
      */
-    public int changeCompletedStatus(UUID studentid, EduMoment moment) {
-        String sqlStatement = "UPDATE StudentEducationalMoments SET completed = '" + moment.complete()+ "' WHERE educationalMoment = '" + moment.name() + "' AND studentid = '" + studentid + "'";
+    public int changeCompletedStatus(UUID studentmomentid, EduMoment moment) {
+        String sqlStatement = "UPDATE StudentEducationalMoments SET completed = '" + moment.complete()+ "' WHERE educationalMoment = '" + moment.name() + "' AND studentmomentid = '" + studentmomentid + "'";
         return jdbcTemplate.update(sqlStatement);
     }
 
