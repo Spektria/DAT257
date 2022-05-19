@@ -1,4 +1,4 @@
-import { useReducer, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { map, find } from 'ramda'
 import ListProfile from './ListProfile'
 import { MdAddCircle } from 'react-icons/md'
@@ -24,11 +24,8 @@ type Props = {
  * @param props.onChange    - Callback for when the list updates
  */
 function MultiInput({ options, placeholder, onChange, defaultValue }: Props) {
-  const [list, dispatch] = useReducer(
-    (list: Either<Student, Instructor>[]
-      , newInput: Either<Student, Instructor>) => [...list, newInput],
-    defaultValue ? defaultValue : [])
-
+  
+  const [list, setList] = useState(defaultValue ? defaultValue : []);
 
   /**
    * Reference for TextSelector
@@ -75,7 +72,8 @@ function MultiInput({ options, placeholder, onChange, defaultValue }: Props) {
    */
   function handleSubmit(input: String) {
     const person = find(opt => getName(opt) === input, options)!
-    dispatch(person)
+    const newList = [...list, person];
+    setList(newList);
     if (onChange) onChange(list)
   }
 
@@ -89,32 +87,34 @@ function MultiInput({ options, placeholder, onChange, defaultValue }: Props) {
     // For each element in the list, check if the ID of the current student or
     // instructor matches the ID to remove. If it matches, remove the current
     // element from the list.
-    for (var i = 0; i < arr.length; i++) {
+    var newArr = arr;
+    for (var i = 0; i < newArr.length; i++) {
       var thisId: String; // The ID of the current element
-      if (arr[i].left != undefined) {
+      if (newArr[i].left !== undefined) {
         // Get ID of student
-        const student = arr[i].left!;
+        const student = newArr[i].left!;
         thisId = student.id;
-      } else if (arr[i].right != undefined) {
+      } else if (newArr[i].right !== undefined) {
         // Get ID of instructor
-        const instructor = arr[i].right!;
+        const instructor = newArr[i].right!;
         thisId = instructor.id;
       } else {
         // Not a student or instructor. Shouldn't be possible, but skip anyway.
         continue;
       }
 
-      if (thisId == id) {
+      if (thisId === id) {
         // Remove element from list.
-        arr.splice(i, 1);
+        newArr.splice(i, 1);
         i--;
         continue;
       }
     }
 
     // Update list
+    setList(newArr);
     if (onChange)
-      onChange(arr);
+      onChange(newArr);
   }
 }
 
