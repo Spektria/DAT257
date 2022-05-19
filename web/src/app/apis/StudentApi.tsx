@@ -16,7 +16,7 @@ export async function getStudents(): Promise<Student[]>{
     return res.json();
 }
 
-export async function getStudentMoments(email: String): Promise<StudentEducationalMomentData[]>{
-    const res = await fetch(ServerURL + "/students/"+email+"/moments");
+export async function getStudentMoments(id: string): Promise<StudentEducationalMomentData[]>{
+    const res = await fetch(`${ServerURL}/students/${id}/moments`);
     return res.json();
 }

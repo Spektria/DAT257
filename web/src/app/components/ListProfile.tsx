@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import { IoMdPerson } from 'react-icons/io'
-import { BsCheck2, BsX } from 'react-icons/bs'
+import { BsX } from 'react-icons/bs'
 import { useNavigate } from 'react-router'
 
 
@@ -21,10 +21,10 @@ const ListProfile: FC<Props> = ({ name, email, id }) => {
   const navigate = useNavigate();
   return (
     <li className='flex justify-between mb-1 listitem'>
-      <label className='listitem-text'>{}</label>
+      <label className='listitem-text'>{name}</label>
       <div className='flex justify-between space-x-1'>
         <BsX className='cursor-pointer' size='20px' />
-        { id && <IoMdPerson className='cursor-pointer' onClick={() => navigate(`${email}`)} size='20px' /> }
+        { id && <IoMdPerson className='cursor-pointer' onClick={() => navigate(`${id}`)} size='20px' /> }
       </div>
     </li>
   )

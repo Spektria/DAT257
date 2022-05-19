@@ -12,7 +12,7 @@ export type SessionData =
 
 export type StudentEducationalMomentData = 
   { educationalMoment: string,
-    //description      : string,
+    description?      : string,
     completed        : boolean
   };
 

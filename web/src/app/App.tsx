@@ -27,7 +27,7 @@ import { getStudents } from './apis/StudentApi';
 
 /**
  * Root component of the app
- * 
+ * <Route path="/session/:id/:student" element={<StudentProfile name='Alice Andersson' email='AliceA@outlook.com' id='abdfcs23faf'/>}/>
  * @remarks
  * 
  * App tries to be relatively small, but since it is the root 
@@ -70,7 +70,7 @@ function App() {
   
   const { isLoading, error, data } =
     useQuery<SessionData[], Error>('events', () => getEvents(year), { staleTime: 600000 })
-  const {data:sdata} = useQuery<StudentData[]>('student', () => getStudents(), { staleTime: 600000});
+  const {data:sdata} = useQuery<Student[]>('student', () => getStudents(), { staleTime: 600000});
   if (isLoading) return <p className='text-center p-10'>Loading...</p>
   if (error) return (
     <p className='text-center p-10'>
@@ -102,8 +102,7 @@ function App() {
           <Route path="/newsession" element={<NewSession />} />
           <Route path="/session/:id" element={<ViewSession />} />
           <Route path="/session/:id/edit" element={<EditSession />} />
-          <Route path="/session/:id/:student" element={<StudentProfile name='Alice Andersson' email='AliceA@outlook.com'/>}/>
-          <Route path="*" element={<NotFound />} />
+          <Route path="/session/:id/:student" element={<ViewProfile />} />
         </Routes>
       )}
       <ReactQueryDevtools />
@@ -187,10 +186,11 @@ function App() {
    * Matches the student id with the corresponding profile.
    */
   function ViewProfile(){
-    return WithParam<String>(checkStudentParam, student => {
-      const profile = find(e => e.email === student, sprofile) 
+    return WithParam<string>(checkStudentIdParam, studentID => {
+      const profile = find(e => e.id === studentID, sprofile)
       return profile === undefined ? undefined : <StudentProfile {...profile} />
     })
+  }
     
   /**
    * Finds session with a specific id
@@ -273,7 +273,7 @@ function checkIdParam(params: Readonly<Params<string>>): Number | undefined {
  * @param params 
  * @returns student
  */
-function checkStudentParam(params: Readonly<Params<string>>): String | undefined{
+function checkStudentIdParam(params: Readonly<Params<string>>): string | undefined{
   const student = params.student
   return (student)
 }

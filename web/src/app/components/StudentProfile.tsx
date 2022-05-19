@@ -1,5 +1,5 @@
 import { FC, useState } from 'react'
-import { StudentData, StudentEducationalMomentData } from '../../types/types';
+import { Student, StudentEducationalMomentData } from '../../types/types';
 import { useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from 'react-query';
 import { getStudentMoments } from '../apis/StudentApi';
@@ -20,7 +20,7 @@ function NavigateBack() {
  * A function that works like testListMoments but with uses testdata so that you can use the demo without needing actual data from the server.
  * @returns 
  */
-function testListMoments(){
+function testListMoments(data: StudentEducationalMomentData[]){
   const sdata = [{educationalMoment:'Start', completed:true}, {educationalMoment:'Parkera', completed:true},{educationalMoment:'Uppkörning', completed:false}]
   return(
     <div>
@@ -66,9 +66,9 @@ function listMoments(sdata: StudentEducationalMomentData[]) {
  * @param data 
  * @returns a student profile view with data from @param data
  */
-const StudentProfile : FC<StudentData> = data =>{
+const StudentProfile : FC<Student> = data =>{
   const queryClient = useQueryClient();
-  const {data:queryData} = useQuery<StudentEducationalMomentData[]>('moments', () => getStudentMoments(data.email), {staleTime:600000})
+  const {data:queryData} = useQuery<StudentEducationalMomentData[]>('moments', () => getStudentMoments(data.id), {staleTime:600000})
   const sdata = queryData!;
   const navigate = useNavigate();
   return (
@@ -91,8 +91,8 @@ const StudentProfile : FC<StudentData> = data =>{
                         </div>
                         <p className="title-content pt-5">Utbildningsmoment:</p>
 
-                        <form onSubmit={() => submitInfo(data.email, sdata)}>
-                            <ol className='subtitle-content pt-3'>{testListMoments()}</ol>
+                        <form onSubmit={() => submitInfo(data.id, sdata)}>
+                            <ol className='subtitle-content pt-3'>{testListMoments(sdata)}</ol>
                             <div className='relative sm:flex-row-reverse flex-col mt-10 mb-10 '>
                             <button type="submit" value="Submit" className="button-solid sm:mt-6 mt-20 sm:mr-3">Spara</button>
                             <button className='button-outline'>{NavigateBack()}</button>
@@ -109,12 +109,11 @@ const StudentProfile : FC<StudentData> = data =>{
 /**
  * Handles the submitted data and updates the status of finished educational moments.
  * Added exceptions when an error might occur.
- * @param email, profile
+ * @param id, profile
  * @author Renato Roos Radevski
 */
-function submitInfo(email:String, profile:StudentEducationalMomentData[]){
-  console.log("This function will then manage the sent data and update accordingly.");
-  fetch(`${ServerURL}/students/${email}/updatemoments`,
+function submitInfo(id:String, profile:StudentEducationalMomentData[]){
+  fetch(`${ServerURL}/students/${id}/updatemoments`,
     {
       method: 'POST'
       , headers:
