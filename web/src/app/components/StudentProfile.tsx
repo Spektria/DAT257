@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from 'react-query';
 import { getStudentMoments } from '../apis/StudentApi';
 import { ServerURL } from '../apis/URIs';
 import { map } from 'ramda'
+import { useLocation } from 'react-router';
 
 
 
@@ -12,7 +13,7 @@ import { map } from 'ramda'
  * Creates a studentProfile view following the data structure of StudentEducationalMomentsData. The view includes:
  * -navigate back button
  * -Student name and email
- * -list of educational moments both completed and uncompleted
+ * -list of educational moments both completed and uncompleted with functionality to check and uncheck the boxes and use the submit info button.
  * -A submit info button that posts the updated checkboxes' data to the server in order to update the student's profile.
  * @author Renato Roos Radevski
  * @param data 
@@ -20,6 +21,7 @@ import { map } from 'ramda'
  */
 const StudentProfile: FC<Student> = data => {
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
   const { isLoading, data: queryData } = useQuery<StudentEducationalMomentData[]>('moments', () => getStudentMoments(data.id), { staleTime: 600000 })
   const [moments, setMoments] = useState<StudentEducationalMomentData[]>(queryData ? queryData : [])
@@ -56,7 +58,7 @@ const StudentProfile: FC<Student> = data => {
 
                 <div className='relative sm:flex-row-reverse flex-col mt-10 mb-10 '>
                   <button type="submit" className="button-solid sm:mt-6 mt-20 sm:mr-3">Spara</button>
-                  <button type="button" className={'button-outline sm:mt-0 sm:w-auto sm:text-sm bg-transparent text-base font-medium text-light-primary hover:text-dark-primary'} onClick={() => navigate(-1)}>Tillbaka</button>
+                  <button type="button" className={'button-outline sm:mt-0 sm:w-auto sm:text-sm bg-transparent text-base font-medium text-light-primary hover:text-dark-primary'} onClick={() => navigate(location.pathname.replace(data.id,''))}>Tillbaka</button>
                 </div>
               </form>
             </div>
@@ -66,11 +68,8 @@ const StudentProfile: FC<Student> = data => {
     </div>
   )
 
-
-
-
   /**
-   * Handles the submitted data and updates the status of finished educational moments.
+   * Handles the submitted data and updates the status of educational moments.
    * Added exceptions when an error might occur.
    * @param id, profile
    * @author Renato Roos Radevski
@@ -93,8 +92,13 @@ const StudentProfile: FC<Student> = data => {
     queryClient.invalidateQueries();
   }
 
-
-
+  /**
+   * Creates a list item that includes the educational moment. 
+   * The checkbox is checked depending on the status on the moment fetched from the server.
+   * 
+   * @param m 
+   * @returns list item with checked status depending on moment completion.
+   */
   function ListMoment(m: StudentEducationalMomentData) {
     return (
       <li
@@ -112,15 +116,14 @@ const StudentProfile: FC<Student> = data => {
     )
 
   }
-
-  /**
-   * Iterates through sdata that have data according to the StudentEducationalMomentData type. It creates an unordered list with HTML checkboxes that have a state based on a boolean from sdata.
-   * @author Renato Roos Radevski
-   * @param sdata
-   */
-
 }
 
+/**
+ * Updates the list of educational moments whenever a checkbox have been checked or unchecked.
+ * @param prevMoments 
+ * @param moment 
+ * @returns New list of educational moments with up-to-date completion status.
+ */
 function toggleMoment(prevMoments: StudentEducationalMomentData[], moment: StudentEducationalMomentData): StudentEducationalMomentData[] {
   return map(
     m => m === moment

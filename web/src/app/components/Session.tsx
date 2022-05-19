@@ -86,7 +86,7 @@ const Session : FC<SessionData> = data => {
               <button
                 type="button"
                 className="button-outline"
-                onClick={() => navigate(-1)}
+                onClick={() => navigate('/')}
               >Tillbaka
               </button>
             </div>

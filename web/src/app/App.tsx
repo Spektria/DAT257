@@ -221,8 +221,6 @@ function App() {
       : undefined
   }
 
-
-
   /**
   * HOC that generalise the task of checking and extracting the url params
   * 
