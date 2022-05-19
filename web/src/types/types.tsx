@@ -8,7 +8,12 @@ export type SessionData =
   , to           : Date
   , instructors  : Instructor[]
   , participants : Student[]
-  }
+  };
+
+export type StudentEducationalMomentData = 
+  { name            : string,
+    complete        : boolean
+  };
 
 export type Student =
   { name  : string

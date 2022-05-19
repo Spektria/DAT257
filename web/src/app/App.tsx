@@ -6,8 +6,9 @@
 import { useReducer } from 'react'
 import Session from './components/Session';
 import SessionEditor from './components/SessionEditor';
+import StudentProfile from './components/StudentProfile';
+import { LocationState, SessionData, Student } from '../types/types';
 import Calendar from './components/Calendar';
-import { LocationState, SessionData } from '../types/types';
 import NotFound from './components/NotFound'
 import { CalendarState } from 'react-awesome-calendar'
 import { find, map } from 'ramda'
@@ -22,10 +23,11 @@ import {
 import { useQuery, useQueryClient } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { getEvents } from './apis/EventApi'
+import { getStudents } from './apis/StudentApi';
 
 /**
  * Root component of the app
- * 
+ * <Route path="/session/:id/:student" element={<StudentProfile name='Alice Andersson' email='AliceA@outlook.com' id='abdfcs23faf'/>}/>
  * @remarks
  * 
  * App tries to be relatively small, but since it is the root 
@@ -65,15 +67,17 @@ function App() {
    * @see {@link https://react-query.tanstack.com/reference/useQuery}
    * @see {@link https://react-query.tanstack.com/guides/initial-query-data#staletime-and-initialdataupdatedat}
    */
+  
   const { isLoading, error, data } =
     useQuery<SessionData[], Error>('events', () => getEvents(year), { staleTime: 600000 })
+  const {data:sprofile} = useQuery<Student[]>('student', () => getStudents(), { staleTime: 600000});
   if (isLoading) return <p className='text-center p-10'>Loading...</p>
   if (error) return (
     <p className='text-center p-10'>
       An error has occurred: {error.message}
     </p>)
   const sessions = data!
-
+    
   return (
     <>
       <Routes>
@@ -83,6 +87,7 @@ function App() {
         {RouteCalendarModal("/newsession")}
         {RouteCalendarModal("session/:id")}
         {RouteCalendarModal("session/:id/edit")}
+        {RouteCalendarModal("session/:id/:student")}
         <Route path="*" element={<NotFound state={state}/>} />
       </Routes>
 
@@ -96,6 +101,7 @@ function App() {
           <Route path="/newsession" element={<NewSession />} />
           <Route path="/session/:id" element={<ViewSession />} />
           <Route path="/session/:id/edit" element={<EditSession />} />
+          <Route path="/session/:id/:student" element={<ViewProfile />} />
         </Routes>
       )}
       <ReactQueryDevtools />
@@ -172,6 +178,22 @@ function App() {
   }
 
   /**
+   * Wrapper for studentProfile
+   * 
+   * @remarks
+   *  
+   * Matches the student id with the corresponding profile.
+   */
+  function ViewProfile(){
+    return WithParam<string>(checkStudentIdParam, studentID => {
+      if (!sprofile)
+        return undefined
+      const profile = find(e => e.id === studentID, sprofile)
+      return profile === undefined ? undefined : <StudentProfile {...profile} />
+    })
+  }
+    
+  /**
    * Finds session with a specific id
    *
    * @param id
@@ -199,8 +221,6 @@ function App() {
       : undefined
   }
 
-
-
   /**
   * HOC that generalise the task of checking and extracting the url params
   * 
@@ -222,7 +242,6 @@ function App() {
   }
 
 }
-
 
 /** 
  * Wrapper for SessionEditor
@@ -247,6 +266,15 @@ function NewSession() {
 function checkIdParam(params: Readonly<Params<string>>): Number | undefined {
   const id = params.id
   return (id === undefined || isNaN(+id)) ? undefined : parseInt(id)
+}
+/**
+ * Checks if the url has a student id and returns the id as a parameter.
+ * @param params 
+ * @returns student
+ */
+function checkStudentIdParam(params: Readonly<Params<string>>): string | undefined{
+  const student = params.student
+  return (student)
 }
 
 

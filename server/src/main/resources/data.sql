@@ -139,6 +139,7 @@ INSERT INTO StudentEducationalMoments VALUES ('Genomgång av säkerhetsutrustnin
                                    ('Slå av gas, gira och ge gas med kraftigt roderutslag', 'c84c7b60-aefc-49b3-b346-7d7fbf9c72c0', FALSE),
                                    ('Paddla med vattenskoter, fästa bogserlina i vattenskotern', 'c84c7b60-aefc-49b3-b346-7d7fbf9c72c0', TRUE)
                             ON CONFLICT DO NOTHING;
+                            
 INSERT INTO Attend VALUES ('c84c7b60-aefc-49b3-b346-7d7fbf9c72c0', 'a7406234-b4b8-4914-8d44-77da3fb1645e', 2, 'Vänersborg'),
                      ('a06ff6d3-1907-4d39-990e-f087d2906ce1', 'a7406234-b4b8-4914-8d44-77da3fb1645e', 2, 'Vänersborg'),
                      ('7843c282-2ca4-4d28-80c2-006138f2b9f5', 'd8ada277-e67f-42d8-9151-ded5b71474a8', 3, 'Göteborg'),
