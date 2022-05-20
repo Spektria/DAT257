@@ -9,8 +9,6 @@ import { FC } from 'react';
 import { SessionData } from '../../types/types';
 import { map, zipWith } from 'ramda'
 import { useNavigate } from 'react-router-dom'
-
-import { map } from 'ramda'
 import { ServerURL } from '../apis/URIs'
 import ListProfile from './ListProfile';
 
