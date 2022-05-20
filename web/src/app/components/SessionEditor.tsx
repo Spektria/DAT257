@@ -132,7 +132,7 @@ function Form(initState: SessionData) {
                   const h = parseInt((e.target.value).substring(0, 2))
                   const m = parseInt((e.target.value).substring(3, 5))
                   const d = state.from
-                  d.setHours(h + 2)
+                  d.setHours(h)
                   d.setMinutes(m)
                   dispatch({ from: new Date(d) })
                 }}
@@ -142,17 +142,12 @@ function Form(initState: SessionData) {
                 className='input'
                 name='to'
                 type='time'
-                defaultValue={(() => {
-                  const d = initState.from
-                  return timeStr((d.getHours() >= 22 || d.getHours() === 0) ?
-                    new Date(d.getFullYear(), d.getMonth(), d.getDay(), 24, 0) :
-                    new Date(d.getTime() + 2 * 3600000))
-                })()}
+                defaultValue={timeStr(initState.to)}
                 onChange={e => {
                   const h = parseInt((e.target.value).substring(0, 2))
                   const m = parseInt((e.target.value).substring(3, 5))
                   const d = state.to
-                  d.setHours(h + 2)
+                  d.setHours(h)
                   d.setMinutes(m)
                   dispatch({ to: new Date(d) })
                 }}

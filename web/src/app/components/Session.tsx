@@ -5,7 +5,6 @@
  * @author Martin
  */
 
-import { FC } from 'react';
 import { SessionData } from '../../types/types';
 import { map, zipWith } from 'ramda'
 import { useNavigate } from 'react-router-dom'
@@ -38,7 +37,7 @@ function listPeople(arr: string[]) {
  * @param data
  * @returns
  */
-const Session : FC<SessionData> = data => {
+function Session({id, title, location, from, to, instructors, participants } : SessionData) {
   const navigate = useNavigate()
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -57,23 +56,23 @@ const Session : FC<SessionData> = data => {
               <div className="flex items-start">
                 <div className="mt-3 sm:mt-0 text-left w-full">
                   <div className="border-b-2 border-light-secondary border-opacity-20 pb-5">
-                    <h1 className="title-page">Uppkörningstillfälle</h1>
+                    <h1 className="title-page">{title}</h1>
                   </div>
                   <div className="mt-5">
                     <span className="title-content">Plats:</span>
-                    <p className="subtitle-content">{data.location}</p>
+                    <p className="subtitle-content">{location}</p>
                   </div>
                   <div className="mt-5 pb-5 border-b-2 border-light-secondary border-opacity-20">
                     <span className="title-content">Tid:</span>
-                    <p className="subtitle-content">{data.from.toString()}</p>
+                    <p className="subtitle-content">{formatTime(from, to)}</p>
                   </div>
                   <div className="mt-5">
                     <span className="title-content">Instruktörer:</span>
-                    {listPeople(map(({ name: n }) => n, data.instructors))}
+                    {listPeople(map(({ name: n }) => n, instructors))}
                   </div>
                   <div className="mt-5 ">
                     <span className="title-content">Deltagare:</span>
-                    {data.participants.map((s)=> <ListProfile key={s.id} name={s.name} email={s.email} id={s.id}/>)}
+                    {participants.map((s)=> <ListProfile key={s.id} name={s.name} email={s.email} id={s.id}/>)}
                   </div>
                 </div>
               </div>
@@ -88,7 +87,7 @@ const Session : FC<SessionData> = data => {
               <button
                 type="button"
                 className="button-outline mt-2 md:mt-0 md:ml-2"
-                onClick={() => navigate("/session/" + data.id + "/edit")}
+                onClick={() => navigate("/session/" + id + "/edit")}
               >Redigera
               </button>
               <button
@@ -109,7 +108,7 @@ const Session : FC<SessionData> = data => {
    * Deletes the session
    */
   function deleteSession(){
-    fetch(`${ServerURL}/events/${data.id}/deletesession`,
+    fetch(`${ServerURL}/events/${id}/deletesession`,
       {
         method: 'POST'
         , headers:
@@ -120,12 +119,32 @@ const Session : FC<SessionData> = data => {
         else { alert("Something went wrong! Your event was not deleted.") }
       })
       .catch(error => console.log(error));
-    if (data.id > 0) {
-      navigate("/session/" + data.id);
+    if (id > 0) {
+      navigate("/session/" + id);
     } else {
       navigate("/");
     }
   }
+}
+
+/**
+ * Formats a suitable time interval
+ *
+ * @param from
+ * @param to
+ *
+ * @returns A formated time interval
+ *
+ * @remarks Never displays the year.
+ */
+function formatTime(from: Date, to: Date): string {
+  const fDate    = `${from.getDate()}/${from.getMonth() + 1}`
+  const toDate   = `${to.getDate()}/${to.getMonth() + 1}`
+  const fromTime = from.toTimeString().substring(0,5) 
+  const toTime   = to.toTimeString().substring(0,5) 
+  return fDate === toDate 
+    ? `${fDate} ${fromTime} - ${toTime}`
+    : `${fDate} ${fromTime} - ${toDate} ${toTime}`
 }
 
 export default Session;
