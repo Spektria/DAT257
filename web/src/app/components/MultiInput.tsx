@@ -1,4 +1,4 @@
-import { useReducer, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { map, find } from 'ramda'
 import ListProfile from './ListProfile'
 import { MdAddCircle } from 'react-icons/md'
@@ -24,11 +24,8 @@ type Props = {
  * @param props.onChange    - Callback for when the list updates
  */
 function MultiInput({ options, placeholder, onChange, defaultValue }: Props) {
-  const [list, dispatch] = useReducer(
-    (list: Either<Student, Instructor>[]
-      , newInput: Either<Student, Instructor>) => [...list, newInput],
-    defaultValue ? defaultValue : [])
-
+  
+  const [list, setList] = useState(defaultValue ? defaultValue : []);
 
   /**
    * Reference for TextSelector
@@ -50,7 +47,7 @@ function MultiInput({ options, placeholder, onChange, defaultValue }: Props) {
 
   return (
     <div className='flex flex-col mt-2'>
-      <ul>{ listProfiles(list) }</ul>
+      <ul>{ listProfiles(list, removePerson) }</ul>
       <div className='flex flex-row items-center '>
         <MdAddCircle
           className='cursor-pointer fill-light-primary ml-1 mr-1 inline pb-{1}'
@@ -75,8 +72,49 @@ function MultiInput({ options, placeholder, onChange, defaultValue }: Props) {
    */
   function handleSubmit(input: String) {
     const person = find(opt => getName(opt) === input, options)!
-    dispatch(person)
+    const newList = [...list, person];
+    setList(newList);
     if (onChange) onChange(list)
+  }
+
+  /**
+   * Handles ListProfile remove button
+   * 
+   * @param arr List to remove person from.
+   * @param id	ID of the person to remove.
+   */
+  function removePerson(arr: Either<Student, Instructor>[], id: String) {
+    // For each element in the list, check if the ID of the current student or
+    // instructor matches the ID to remove. If it matches, remove the current
+    // element from the list.
+    var newArr = arr;
+    for (var i = 0; i < newArr.length; i++) {
+      var thisId: String; // The ID of the current element
+      if (newArr[i].left !== undefined) {
+        // Get ID of student
+        const student = newArr[i].left!;
+        thisId = student.id;
+      } else if (newArr[i].right !== undefined) {
+        // Get ID of instructor
+        const instructor = newArr[i].right!;
+        thisId = instructor.id;
+      } else {
+        // Not a student or instructor. Shouldn't be possible, but skip anyway.
+        continue;
+      }
+
+      if (thisId === id) {
+        // Remove element from list.
+        newArr.splice(i, 1);
+        i--;
+        continue;
+      }
+    }
+
+    // Update list
+    setList(newArr);
+    if (onChange)
+      onChange(newArr);
   }
 }
 
@@ -86,14 +124,25 @@ function MultiInput({ options, placeholder, onChange, defaultValue }: Props) {
  * @remarks Passes in different props if Student or Instructor.
  *
  * @param arr
+ * @param removeFunc Function that removes a person from a list.
  *
  * @returns list of <ListProfile />
  */
-function listProfiles(arr: Either<Student, Instructor>[]) : JSX.Element[] {
+function listProfiles(arr: Either<Student, Instructor>[], removeFunc: (arr: Either<Student, Instructor>[], id: String) => void) : JSX.Element[] {
   return map(xs => either(
-    s => <ListProfile key={s.name} name={s.name} email={s.email} id={s.id}/>,
-    i => <ListProfile key={i.name} name={i.name} id={i.id}/>,
+    s => <ListProfile key={s.name} name={s.name} email={s.email} id={s.id} removeFunction={removePerson}/>,
+    i => <ListProfile key={i.name} name={i.name} id={i.id} removeFunction={removePerson}/>,
     xs), arr)
+  
+    /**
+     * Handles removing a single person
+     * 
+     * @param id ID of person to remove.
+     */
+    function removePerson(id: String) {
+      // Pass the id and list to the *real* remover.
+      removeFunc(arr, id);
+    }
 }
 
 /**
