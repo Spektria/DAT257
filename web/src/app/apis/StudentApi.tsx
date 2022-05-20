@@ -1,4 +1,4 @@
-import { Student } from "../../types/types";
+import { Student, StudentEducationalMomentData} from "../../types/types";
 import { ServerURL } from "./URIs";
 
 /**
@@ -13,5 +13,10 @@ import { ServerURL } from "./URIs";
  */
 export async function getStudents(): Promise<Student[]>{
     const res = await fetch(ServerURL + "/students");
+    return res.json();
+}
+
+export async function getStudentMoments(id: string): Promise<StudentEducationalMomentData[]>{
+    const res = await fetch(`${ServerURL}/students/${id}/moments`);
     return res.json();
 }

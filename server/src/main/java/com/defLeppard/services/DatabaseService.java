@@ -32,13 +32,13 @@ public class DatabaseService {
     /**
      * Returns a list of educational moments for a given student identifier. If the identifier does
      * not exist in the database the return value will be an empty list.
-     * @param studentid the student identifier
+     * @param studentmomentid the student identifier
      * @return the list of educational moments
      */
-    public List<EduMoment> getMoments(UUID studentid){
+    public List<EduMoment> getMoments(UUID studentmomentid){
 
         final String qMoments = "SELECT educationalMoment, description, completed FROM EducationalMoment," +
-                " StudentEducationalMoments WHERE studentid = '" + studentid + "' AND name = educationalMoment;";
+                " StudentEducationalMoments WHERE studentmomentid = '" + studentmomentid + "' AND name = educationalMoment;";
         return  jdbcTemplate.query(qMoments, RowMapperFactory.createRowMapper(EduMoment.class));
     }
 
@@ -275,19 +275,50 @@ public class DatabaseService {
     /**
      *
      * Given a student uuid and educational moment, update the completed status
-     * @param studentid the uuid of the student.
+     * @param studentmomentid the uuid of the student.
      * @param moment the educational moment which status should be updated
      * @return the number of rows affected in the database
      *
      */
-    public int changeCompletedStatus(UUID studentid, EduMoment moment) {
-        String sqlStatement = "UPDATE StudentEducationalMoments SET completed = '" + moment.complete()+ "' WHERE educationalMoment = '" + moment.name() + "' AND studentid = '" + studentid + "'";
+    public int changeCompletedStatus(UUID studentmomentid, EduMoment moment) {
+        String sqlStatement = "UPDATE StudentEducationalMoments SET completed = '" + moment.complete()+ "' WHERE educationalMoment = '" + moment.name() + "' AND studentmomentid = '" + studentmomentid + "'";
         return jdbcTemplate.update(sqlStatement);
     }
 
+    /**
+     *
+     * Deletes an event with the given id from the database
+     * @param id the id of the event
+     * 
+     */
     public void deleteEvent(int id) {
         String sqlStatement1 = "DELETE FROM Session WHERE idnr = " + id;
         jdbcTemplate.update(sqlStatement1);
+
+    /**
+     *
+     * Given an event, all students and instructors will be added to this event. The event itself will also be added
+     * @param event the event which is added
+     * @return the number of rows affected
+     */
+    public int functionAddEvents(Event event){
+        String sqlStatement = "DELETE FROM Attend WHERE sessionIdnr = '" + event.id() + "'; ";
+        String sqlstatement2 = "DELETE FROM Session WHERE idnr = '" + event.id() + "'; ";
+        String sqlstatement3 = "INSERT INTO Session VALUES ('" + event.id() + "', '" + event.title() + "', '" + event.from() + "', '" + event.to() + "', '" + event.location() + "'); ";
+
+        int rowsAffected = jdbcTemplate.update(sqlStatement);
+        jdbcTemplate.update(sqlstatement2);
+        jdbcTemplate.update(sqlstatement3);
+
+        for(Instructor instructor:event.instructors()){
+            for(Student student:event.participants()){
+                String sqlstatement4 = "INSERT INTO Attend VALUES ('" + student.id() + "', '" + instructor.id() + "', '" + event.id() + "' , '" + event.location() + "');";
+                jdbcTemplate.update(sqlstatement4);
+            }
+
+        }
+
+        return rowsAffected;
     }
 
 

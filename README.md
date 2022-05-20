@@ -1,8 +1,8 @@
 # DAT257-Def-Leppard
 Agile Software Management Project GitHub repository for group Def Leppard
 
-Webbsite interface address: http://vattenskoter.fredin.org/
-Trello board: https://trello.com/b/LvVmFprO/agile-software
+- Webbsite interface address: http://vattenskoter.fredin.org/
+- Trello board: https://trello.com/b/LvVmFprO/agile-software
 
 
 ## About
@@ -13,6 +13,8 @@ A calendar scheduling application with a data connection to a Wix website. This 
 
 The project is subdivided into the main architectures, where the server folder contains both the Spring server and postgressql database and
 the web folder contains the React frontend interface. Both folders contain readmes for how to build and launch the application.
+
+Reflection documents are in /Documents and subdivided into individual and team reflection. The social contract and final report can also be found here.
 
 ## Requirements for building
 - Maven, [Download](https://maven.apache.org/download.cgi)
@@ -47,3 +49,9 @@ Github actions for build and continous integration automation.
 | falkenby  | Matilda Falkenby    |
 | jonasrost  | Jonas Röst    |
 | RenatoRR  | Renato Roos Radevski |
+
+## External Links
+- Website (for running the application): https://vattenskoter.fredin.org/
+- Scrum board: https://trello.com/b/LvVmFprO/agile-software
+- Drive (meeting documents, refelctions are also on github): https://drive.google.com/drive/folders/1U1GaQBmhPV5aeI-cYQiMUbfXyeF09ovp
+
