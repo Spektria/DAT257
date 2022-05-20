@@ -34,7 +34,7 @@ const ListProfile: FC<Props> = ({ name, email, id, removeFunction }) => {
 			}
 		  }}
 		/>}
-        { id && <IoMdPerson className='cursor-pointer' onClick={() => navigate(`${id}`)} size='20px' /> }
+        { email && <IoMdPerson className='cursor-pointer' onClick={() => navigate(`${id}`)} size='20px' /> }
       </div>
     </li>
   )
