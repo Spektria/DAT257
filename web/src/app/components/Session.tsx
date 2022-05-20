@@ -9,7 +9,6 @@ import { SessionData } from '../../types/types';
 import { map, zipWith } from 'ramda'
 import { useNavigate } from 'react-router-dom'
 
-import { map } from 'ramda'
 import { ServerURL } from '../apis/URIs'
 import ListProfile from './ListProfile';
 
@@ -89,7 +88,7 @@ function Session({id, title, location, from, to, instructors, participants } : S
               <button
                 type="button"
                 className="button-outline mt-2 md:mt-0 md:ml-2"
-                onClick={() => navigate("/session/" + data.id + "/edit")}
+                onClick={() => navigate("/session/" + id + "/edit")}
               >Redigera
               </button>
               <button
@@ -110,7 +109,7 @@ function Session({id, title, location, from, to, instructors, participants } : S
    * Deletes the session
    */
   function deleteSession(){
-    fetch(`${ServerURL}/events/${data.id}/deletesession`,
+    fetch(`${ServerURL}/events/${id}/deletesession`,
       {
         method: 'POST'
         , headers:
@@ -121,8 +120,8 @@ function Session({id, title, location, from, to, instructors, participants } : S
         else { alert("Something went wrong! Your event was not deleted.") }
       })
       .catch(error => console.log(error));
-    if (data.id > 0) {
-      navigate("/session/" + data.id);
+    if (id > 0) {
+      navigate("/session/" + id);
     } else {
       navigate("/");
     }
