@@ -8,7 +8,6 @@
 import { SessionData } from '../../types/types';
 import { map, zipWith } from 'ramda'
 import { useNavigate } from 'react-router-dom'
-
 import { ServerURL } from '../apis/URIs'
 import ListProfile from './ListProfile';
 
