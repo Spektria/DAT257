@@ -77,7 +77,7 @@ public class EventsController {
      * @return OK HTTP status
      */
     @PostMapping("/{idnr}/deletesession")
-    ResponseEntity<?> postMoments(@PathVariable("idnr") int idnr ) {
+    ResponseEntity<?> deleteSession(@PathVariable("idnr") int idnr ) {
         dbs.deleteEvent(idnr);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
