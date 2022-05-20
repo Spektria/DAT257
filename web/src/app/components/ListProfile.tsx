@@ -14,7 +14,7 @@ type Props =
   { name: string
   , email?: string
   , id?   : string
-  , removeFunction : (id: String) => void
+  , removeFunction? : (id: String) => void
   }
 
 /** Component for displaying a profile list item. Used by MultiInput */
@@ -24,8 +24,8 @@ const ListProfile: FC<Props> = ({ name, email, id, removeFunction }) => {
     <li className='flex justify-between mb-1 listitem'>
       <label className='listitem-text'>{name}</label>
       <div className='flex justify-between space-x-1'>
-		{ /* Remove button */ }
-        <BsX
+		{/* Remove button */ }
+        { removeFunction && <BsX
 		  className='cursor-pointer'
 		  size='20px'
 		  onClick={ _ => {
@@ -33,7 +33,7 @@ const ListProfile: FC<Props> = ({ name, email, id, removeFunction }) => {
 			  removeFunction(id);
 			}
 		  }}
-		/>
+		/>}
         { id && <IoMdPerson className='cursor-pointer' onClick={() => navigate(`${id}`)} size='20px' /> }
       </div>
     </li>
