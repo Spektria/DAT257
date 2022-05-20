@@ -132,7 +132,7 @@ function Form(initState: SessionData) {
                   const h = parseInt((e.target.value).substring(0, 2))
                   const m = parseInt((e.target.value).substring(3, 5))
                   const d = state.from
-                  d.setHours(h + 2)
+                  d.setHours(h)
                   d.setMinutes(m)
                   dispatch({ from: new Date(d) })
                 }}
@@ -147,7 +147,7 @@ function Form(initState: SessionData) {
                   const h = parseInt((e.target.value).substring(0, 2))
                   const m = parseInt((e.target.value).substring(3, 5))
                   const d = state.to
-                  d.setHours(h + 2)
+                  d.setHours(h)
                   d.setMinutes(m)
                   dispatch({ to: new Date(d) })
                 }}
