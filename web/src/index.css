@@ -37,7 +37,7 @@
 }
 
 .card-modal{
-  @apply relative inline-block h-full md:h-auto align-bottom mb-0 bg-dark-primary rounded-t md:rounded-lg text-left overflow-hidden md:shadow-xl transform transition-all md:align-middle md:max-w-lg w-full
+  @apply relative inline-block h-full md:h-auto align-bottom mb-0 bg-dark-primary rounded-t md:rounded-lg text-left md:shadow-xl transform transition-all md:align-middle md:max-w-lg w-full
 }
 
 .title-page{

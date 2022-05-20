@@ -35,7 +35,7 @@ const StudentProfile: FC<Student> = data => {
 
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-      <div className="flex items-end justify-center font-sans sm:min-h-screen pt-10 sm:px-4 sm:pb-20 text-center sm:block sm:p-0">
+      <div className="flex items-end justify-center font-sans h-screen sm:min-h-screen pt-10 sm:px-4 sm:pb-20 text-center sm:block sm:p-0">
 
         <div
           className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
@@ -44,32 +44,34 @@ const StudentProfile: FC<Student> = data => {
         />
 
         <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-        <div className="flex flex-col card-modal">
-          <div className="relative px-8 pt-2 ">
-            <div className=" sm:mt-0 w-full">
-              <div className="border-b-2 border-light-secondary border-opacity-20 pb-5 pt-5">
-                <h1 className="title-page">{data.name}</h1>
-                <p className='subtitle-content'>{data.email}</p>
-              </div>
-              <p className="title-content pt-5">Utbildningsmoment:</p>
-              <ol className='subtitle-content pt-3'>{map(ListMoment, moments)}</ol>
-              <form onSubmit={e => {
-                e.preventDefault()
-                submitInfo(data.id, moments).then(ok => {
-                  if (ok) {
-                    queryClient.removeQueries('moments')
-                    navigate(location.pathname.replace(data.id, ''))
-                  } else
-                    alert("Something went wrong! Your student profile was not saved.")
-                })
-              }}
-              >
-
-                <div className='relative sm:flex-row-reverse flex-col mt-10 mb-10 '>
-                  <button type="submit" className="button-solid sm:mt-6 mt-20 sm:mr-3">Spara</button>
-                  <button type="button" className={'button-outline sm:mt-0 sm:w-auto sm:text-sm bg-transparent text-base font-medium text-light-primary hover:text-dark-primary'} onClick={() => {queryClient.removeQueries('moments');navigate(location.pathname.replace(data.id, ''))}}>Tillbaka</button>
+        <div className='absolute inset-0 mx-auto z-20 w-full md:w-fit mt-10'>
+          <div className="flex flex-col card-modal overflow-y-auto">
+            <div className="relative px-8 pt-2 ">
+              <div className=" sm:mt-0 w-full">
+                <div className="border-b-2 border-light-secondary border-opacity-20 pb-5 pt-5">
+                  <h1 className="title-page">{data.name}</h1>
+                  <p className='subtitle-content'>{data.email}</p>
                 </div>
-              </form>
+                <p className="title-content pt-5">Utbildningsmoment:</p>
+                <ol className='subtitle-content pt-3'>{map(ListMoment, moments)}</ol>
+                <form onSubmit={e => {
+                  e.preventDefault()
+                  submitInfo(data.id, moments).then(ok => {
+                    if (ok) {
+                      queryClient.removeQueries('moments')
+                      navigate(location.pathname.replace(data.id, ''))
+                    } else
+                      alert("Something went wrong! Your student profile was not saved.")
+                  })
+                }}
+                >
+
+                  <div className='relative sm:flex-row-reverse flex-col mt-10 mb-10 '>
+                    <button type="submit" className="button-solid sm:mt-6 mt-20 sm:mr-3">Spara</button>
+                    <button type="button" className={'button-outline sm:mt-0 sm:w-auto sm:text-sm bg-transparent text-base font-medium text-light-primary hover:text-dark-primary'} onClick={() => {queryClient.removeQueries('moments');navigate(location.pathname.replace(data.id, ''))}}>Tillbaka</button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
