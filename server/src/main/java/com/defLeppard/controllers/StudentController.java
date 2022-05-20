@@ -92,9 +92,15 @@ class StudentController {
         return ResponseEntity.status(moments.isEmpty() ? HttpStatus.BAD_REQUEST : HttpStatus.OK).body(moments);
     }
 
+    /***
+     * Changes the completion status of an educational moment for a given student
+     * @param uuid the student id
+     * @param educationalMoment the educational moment which completion status should be changed
+     * @return OK HTTP status or NOT_FOUND HTTP status
+     */
     @PostMapping("/{uuid}/updatemoment")
-    ResponseEntity<?> updateMoment(@PathVariable("uuid") UUID uuid, @RequestBody EduMoment educationalMoment){
 
+    ResponseEntity<?> updateMoment(@PathVariable("uuid") UUID uuid, @RequestBody EduMoment educationalMoment){
         int rowsChanged = dbs.changeCompletedStatus(uuid, educationalMoment);
         if (rowsChanged == 0)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

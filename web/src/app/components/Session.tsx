@@ -9,7 +9,11 @@ import { FC } from 'react';
 import { SessionData } from '../../types/types';
 import { map, zipWith } from 'ramda'
 import { useNavigate } from 'react-router-dom'
+
+import { map } from 'ramda'
+import { ServerURL } from '../apis/URIs'
 import ListProfile from './ListProfile';
+
 
 /**
  * Converts an array of strings to an HTML list of those strings.
@@ -76,27 +80,54 @@ const Session : FC<SessionData> = data => {
                 </div>
               </div>
             </div>
-            <div className=" text-left py-6 sm:px-6 sm:relative relative sm:flex-row-reverse">
+            <div className="w-full px-4 py-6 md:px-6 flex flex-col md:flex-row justify-end">
+              <button
+                className='button-outline mt-2 md:mt-0'
+                type='submit'
+                onClick={deleteSession}
+              > Radera
+              </button>
               <button
                 type="button"
-                className="button-solid mr-3"
+                className="button-outline mt-2 md:mt-0 md:ml-2"
                 onClick={() => navigate("/session/" + data.id + "/edit")}
               >Redigera
               </button>
               <button
                 type="button"
-                className="button-outline"
-                onClick={() => navigate('/')}
-              >Tillbaka
+                className="button-solid mt-2 md:mt-0 md:ml-2"
+                onClick={() => navigate("/")}
+              >Avbryt
               </button>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-
   );
+
+
+  /** 
+   * Deletes the session
+   */
+  function deleteSession(){
+    fetch(`${ServerURL}/events/${data.id}/deletesession`,
+      {
+        method: 'POST'
+        , headers:
+          { 'Content-Type': "application/json" }
+      })
+      .then(response => {
+        if (response.status === 200) { navigate(-1) }
+        else { alert("Something went wrong! Your event was not deleted.") }
+      })
+      .catch(error => console.log(error));
+    if (data.id > 0) {
+      navigate("/session/" + data.id);
+    } else {
+      navigate("/");
+    }
+  }
 }
 
 export default Session;
