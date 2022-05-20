@@ -63,8 +63,7 @@ function Calendar({ onChange, sessions }: Props) {
             background: location,
             date: {
               ...date,
-              /* May get negative hours depending on time and time zone */
-              hour: date.hour + new Date().getTimezoneOffset() / 60 
+              hour: date.hour 
             }
           }
         })}
