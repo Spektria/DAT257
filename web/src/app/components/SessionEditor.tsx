@@ -56,6 +56,7 @@ function Form(initState: SessionData) {
     , async () => ({ students: await getStudents(), instructors: await getInstructors() })
     , { staleTime: 600000 })
 
+  const queryClient = useQueryClient();
   const students = data ? map(studentToEither, listDiff(data.students, state.participants)) : []
   const instructors = data ? map(instructorToEither, listDiff(data.instructors, state.instructors)) : []
 
@@ -72,7 +73,7 @@ function Form(initState: SessionData) {
               <h1 className="title-page">Lägg till uppkörningstillfälle</h1>
             </div>
             <div className='flex-row justify-between mt-5 mb-1 '>
-              <input className='input' name='title' type="text" placeholder="Titel" value={title} onChange={e => setTitle(e.target.value)} />
+              <input className='input' name='title' type="text" placeholder="Titel" value={title} onChange={e => {dispatch({title: e.target.value}); setTitle(e.target.value)}} />
             </div>
 
             <div className='flex-row justify-between mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4'>
@@ -132,7 +133,7 @@ function Form(initState: SessionData) {
                   const h = parseInt((e.target.value).substring(0, 2))
                   const m = parseInt((e.target.value).substring(3, 5))
                   const d = state.from
-                  d.setHours(h + 2)
+                  d.setHours(h)
                   d.setMinutes(m)
                   dispatch({ from: new Date(d) })
                 }}
@@ -152,7 +153,7 @@ function Form(initState: SessionData) {
                   const h = parseInt((e.target.value).substring(0, 2))
                   const m = parseInt((e.target.value).substring(3, 5))
                   const d = state.to
-                  d.setHours(h + 2)
+                  d.setHours(h)
                   d.setMinutes(m)
                   dispatch({ to: new Date(d) })
                 }}
@@ -188,22 +189,21 @@ function Form(initState: SessionData) {
             <button
               className='button-solid'
               type='submit'
-              onClick={() => {
-                fetch(`${ServerURL}/events/update`,
+              onClick={() => {console.log(state);
+                fetch(`${ServerURL}/events/newsession`,
                   {
                     method: 'POST'
                     , headers:
                       { 'Content-Type': "application/json" }
-                    , body: JSON.stringify({ ...state, id: state.id === 0 ? Math.random()*1e16 : state.id })
+                    , body: JSON.stringify({ ...state, id: state.id === 0 ? getRandomInt(1,999999999) : state.id })
                   })
                   .then(response => {
                     if (response.status === 200) { 
-                      if (state.id > 0) { navigate("/session/" + state.id) } 
-                      else { navigate("/") }}
+                      if (state.id > 0) {queryClient.invalidateQueries(); navigate("/session/" + state.id) } 
+                      else {queryClient.invalidateQueries(); navigate("/") }}
                     else { alert("Something went wrong! Your event was not saved.") }
                   })
-                  .catch(error => console.log(error));
-                queryClient.invalidateQueries()
+                  .catch(error => console.log(error))
               }
               }
             > Spara
@@ -278,6 +278,13 @@ function timeStr(date: Date): string {
  */
 function dateStr(date: Date): string {
   return date.toISOString().substring(0, 10)
+}
+
+
+function getRandomInt(min: number, max: number): number {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); 
 }
 
 export default SessionEditor
