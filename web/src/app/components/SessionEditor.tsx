@@ -38,7 +38,6 @@ function SessionEditor({ left, right }: Either<CalendarDate, SessionData>) {
   )
 }
 
-
 /**
  * Component for input of session information
  * 
@@ -49,17 +48,16 @@ function Form(initState: SessionData) {
   const [state, dispatch] = useReducer(
     (prevState: SessionData, newFields: Partial<SessionData>) => ({ ...prevState, ...newFields })
     , initState)
-  const [fromDate, setFromDate] = useState(dateStr(state.from))
+  const [fromDate, setFromDate] = useState(dateStr(initState.from))
   const [toDate, setToDate] = useState(fromDate)
   const [title, setTitle] = useState(state.title);
-
-  const { isLoading, error, data } = useQuery<{ students: Student[], instructors: Instructor[] }, Error>(
+  const { data } = useQuery<{ students: Student[], instructors: Instructor[] }, Error>(
     'student-instructor-names'
     , async () => ({ students: await getStudents(), instructors: await getInstructors() })
     , { staleTime: 600000 })
-  if (isLoading) return <p className='fixed text-center p-10 top-20 z-20'>Loading...</p>;
-  if (error) return <p className='fixed text-center p-10 top-20 z-20'>An error has occurred: {error.message}</p>;
-  const { students, instructors } = data!
+
+  const students = data ? map(studentToEither, listDiff(data.students, state.participants)) : []
+  const instructors = data ? map(instructorToEither, listDiff(data.instructors, state.instructors)) : []
 
   return (
     <div className='fixed inset-0 z-10'>
@@ -168,7 +166,7 @@ function Form(initState: SessionData) {
                 Instruktörer:
               </label>
               <MultiInput
-                options={map(instructorToEither, listDiff(instructors, state.instructors))}
+                options={instructors}
                 defaultValue={map(instructorToEither, state.instructors)}
                 placeholder='Lägg till en instruktör'
                 onChange={is => dispatch({ instructors: rights(is) })}
@@ -177,7 +175,7 @@ function Form(initState: SessionData) {
             <div className='mt-1 mb-1'>
               <label className='title-content' htmlFor="students">Elever: </label>
               <MultiInput
-                options={map(studentToEither, listDiff(students, state.participants))}
+                options={students}
                 defaultValue={map(studentToEither, state.participants)}
                 placeholder='Lägg till en elev'
                 onChange={ss => dispatch({ participants: lefts(ss) })
@@ -281,7 +279,7 @@ function timeStr(date: Date): string {
  * @param date   
  */
 function dateStr(date: Date): string {
-  return date.getFullYear() + "-" + (date.getMonth() + 1).toString().padStart(2, "0") + "-" + date.getDate().toString().padStart(2, "0")
+  return date.toISOString().substring(0, 10)
 }
 
 export default SessionEditor

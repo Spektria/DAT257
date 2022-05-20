@@ -14,9 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.json.JSONObject;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 
 /**
@@ -95,7 +93,7 @@ class StudentController {
     }
 
     @PostMapping("/{uuid}/updatemoment")
-    ResponseEntity<?> postMoments(@PathVariable("uuid") UUID uuid, @RequestBody EduMoment educationalMoment){
+    ResponseEntity<?> updateMoment(@PathVariable("uuid") UUID uuid, @RequestBody EduMoment educationalMoment){
 
         int rowsChanged = dbs.changeCompletedStatus(uuid, educationalMoment);
         if (rowsChanged == 0)
@@ -103,4 +101,17 @@ class StudentController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    @PostMapping("/{uuid}/updatemoments")
+    ResponseEntity<?> updateMoments(@PathVariable("uuid") UUID uuid, @RequestBody EduMoment[] educationalMoment) {
+        List<String> failed = new ArrayList<>();
+        Arrays.stream(educationalMoment).forEach(mom -> {
+            if(updateMoment(uuid, mom).getStatusCode() != HttpStatus.OK)
+                failed.add(mom.name());
+        });
+
+        if(failed.isEmpty())
+            return ResponseEntity.status(HttpStatus.OK).build();
+        else
+            return ResponseEntity.status(HttpStatus.MULTI_STATUS).body("Partial success. Failed with " + failed.stream().reduce("", (acc, str) -> acc + ", " + str));
+    }
 }

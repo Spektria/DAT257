@@ -20,7 +20,14 @@ const root = createRoot(container);
  * 
  * @see {@link https://react-query.tanstack.com/reference/useQueryClient}
  */
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+      queries: {
+        staleTime: Infinity,
+      },
+    },
+  }
+)
 
 root.render(
   <StrictMode>
