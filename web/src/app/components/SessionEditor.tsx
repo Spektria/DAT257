@@ -63,7 +63,7 @@ function Form(initState: SessionData) {
     <div className='fixed inset-0 z-10'>
       <div
         className='bg-gray-500 bg-opacity-75 h-screen'
-        onClick={() => navigate(-1)}
+        onClick={() => navigate('/')}
       />
       <div className='absolute inset-0 mx-auto z-20 w-full md:w-fit mt-10'>
         <div className='card-modal-add'>
