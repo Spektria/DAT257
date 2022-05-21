@@ -40,6 +40,7 @@ declare module 'react-awesome-calendar' {
     onChange?: (newState : CalendarState) => void
     onClickEvent?: (id: number) => void 
     onClickTimeLine?: (date: CalendarDate) => void
+    defaultState? : CalendarState
   }
 
   export interface AwesomeCalendarComponent extends ComponentClass<CalendarProps>{
