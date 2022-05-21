@@ -63,11 +63,6 @@ public class EventsController {
         return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchAllEvents());
     }
 
-    @PostMapping("/updatesession")
-    ResponseEntity<String> updateSession(@RequestBody String state){
-        return ResponseEntity.status(HttpStatus.OK).body(state);
-    }
-
     @PostMapping("/newsession")
     ResponseEntity<String> newSession(@RequestBody Event event){
         dbs.functionAddEvents(event);
