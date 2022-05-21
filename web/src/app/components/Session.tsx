@@ -50,7 +50,7 @@ function Session({id, title, location, from, to, instructors, participants } : S
         />
 
         <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-        <div className='absolute inset-0 mx-auto z-20 w-full md:w-fit mt-10'>
+        <div className='absolute inset-0 mx-auto z-20 w-full md:w-fit md:h-fit mt-10'>
           <div className="card-modal-add md:min-w-[32rem]">
             <div className="relative px-8 pt-8 md:p-6 md:pb-10">
               <div className="flex items-start">
