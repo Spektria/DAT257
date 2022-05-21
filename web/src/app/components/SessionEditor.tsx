@@ -90,8 +90,8 @@ function Form(initState: SessionData) {
                 onChange={e => {
                   setFromDate(e.target.value)
                   const y = parseInt((e.target.value).substring(0, 4))
-                  const m = parseInt((e.target.value).substring(5, 6))
-                  const d = parseInt((e.target.value).substring(8, 9))
+                  const m = parseInt((e.target.value).substring(5, 7))
+                  const d = parseInt((e.target.value).substring(8, 10))
                   const date = state.from
                   date.setFullYear(y)
                   date.setMonth(m - 1)
@@ -110,8 +110,8 @@ function Form(initState: SessionData) {
                 onChange={e => {
                   setToDate(e.target.value)
                   const y = parseInt((e.target.value).substring(0, 4))
-                  const m = parseInt((e.target.value).substring(5, 6))
-                  const d = parseInt((e.target.value).substring(8, 9))
+                  const m = parseInt((e.target.value).substring(5, 7))
+                  const d = parseInt((e.target.value).substring(8, 10))
                   const date = state.to
                   date.setFullYear(y)
                   date.setMonth(m - 1)
