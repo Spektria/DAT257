@@ -51,7 +51,7 @@ public class EventsController {
 
             try {
 
-                var retEvents = dbs.fetchEventsInIntervall(from.get(), to.get()).stream().map(Event::removeDateOffsets).toList();
+                var retEvents = dbs.fetchEventsInIntervall(from.get(), to.get());
                 return ResponseEntity.status(HttpStatus.OK).body(retEvents);
 
             } catch (EmptyResultDataAccessException e) {
@@ -60,8 +60,9 @@ public class EventsController {
 
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchAllEvents().stream().map(Event::removeDateOffsets).toList());
+        return ResponseEntity.status(HttpStatus.OK).body(dbs.fetchAllEvents());
     }
+
     @PostMapping("/updatesession")
     ResponseEntity<String> updateSession(@RequestBody String state){
         return ResponseEntity.status(HttpStatus.OK).body(state);
@@ -72,5 +73,18 @@ public class EventsController {
         dbs.functionAddEvents(event);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    /**
+     * Deletes an event with the given idnr and data about who was supposed to attend it from the database.
+     *
+     * @param idnr the idnr of the event that should be deleted
+     * @return OK HTTP status
+     */
+    @PostMapping("/{idnr}/deletesession")
+    ResponseEntity<?> deleteSession(@PathVariable("idnr") int idnr ) {
+        dbs.deleteEvent(idnr);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 
 }

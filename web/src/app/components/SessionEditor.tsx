@@ -60,12 +60,12 @@ function Form(initState: SessionData) {
   const instructors = data ? map(instructorToEither, listDiff(data.instructors, state.instructors)) : []
 
   return (
-    <div className='fixed inset-0 z-10'>
+    <div className='fixed inset-0 z-10 mt-10 overflow-y-auto'>
       <div
-        className='bg-gray-500 bg-opacity-75 h-screen'
-        onClick={() => navigate(-1)}
+        className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity'
+        onClick={() => navigate('/')}
       />
-      <div className='absolute inset-0 mx-auto z-20 w-full md:w-fit mt-10'>
+      <div className='absolute inset-0 mx-auto z-20 w-full md:w-fit'>
         <div className='card-modal-add'>
           <div className='flex flex-col'>
             <div className="border-b-2 border-light-secondary border-opacity-20 pb-5">
@@ -132,7 +132,7 @@ function Form(initState: SessionData) {
                   const h = parseInt((e.target.value).substring(0, 2))
                   const m = parseInt((e.target.value).substring(3, 5))
                   const d = state.from
-                  d.setHours(h + 2)
+                  d.setHours(h)
                   d.setMinutes(m)
                   dispatch({ from: new Date(d) })
                 }}
@@ -142,17 +142,12 @@ function Form(initState: SessionData) {
                 className='input'
                 name='to'
                 type='time'
-                defaultValue={(() => {
-                  const d = initState.from
-                  return timeStr((d.getHours() >= 22 || d.getHours() === 0) ?
-                    new Date(d.getFullYear(), d.getMonth(), d.getDay(), 24, 0) :
-                    new Date(d.getTime() + 2 * 3600000))
-                })()}
+                defaultValue={timeStr(initState.to)}
                 onChange={e => {
                   const h = parseInt((e.target.value).substring(0, 2))
                   const m = parseInt((e.target.value).substring(3, 5))
                   const d = state.to
-                  d.setHours(h + 2)
+                  d.setHours(h)
                   d.setMinutes(m)
                   dispatch({ to: new Date(d) })
                 }}

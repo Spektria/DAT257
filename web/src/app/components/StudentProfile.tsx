@@ -35,7 +35,7 @@ const StudentProfile: FC<Student> = data => {
 
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-      <div className="flex items-end justify-center font-sans h-screen sm:min-h-screen pt-10 sm:px-4 sm:pb-20 text-center sm:block sm:p-0">
+      <div className="flex items-end justify-center font-sans sm:min-h-screen pt-10 sm:px-4 sm:pb-20 text-center sm:block sm:p-0">
 
         <div
           className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
@@ -57,7 +57,7 @@ const StudentProfile: FC<Student> = data => {
                 e.preventDefault()
                 submitInfo(data.id, moments).then(ok => {
                   if (ok) {
-                    queryClient.invalidateQueries('moments')
+                    queryClient.removeQueries('moments')
                     navigate(location.pathname.replace(data.id, ''))
                   } else
                     alert("Something went wrong! Your student profile was not saved.")
@@ -67,7 +67,7 @@ const StudentProfile: FC<Student> = data => {
 
                 <div className='relative sm:flex-row-reverse flex-col mt-10 mb-10 '>
                   <button type="submit" className="button-solid sm:mt-6 mt-20 sm:mr-3">Spara</button>
-                  <button type="button" className={'button-outline sm:mt-0 sm:w-auto sm:text-sm bg-transparent text-base font-medium text-light-primary hover:text-dark-primary'} onClick={() => navigate(location.pathname.replace(data.id, ''))}>Tillbaka</button>
+                  <button type="button" className={'button-outline sm:mt-0 sm:w-auto sm:text-sm bg-transparent text-base font-medium text-light-primary hover:text-dark-primary'} onClick={() => {queryClient.removeQueries('moments');navigate(location.pathname.replace(data.id, ''))}}>Tillbaka</button>
                 </div>
               </form>
             </div>

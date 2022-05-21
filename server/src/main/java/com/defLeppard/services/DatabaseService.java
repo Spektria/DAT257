@@ -287,6 +287,16 @@ public class DatabaseService {
 
     /**
      *
+     * Deletes an event with the given id from the database
+     * @param id the id of the event
+     * 
+     */
+    public void deleteEvent(int id) {
+        String sqlStatement1 = "DELETE FROM Session WHERE idnr = " + id;
+        jdbcTemplate.update(sqlStatement1);
+
+    /**
+     *
      * Given an event, all students and instructors will be added to this event. The event itself will also be added
      * @param event the event which is added
      * @return the number of rows affected
