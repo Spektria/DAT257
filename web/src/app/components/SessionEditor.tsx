@@ -189,7 +189,7 @@ function Form(initState: SessionData) {
             <button
               className='button-solid'
               type='submit'
-              onClick={() => {console.log(state);
+              onClick={() => {
                 fetch(`${ServerURL}/events/newsession`,
                   {
                     method: 'POST'
@@ -199,11 +199,10 @@ function Form(initState: SessionData) {
                   })
                   .then(response => {
                     if (response.status === 200) { 
-                      if (state.id > 0) {queryClient.invalidateQueries(); navigate("/session/" + state.id) } 
-                      else {queryClient.invalidateQueries(); navigate("/") }}
+                      queryClient.invalidateQueries('events')
+                      navigate(state.id > 0 ? "/session/" + state.id : '/')}
                     else { alert("Something went wrong! Your event was not saved.") }
                   })
-                  .catch(error => console.log(error))
               }
               }
             > Spara
@@ -211,11 +210,7 @@ function Form(initState: SessionData) {
             <button
               className='button-outline'
               onClick={() => {
-                if (state.id > 0) {
-                  navigate("/session/" + state.id);
-                } else {
-                  navigate("/");
-                }
+                navigate(state.id > 0 ? "/session/" + state.id : '/')
               }}
             > Avbryt
             </button>
@@ -280,7 +275,13 @@ function dateStr(date: Date): string {
   return date.toISOString().substring(0, 10)
 }
 
-
+/**
+ * Get random integer between two numbers
+ * 
+ * @param min 
+ * @param max 
+ * @returns Random integer between min and max
+ */
 function getRandomInt(min: number, max: number): number {
   min = Math.ceil(min);
   max = Math.floor(max);
