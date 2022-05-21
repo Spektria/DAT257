@@ -3,14 +3,13 @@
  *  regarding routing and querying.
  * 
  */
-import { useReducer } from 'react'
+import { useState } from 'react'
 import Session from './components/Session';
 import SessionEditor from './components/SessionEditor';
 import StudentProfile from './components/StudentProfile';
 import { LocationState, SessionData, Student } from '../types/types';
 import Calendar from './components/Calendar';
 import NotFound from './components/NotFound'
-import { CalendarState } from 'react-awesome-calendar'
 import { find, map } from 'ramda'
 import {
   Routes,
@@ -20,11 +19,12 @@ import {
   Params,
   Navigate,
 } from "react-router-dom";
-import { useQuery, useQueryClient } from 'react-query'
+import { useQuery } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { getEvents } from './apis/EventApi'
 import { getStudents } from './apis/StudentApi';
 import IndicatorManager from './components/IndicatorManager'
+import { toCalendarState } from './helpers/Helpers'
 
 /**
  * Root component of the app
@@ -39,26 +39,8 @@ import IndicatorManager from './components/IndicatorManager'
 function App() {
   const location = useLocation()
   const state = location.state as Partial<LocationState>
-  const queryClient = useQueryClient()
 
-  /**
-   * Reducer for fetching new events on year onChange
-   * 
-   * @remarks 
-   *
-   * It keeps track of selected year and invalidates
-   * the event query on year change
-   * @see {@link https://react-query.tanstack.com/guides/query-invalidation}
-   * @see {@link https://reactjs.org/docs/hooks-reference.html#usereducer}
-   */
-  const [year, dispatch] = useReducer(
-    (prevYear: number, newYear: number) => {
-      if (prevYear !== newYear)
-        queryClient.invalidateQueries('events')
-      return newYear
-    }
-    , new Date().getFullYear())
-
+  const [calendarState, setCalendarState] = useState(toCalendarState(new Date(), 'monthlyMode'))
 
   /**
    * Queries events and display and returns early if loading or error
@@ -69,7 +51,7 @@ function App() {
    * @see {@link https://react-query.tanstack.com/guides/initial-query-data#staletime-and-initialdataupdatedat}
    */
   const { data : sessions } =
-    useQuery<SessionData[], Error>('events', () => getEvents(year))
+    useQuery<SessionData[], Error>(['events', calendarState], () => getEvents(calendarState.year))
   const {data:sprofile} = useQuery<Student[]>('student', () => getStudents());
 
   return (
@@ -108,7 +90,13 @@ function App() {
    *  Wrapper for Calendar
    */
   function Cal() {
-    return <Calendar sessions={sessions ? sessions : []} onChange={(state: CalendarState) => dispatch(state.year)} />
+    return (
+      <Calendar   
+        sessions={sessions ? sessions : []} 
+        state={calendarState}
+        onStateChange={setCalendarState} 
+      />
+    )
   }
 
 
