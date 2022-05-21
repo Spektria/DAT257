@@ -115,15 +115,9 @@ function Session({id, title, location, from, to, instructors, participants } : S
           { 'Content-Type': "application/json" }
       })
       .then(response => {
-        if (response.status === 200) { navigate(-1) }
+        if (response.status === 200) { navigate("/") }
         else { alert("Something went wrong! Your event was not deleted.") }
       })
-      .catch(error => console.log(error));
-    if (id > 0) {
-      navigate("/session/" + id);
-    } else {
-      navigate("/");
-    }
   }
 }
 
