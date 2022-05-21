@@ -24,6 +24,7 @@
 }
 
 .button-solid{
+
   @apply w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-button-solid text-base font-medium text-light-primary hover:text-dark-primary hover:bg-light-primary focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-light-primary sm:w-auto sm:text-sm
 }
 

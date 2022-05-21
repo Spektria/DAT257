@@ -33,6 +33,6 @@ CREATE TABLE IF NOT EXISTS Attend(
 	instructorattendid UUID REFERENCES Instructor(instructorid) NOT NULL,
 	sessionIdnr INT NOT NULL,
 	sessionLocation TEXT NOT NULL,
-	FOREIGN KEY(sessionIdnr, sessionLocation) REFERENCES Session(idnr,location)); 
+	FOREIGN KEY(sessionIdnr, sessionLocation) REFERENCES Session(idnr,location) ON DELETE CASCADE);
 	
 
