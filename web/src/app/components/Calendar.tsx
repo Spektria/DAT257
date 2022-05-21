@@ -8,8 +8,9 @@ import { useSwipeable } from 'react-swipeable'
 
 type Props =
   {
-    onChange: (s: CalendarState) => void
     sessions: SessionData[]
+    state: CalendarState
+    onStateChange: (s: CalendarState) => void
   }
 
 /** 
@@ -19,7 +20,7 @@ type Props =
  * @param props.onChange - Change handler for CalendarState
  * @param props.sessions 
  */
-function Calendar({ onChange, sessions }: Props) {
+function Calendar({ sessions, state, onStateChange }: Props) {
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -56,7 +57,7 @@ function Calendar({ onChange, sessions }: Props) {
     >
       <AwesomeCalendar
         events={map(toEvent, sessions)}
-        onChange={onChange}
+        onChange={onStateChange}
         onClickEvent={id => navigate(`session/${id}`, { state: { background: location } })}
         onClickTimeLine={date => navigate('/newsession', {
           state: {
@@ -68,6 +69,7 @@ function Calendar({ onChange, sessions }: Props) {
           }
         })}
         ref={ref as unknown as LegacyRef<Component<CalendarProps, any, any>> | undefined}
+        defaultState={state}
       />
     </div>
   );
