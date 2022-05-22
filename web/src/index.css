@@ -32,11 +32,11 @@
 }
 
 .card-modal-add {
-  @apply bg-dark-primary w-full md:w-fit rounded-t md:rounded pl-4 pr-4 pt-4 pb-4 flex flex-col h-full md:h-fit justify-between overflow-y-auto md:overflow-y-clip
+  @apply overscroll-none bg-dark-primary w-full md:w-fit rounded-t md:rounded pl-4 pr-4 pt-4 pb-4 flex flex-col h-full md:h-fit justify-between overflow-y-auto md:overflow-y-clip
 }
 
 .card-modal{
-  @apply relative inline-block h-full md:h-auto align-bottom mb-0 bg-dark-primary rounded-t md:rounded-lg text-left md:shadow-xl transform transition-all md:align-middle md:max-w-lg w-full
+  @apply overscroll-none relative inline-block h-full md:h-auto align-bottom mb-0 bg-dark-primary rounded-t md:rounded-lg text-left md:shadow-xl transform transition-all md:align-middle md:max-w-lg w-full
 }
 
 .title-page{
