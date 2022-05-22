@@ -51,7 +51,7 @@ function App() {
    * @see {@link https://react-query.tanstack.com/guides/initial-query-data#staletime-and-initialdataupdatedat}
    */
   const { data : sessions } =
-    useQuery<SessionData[], Error>(['events', calendarState], () => getEvents(calendarState.year))
+    useQuery<SessionData[], Error>(['events', calendarState.year], () => getEvents(calendarState.year))
   const {data:sprofile} = useQuery<Student[]>('student', () => getStudents());
 
   return (
