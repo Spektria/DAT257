@@ -74,7 +74,7 @@ function MultiInput({ options, placeholder, onChange, defaultValue }: Props) {
     const person = find(opt => getName(opt) === input, options)!
     const newList = [...list, person];
     setList(newList);
-    if (onChange) onChange(list)
+    if (onChange) onChange(newList)
   }
 
   /**

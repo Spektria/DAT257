@@ -1,3 +1,4 @@
+import { CalendarMode } from 'react-awesome-calendar';
 import { Either } from '../../types/types'
 import { map } from 'ramda' 
 
@@ -90,4 +91,21 @@ export function lefts<T, U>(xs: Either<T, U>[]): T[]{
  */
 export function rights<T, U>(xs: Either<T, U>[]): U[]{
   return map(x => either(_ => [], singleton, x), xs).flat()
+}
+
+/**
+ * Produces a CalendarState from arguments 
+ * 
+ * @param date
+ * @param mode
+ * 
+ * @returns CalendarState
+ */
+export function toCalendarState(date: Date, mode: CalendarMode){
+  return {
+    mode: mode,
+    year: date.getFullYear(),
+    month: date.getMonth(),
+    day: date.getDate()
+  }
 }

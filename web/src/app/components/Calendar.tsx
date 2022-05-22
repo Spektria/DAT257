@@ -8,8 +8,9 @@ import { useSwipeable } from 'react-swipeable'
 
 type Props =
   {
-    onChange: (s: CalendarState) => void
     sessions: SessionData[]
+    state: CalendarState
+    onStateChange: (s: CalendarState) => void
   }
 
 /** 
@@ -19,7 +20,7 @@ type Props =
  * @param props.onChange - Change handler for CalendarState
  * @param props.sessions 
  */
-function Calendar({ onChange, sessions }: Props) {
+function Calendar({ sessions, state, onStateChange }: Props) {
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -56,18 +57,19 @@ function Calendar({ onChange, sessions }: Props) {
     >
       <AwesomeCalendar
         events={map(toEvent, sessions)}
-        onChange={onChange}
+        onChange={onStateChange}
         onClickEvent={id => navigate(`session/${id}`, { state: { background: location } })}
         onClickTimeLine={date => navigate('/newsession', {
           state: {
             background: location,
             date: {
               ...date,
-              hour: date.hour 
+              hour: date.hour
             }
           }
         })}
         ref={ref as unknown as LegacyRef<Component<CalendarProps, any, any>> | undefined}
+        defaultState={state}
       />
     </div>
   );
@@ -87,12 +89,25 @@ function toEvent(session: SessionData): CalendarEvent {
   return (
     {
       id: session.id,
-      color: '#fd3153',
+      color: getColor(session.id),
       from: addTimeOffset(new Date(session.from)),
       to: addTimeOffset(new Date(session.to)),
       title: session.title,
     }
   )
+}
+
+
+/**
+ * Generates a color depending on id 
+ * 
+ * @param id 
+ * 
+ * @returns a hexadecimal color code value 
+ */
+function getColor(id: number) {
+  const colors = ['#FEADCD', '#FFEC9E', '#7AE7B9', '#5BD2F0', '#9BE7FF', '#B9ACF2']
+  return colors[Math.abs(id % 5)]
 }
 
 /**

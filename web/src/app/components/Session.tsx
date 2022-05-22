@@ -10,6 +10,7 @@ import { map, zipWith } from 'ramda'
 import { useNavigate } from 'react-router-dom'
 import { ServerURL } from '../apis/URIs'
 import ListProfile from './ListProfile';
+import { useQueryClient } from 'react-query'
 
 
 /**
@@ -39,6 +40,8 @@ function listPeople(arr: string[]) {
  */
 function Session({id, title, location, from, to, instructors, participants } : SessionData) {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
+
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="flex items-end justify-center font-sans h-screen md:min-h-screen pt-10 md:px-4 md:pb-20 text-center md:block md:p-0">
@@ -46,11 +49,11 @@ function Session({id, title, location, from, to, instructors, participants } : S
         <div
           className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
           aria-hidden="true"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate('/')}
         />
 
         <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-        <div className='absolute inset-0 mx-auto z-20 w-full md:w-fit mt-10'>
+        <div className='absolute inset-0 mx-auto z-20 w-full md:w-fit md:h-fit mt-10'>
           <div className="card-modal-add md:min-w-[32rem]">
             <div className="relative px-8 pt-8 md:p-6 md:pb-10">
               <div className="flex items-start">
@@ -115,15 +118,13 @@ function Session({id, title, location, from, to, instructors, participants } : S
           { 'Content-Type': "application/json" }
       })
       .then(response => {
-        if (response.status === 200) { navigate(-1) }
+        if (response.status === 200) { 
+          queryClient.invalidateQueries('events')
+          navigate("/") 
+        }
         else { alert("Something went wrong! Your event was not deleted.") }
       })
-      .catch(error => console.log(error));
-    if (id > 0) {
-      navigate("/session/" + id);
-    } else {
-      navigate("/");
-    }
+      .catch(_ => alert("Something went wrong! Your event was not deleted."))
   }
 }
 

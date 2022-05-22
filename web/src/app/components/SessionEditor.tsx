@@ -8,7 +8,7 @@ import { ServerURL } from '../apis/URIs';
 import { getInstructors } from '../apis/InstructorApi';
 import { useNavigate } from 'react-router-dom'
 import { map, filter } from 'ramda';
-import { useQuery } from 'react-query'
+import { useQuery, useQueryClient } from 'react-query'
 import { lefts, rights } from '../helpers/Helpers'
 
 /**
@@ -27,7 +27,7 @@ function SessionEditor({ left, right }: Either<CalendarDate, SessionData>) {
   const min = hour % 1 * 60
   return (
     <Form
-      id={0}  /* TODO generate session id */
+      id={0}
       title=""
       location=""
       from={new Date(year, month, day, hour, min)}
@@ -56,27 +56,28 @@ function Form(initState: SessionData) {
     , async () => ({ students: await getStudents(), instructors: await getInstructors() })
     , { staleTime: 600000 })
 
+  const queryClient = useQueryClient();
   const students = data ? map(studentToEither, listDiff(data.students, state.participants)) : []
   const instructors = data ? map(instructorToEither, listDiff(data.instructors, state.instructors)) : []
 
   return (
-    <div className='fixed inset-0 z-10'>
+    <div className='fixed inset-0 z-10 mt-10 overflow-y-auto'>
       <div
-        className='bg-gray-500 bg-opacity-75 h-screen'
-        onClick={() => navigate(-1)}
+        className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity'
+        onClick={() => navigate('/')}
       />
-      <div className='absolute inset-0 mx-auto z-20 w-full md:w-fit mt-10'>
+      <div className='absolute inset-0 mx-auto z-20 w-full md:w-fit md:h-fit'>
         <div className='card-modal-add'>
           <div className='flex flex-col'>
             <div className="border-b-2 border-light-secondary border-opacity-20 pb-5">
               <h1 className="title-page">Lägg till uppkörningstillfälle</h1>
             </div>
             <div className='flex-row justify-between mt-5 mb-1 '>
-              <input className='input' name='title' type="text" placeholder="Titel" value={title} onChange={e => setTitle(e.target.value)} />
+              <input className='input' name='title' type="text" placeholder="Titel" value={title} onChange={e => {dispatch({title: e.target.value}); setTitle(e.target.value)}} />
             </div>
 
             <div className='flex-row justify-between mt-1 mb-3 border-b-2 border-light-secondary border-opacity-20 pb-4'>
-              <input className='input' name='place' type="text" placeholder="Plats" value={state.location} onChange={e => dispatch({ location: e.target.value, id: Math.random() })} />
+              <input className='input' name='place' type="text" placeholder="Plats" value={state.location} onChange={e => dispatch({ location: e.target.value })} />
             </div>
 
             <p className='title-content'>Datum</p>
@@ -89,13 +90,13 @@ function Form(initState: SessionData) {
                 onChange={e => {
                   setFromDate(e.target.value)
                   const y = parseInt((e.target.value).substring(0, 4))
-                  const m = parseInt((e.target.value).substring(5, 6))
-                  const d = parseInt((e.target.value).substring(8, 9))
+                  const m = parseInt((e.target.value).substring(5, 7))
+                  const d = parseInt((e.target.value).substring(8, 10))
                   const date = state.from
                   date.setFullYear(y)
                   date.setMonth(m - 1)
                   date.setDate(d)
-                  dispatch({ from: new Date(date), id: Math.random() })
+                  dispatch({ from: new Date(date) })
                 }}
 
               />
@@ -109,13 +110,13 @@ function Form(initState: SessionData) {
                 onChange={e => {
                   setToDate(e.target.value)
                   const y = parseInt((e.target.value).substring(0, 4))
-                  const m = parseInt((e.target.value).substring(5, 6))
-                  const d = parseInt((e.target.value).substring(8, 9))
+                  const m = parseInt((e.target.value).substring(5, 7))
+                  const d = parseInt((e.target.value).substring(8, 10))
                   const date = state.to
                   date.setFullYear(y)
                   date.setMonth(m - 1)
                   date.setDate(d)
-                  dispatch({ to: new Date(date), id: Math.random() })
+                  dispatch({ to: new Date(date) })
                 }}
 
               />
@@ -179,28 +180,24 @@ function Form(initState: SessionData) {
             </div>
           </div>
 
-          <div className='flex flex-col space-y-1 mt-10'>
+          <div className='flex flex-col space-y-2 mt-10'>
             <button
               className='button-solid'
               type='submit'
               onClick={() => {
-                fetch(`${ServerURL}/events/new`,
+                fetch(`${ServerURL}/events/newsession`,
                   {
                     method: 'POST'
                     , headers:
                       { 'Content-Type': "application/json" }
-                    , body: JSON.stringify({ ...state, id: Math.random() })
+                    , body: JSON.stringify({ ...state, id: state.id === 0 ? getRandomInt(1,999999999) : state.id })
                   })
                   .then(response => {
-                    if (response.status === 200) { navigate(-1) }
+                    if (response.status === 200) { 
+                      queryClient.invalidateQueries('events')
+                      navigate(state.id > 0 ? "/session/" + state.id : '/')}
                     else { alert("Something went wrong! Your event was not saved.") }
                   })
-                  .catch(error => console.log(error));
-                if (state.id > 0) {
-                  navigate("/session/" + state.id);
-                } else {
-                  navigate("/");
-                }
               }
               }
             > Spara
@@ -208,11 +205,7 @@ function Form(initState: SessionData) {
             <button
               className='button-outline'
               onClick={() => {
-                if (state.id > 0) {
-                  navigate("/session/" + state.id);
-                } else {
-                  navigate("/");
-                }
+                navigate(state.id > 0 ? "/session/" + state.id : '/')
               }}
             > Avbryt
             </button>
@@ -275,6 +268,19 @@ function timeStr(date: Date): string {
  */
 function dateStr(date: Date): string {
   return date.toISOString().substring(0, 10)
+}
+
+/**
+ * Get random integer between two numbers
+ * 
+ * @param min 
+ * @param max 
+ * @returns Random integer between min and max
+ */
+function getRandomInt(min: number, max: number): number {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min); 
 }
 
 export default SessionEditor
