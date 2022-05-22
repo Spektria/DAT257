@@ -64,7 +64,7 @@ function Calendar({ sessions, state, onStateChange }: Props) {
             background: location,
             date: {
               ...date,
-              hour: date.hour 
+              hour: date.hour
             }
           }
         })}
@@ -89,12 +89,25 @@ function toEvent(session: SessionData): CalendarEvent {
   return (
     {
       id: session.id,
-      color: '#fd3153',
+      color: getColor(session.id),
       from: addTimeOffset(new Date(session.from)),
       to: addTimeOffset(new Date(session.to)),
       title: session.title,
     }
   )
+}
+
+
+/**
+ * Generates a color depending on id 
+ * 
+ * @param id 
+ * 
+ * @returns a hexadecimal color code value 
+ */
+function getColor(id: number) {
+  const colors = ['#FEADCD', '#FFEC9E', '#7AE7B9', '#5BD2F0', '#9BE7FF', '#B9ACF2']
+  return colors[Math.abs(id % 5)]
 }
 
 /**
