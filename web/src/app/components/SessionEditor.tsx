@@ -180,7 +180,7 @@ function Form(initState: SessionData) {
             </div>
           </div>
 
-          <div className='flex flex-col space-y-1 mt-10'>
+          <div className='flex flex-col space-y-2 mt-10'>
             <button
               className='button-solid'
               type='submit'

@@ -67,7 +67,7 @@ const StudentProfile: FC<Student> = data => {
 
                 <div className='relative sm:flex-row-reverse flex-col mt-10 mb-10 '>
                   <button type="submit" className="button-solid sm:mt-6 mt-20 sm:mr-3">Spara</button>
-                  <button type="button" className={'button-outline sm:mt-0 sm:w-auto sm:text-sm bg-transparent text-base font-medium text-light-primary hover:text-dark-primary'} onClick={() => {queryClient.removeQueries('moments');navigate(location.pathname.replace(data.id, ''))}}>Tillbaka</button>
+                  <button type="button" className={'button-outline sm:mt-0 sm:w-auto sm:text-sm bg-transparent text-base font-medium text-light-primary hover:text-dark-primary mt-2'} onClick={() => {queryClient.removeQueries('moments');navigate(location.pathname.replace(data.id, ''))}}>Tillbaka</button>
                 </div>
               </form>
             </div>
