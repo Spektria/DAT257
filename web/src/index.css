@@ -24,12 +24,11 @@
 }
 
 .button-solid{
-
-  @apply w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-button-solid text-base font-medium text-light-primary hover:text-dark-primary hover:bg-light-primary focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-light-primary sm:w-auto sm:text-sm
+  @apply w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-button-solid text-base font-medium text-light-primary hover:text-dark-primary hover:bg-light-primary focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-light-primary md:w-auto sm:text-sm
 }
 
 .button-outline{
-  @apply w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-button-outline bg-opacity-30 text-base font-medium text-light-primary hover:bg-light-primary hover:text-dark-primary focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-light-primary sm:w-auto sm:text-sm
+  @apply w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-button-outline bg-opacity-30 text-base font-medium text-light-primary hover:bg-light-primary hover:text-dark-primary focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-light-primary md:w-auto sm:text-sm
 }
 
 .card-modal-add {
@@ -37,7 +36,7 @@
 }
 
 .card-modal{
-  @apply relative inline-block h-full md:h-auto align-bottom mb-0 bg-dark-primary rounded-t md:rounded-lg text-left overflow-hidden md:shadow-xl transform transition-all md:align-middle md:max-w-lg w-full
+  @apply relative inline-block h-full md:h-auto align-bottom mb-0 bg-dark-primary rounded-t md:rounded-lg text-left md:shadow-xl transform transition-all md:align-middle md:max-w-lg w-full
 }
 
 .title-page{
