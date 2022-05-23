@@ -42,10 +42,10 @@ Contains Wix endpoint functions. Cannot be run outside of Wix and are simply a c
 Github actions for build and continous integration automation.
 
 ## People
-| nick    | IRL |
+| nick(s)    | IRL |
 | ------------- | ------------- |
 | fredins  | Martin Fredin  |
-| Spektria  | Hugo Ekstrand  |
+| Spektria (Λ Tllija) | Hugo Ekstrand  |
 | ***REMOVED*** | ***REMOVED***|
 | SchWilliam  | William Schmitz  |
 | Kablero  | Kasper Ljunggren   |
