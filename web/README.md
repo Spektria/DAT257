@@ -13,7 +13,7 @@ npm run build
 ```
 
 ## Other information
-- The server url can be changed in the ``` ./src/app/apis/URIs.tsx ```, 
-  which can useful if you want to change to a server running locally.
+- The server url can be changed in ``` ./src/app/apis/URIs.tsx ```, 
+  which can useful if you want to change to a local server.
 
 
