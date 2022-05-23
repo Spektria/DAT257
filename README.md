@@ -47,7 +47,7 @@ Github actions for build and continous integration automation.
 | fredins  | Martin Fredin  |
 | Spektria (Λ Tllija) | Hugo Ekstrand  |
 | ***REMOVED*** | ***REMOVED***|
-| SchWilliam  | William Schmitz  |
+| SchWilliam, Willeeez  | William Schmitz  |
 | Kablero  | Kasper Ljunggren   |
 | falkenby  | Matilda Falkenby    |
 | jonasrost  | Jonas Röst    |
