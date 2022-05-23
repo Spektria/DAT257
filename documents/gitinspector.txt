@@ -1,0 +1,163 @@
+Kommando: gitinspector --grading -f java,sql,js,jsx,ts,tsx,css
+
+OBS: Tllija och Spektria är samma person. Samma sak med SchWilliam och Willeeez.
+
+Statistical information for the repository 'DAT257-Def-Leppard' was gathered on
+2022/05/23.
+The following historical commit information, by author, was found in the
+repository:
+
+Author                     Commits    Insertions      Deletions    % of changes
+Kablero                         24           317            138            4.33
+RenatoRR                        40           617            323            8.94
+SchWilliam                       9           133             60            1.84
+Spektria                        86          1225            720           18.50
+Tllija                          47           558            191            7.12
+Willeeez                        19           351            121            4.49
+falkenby                        17           287            181            4.45
+fredins                        152          2577           1234           36.24
+***REMOVED***                     31           306             97            3.83
+jonasrost                       30           743            337           10.27
+
+Below are the number of rows from each author that have survived and are still
+intact in the current revision:
+
+Author                     Rows      Stability          Age       % in comments
+Kablero                      87           27.4          1.9                0.00
+RenatoRR                    180           29.2          1.6                0.00
+SchWilliam                   92           69.2          2.3               29.35
+Spektria                    860           70.2          2.3               16.40
+Tllija                      338           60.6          4.5               23.08
+Willeeez                     11            3.1          4.6                0.00
+falkenby                    132           46.0          2.7                0.00
+fredins                    1673           64.9          2.0                0.00
+***REMOVED***                 106           34.6          1.6                0.00
+jonasrost                   305           41.0          2.6               36.72
+
+The following history timeline has been gathered from the repository:
+
+Author                  2022W14    2022W15    2022W16    2022W17    2022W18 
+Kablero                       +                     +          .          . 
+RenatoRR                                            +                   +++ 
+SchWilliam                                         -+                     . 
+Spektria                   ++++              -+++++++      -++++          . 
+Tllija                       ++              -+++++++       -+++          . 
+Willeeez                                            +      -++++          + 
+falkenby                      .                   -++          .         -+ 
+fredins                ---+++++   --++++++          .   --++++++   --++++++ 
+***REMOVED***                ++++                     .          +          . 
+jonasrost                                         +++          .   ---+++++ 
+Modified Rows:              730        328       1133       1157       2591 
+
+Author                  2022W19    2022W20    2022W21 
+Kablero                       .          .            
+RenatoRR                      .      --+++            
+SchWilliam                    .          .            
+Spektria                 ---+++      --+++            
+Tllija                        .          .            
+falkenby                      .          .            
+fredins               ---++++++   --++++++  --------- 
+***REMOVED***                   .          .            
+jonasrost                     .          .            
+Modified Rows:             2184       2337         56 
+
+No metrics violations were found in the repository.
+
+The following responsibilities, by author, were found in the current revision of
+the repository (comments are excluded from the line count, if possible):
+
+Kablero is mostly responsible for:
+    68 web/src/app/components/SessionEditor.tsx
+    17 server/src/main/java/com/defLeppard/controllers/InstructorController.java
+     2 ...er/src/test/java/com/defLeppard/controllers/StudentControllerTest.java
+
+RenatoRR is mostly responsible for:
+    70 web/src/app/components/StudentProfile.tsx
+    35 web/src/app/App.tsx
+    33 server/src/main/resources/data.sql
+    17 web/src/app/sData.tsx
+     6 web/src/types/types.tsx
+     6 web/src/app/apis/StudentApi.tsx
+     5 web/src/app/components/Session.tsx
+     2 web/src/index.css
+     2 web/src/app/components/SessionEditor.tsx
+     2 web/src/app/components/ListProfile.tsx
+
+SchWilliam is mostly responsible for:
+    28 server/src/main/java/com/defLeppard/services/DatabaseService.java
+     9 server/src/main/java/com/defLeppard/Application.java
+     8 server/src/main/resources/schema.sql
+     7 wix/backend/http-functions.js
+     6 server/src/main/java/com/defLeppard/controllers/StudentController.java
+     5 server/src/main/java/com/defLeppard/controllers/EventsController.java
+     2 server/src/main/resources/data.sql
+
+Spektria is mostly responsible for:
+   106 server/src/main/resources/data.sql
+    70 server/src/main/java/com/defLeppard/services/DatabaseService.java
+    60 wix/backend/http-functions.js
+    55 server/src/main/java/com/defLeppard/controllers/StudentController.java
+    50 server/src/main/java/com/defLeppard/services/WixService.java
+    33 web/src/app/components/TextSelector.tsx
+    27 server/src/test/java/com/defLeppard/controllers/EventsControllerTest.java
+    27 server/src/main/java/com/defLeppard/Application.java
+    20 server/src/main/java/com/defLeppard/entities/Event.java
+    18 server/src/main/java/com/defLeppard/services/mappers/EventRowMapper.java
+
+Tllija is mostly responsible for:
+    53 wix/backend/http-functions.js
+    36 ...er/src/test/java/com/defLeppard/controllers/StudentControllerTest.java
+    33 web/src/app/components/TextSelector.tsx
+    29 server/src/test/java/com/defLeppard/controllers/OKAndHasBody.java
+    28 server/src/main/java/com/defLeppard/controllers/EventsController.java
+    20 server/src/test/java/com/defLeppard/controllers/EventsControllerTest.java
+    15 web/src/app/helpers/Helpers.tsx
+    15 server/src/main/java/com/defLeppard/entities/Event.java
+    10 server/src/main/java/com/defLeppard/controllers/InstructorController.java
+     7 server/src/main/resources/schema.sql
+
+Willeeez is mostly responsible for:
+     9 server/src/main/resources/schema.sql
+     2 server/src/main/java/com/defLeppard/services/DatabaseService.java
+
+falkenby is mostly responsible for:
+    50 web/src/app/components/Session.tsx
+    34 web/src/index.css
+    22 web/src/app/components/SessionEditor.tsx
+    15 web/src/app/components/StudentProfile.tsx
+     9 web/tailwind.config.js
+     1 web/src/app/components/MultiInput.tsx
+     1 web/src/app/components/ListProfile.tsx
+
+fredins is mostly responsible for:
+   224 web/src/app/App.tsx
+   186 web/src/app/components/SessionEditor.tsx
+   142 web/src/serviceWorkerRegistration.ts
+   141 web/src/app/components/IndicatorManager.tsx
+   129 web/src/app/components/Calendar.tsx
+    98 web/src/app/components/MultiInput.tsx
+    96 web/src/app/helpers/Helpers.tsx
+    91 web/src/app/components/TextSelector.tsx
+    80 web/src/service-worker.ts
+    70 web/src/app/components/Session.tsx
+
+***REMOVED***is mostly responsible for:
+    59 web/src/app/components/MultiInput.tsx
+    29 web/src/app/components/TextSelector.tsx
+    13 web/src/app/components/ListProfile.tsx
+     3 web/src/app/components/SessionEditor.tsx
+     1 web/src/app/components/Session.tsx
+     1 web/src/app/App.tsx
+
+jonasrost is mostly responsible for:
+    96 server/src/main/java/com/defLeppard/services/DatabaseService.java
+    29 server/src/main/java/com/defLeppard/controllers/StudentController.java
+    25 web/src/app/components/Session.tsx
+    19 server/src/main/java/com/defLeppard/controllers/EventsController.java
+    18 server/src/main/java/com/defLeppard/controllers/InstructorController.java
+     5 server/src/main/java/com/defLeppard/Application.java
+     1 server/src/main/resources/schema.sql
+
+The extensions below were found in the repository history (extensions used
+during statistical analysis are marked):
+* [css] html iml [java] [js] json md properties [sql] svg [ts] [tsx] txt xml yml 
