@@ -14,7 +14,10 @@ A calendar scheduling application with a data connection to a Wix website. This 
 The project is subdivided into the main architectures, where the server folder contains both the Spring server and postgressql database and
 the web folder contains the React frontend interface. Both folders contain readmes for how to build and launch the application.
 
-Reflection documents are in /Documents and subdivided into individual and team reflection. The social contract and final report can also be found here.
+Reflection documents are in /documents and subdivided into individual and team reflection. The social contract and final report can also be found here.
+
+## Gitinspector
+There is a gitinspector report in ```documents/``` which was generated on 23/5.
 
 ## Requirements for building
 - Maven, [Download](https://maven.apache.org/download.cgi)
