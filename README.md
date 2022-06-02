@@ -14,7 +14,7 @@ A calendar scheduling application with a data connection to a Wix website. This 
 The project is subdivided into the main architectures, where the server folder contains both the Spring server and postgressql database and
 the web folder contains the React frontend interface. Both folders contain readmes for how to build and launch the application.
 
-Reflection documents are in /documents and subdivided into individual and team reflection. The social contract and final report can also be found here.
+Reflection documents are in /documents and subdivided into individual and team reflection. The social contract and final report can also be found there.
 
 ## Gitinspector
 There is a gitinspector report in ```documents/``` which was generated on 23/5.
@@ -33,7 +33,7 @@ Contains Spring-boot server and postgressql database in resoucre folder.
 Contains React frontend.
 
 ### [/Documents](https://github.com/funcorange/DAT257-Def-Leppard/tree/main/documents)
-Contains individual and team reflections as well as technical documents.
+Contains individual and team reflections, final report, gitinspector, and technical documents.
 
 ### [/Wix](https://github.com/funcorange/DAT257-Def-Leppard/tree/main/wix/backend)
 Contains Wix endpoint functions. Cannot be run outside of Wix and are simply a copy of what is on the Wix website.
@@ -45,7 +45,7 @@ Github actions for build and continous integration automation.
 | nick(s)    | IRL |
 | ------------- | ------------- |
 | fredins  | Martin Fredin  |
-| Spektria (Λ Tllija) | Hugo Ekstrand  |
+| Spektria ,Tllija | Hugo Ekstrand  |
 | ***REMOVED*** | ***REMOVED***|
 | SchWilliam, Willeeez  | William Schmitz  |
 | Kablero  | Kasper Ljunggren   |
